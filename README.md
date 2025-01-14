@@ -140,18 +140,6 @@ Desarrollado con 💻 por:
         <br /><sub><b>Jose Pol Ku</b></sub>
       </a>
     </td>
-    <td align="center" style="border: none;">
-      <a href="https://github.com/gogphojoh">
-        <img src="https://avatars.githubusercontent.com/u/149612930?v=4" width="100px;" alt="Hector Mendoza"/>
-        <br /><sub><b>Hector Mendoza</b></sub>
-      </a>
-    </td>
-    <td align="center" style="border: none;">
-      <a href="https://github.com/Arielo16">
-        <img src="https://avatars.githubusercontent.com/u/108147166?v=4" width="100px;" alt="Jose Ariel Martinez"/>
-        <br /><sub><b>Jose Ariel Martinez</b></sub>
-      </a>
-    </td>
   </tr>
 </table>
 
