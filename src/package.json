@@ -43,7 +43,8 @@
     "react-native-web": "~0.19.13",
     "tailwindcss-react-native": "^1.7.10",
     "zod": "^3.23.8",
-    "expo-notifications": "~0.29.8"
+    "expo-notifications": "~0.29.8",
+    "expo-linear-gradient": "~14.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

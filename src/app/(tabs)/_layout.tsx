@@ -8,9 +8,18 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#FFD700',
         tabBarStyle: {
           backgroundColor: 'black',
+          height: 80,
+        },
+        tabBarLabelStyle: {
+          textAlign: 'center',
+          fontSize: 14, 
+        },
+        tabBarIconStyle: {
+          marginTop: 10,
         },
         headerShown: false,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -25,7 +34,7 @@ export default function TabLayout() {
         options={{
           title: 'Resultados',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="trophy" size={24} color={color} />
+            <FontAwesome name="bar-chart" size={24} color={color} />
           ),
         }}
       />
@@ -34,7 +43,7 @@ export default function TabLayout() {
         options={{
           title: 'Mis Eventos',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="star" size={24} color={color} />
+            <FontAwesome name="calendar-plus-o" size={24} color={color} />
           ),
         }}
       />
