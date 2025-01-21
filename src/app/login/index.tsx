@@ -1,88 +1,103 @@
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
-import { router } from 'expo-router';
-import { useForm, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import { stripBaseUrl } from "expo-router/build/fork/getStateFromPath-forks";
+import { View, Text,TextInput, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import {SafeAreaView} from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { useAuth } from "../../context/AuthContext";// Asegúrate de la ruta correcta
 
-const loginSchema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
-});
-
-type LoginForm = z.infer<typeof loginSchema>;
-
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 export default function LoginScreen() {
-  const { control, handleSubmit, formState: { errors } } = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
-  });
+  const router = useRouter(); // Hook para manejar la navegación
 
-  const onSubmit = (data: LoginForm) => {
-    console.log(data);
-    router.replace('/(tabs)');
+  const { login } = useAuth();
+
+  const handleLogin = () => {
+    // Aquí puedes validar credenciales antes de iniciar sesión
+    login();
   };
-
   return (
-    <View style={{ flex: 1, backgroundColor: 'white' }} className="flex-1 items-center justify-center p-6">
-      <View className="w-full max-w-sm">
-        <Text className="text-2xl font-bold text-center text-black mb-8 ng">
-          Iniciar Sesión
-        </Text>
-        
-        <View className="space-y-4 w-full">
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, value } }) => (
-              <View>
-                <TextInput
-                  className="w-full bg-gray-100 rounded-lg px-4 py-3"
-                  style={{ height: 50 }}
-                  placeholder="Email"
-                  placeholderTextColor="#666"
-                  onChangeText={onChange}
-                  value={value}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-                {errors.email && (
-                  <Text className="text-red-500 text-sm mt-1">{errors.email?.message}</Text>
-                )}
-              </View>
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <View>
-                <TextInput
-                  className="w-full bg-gray-100 rounded-lg px-4 py-3"
-                  style={{ height: 50 }}
-                  placeholder="Contraseña"
-                  placeholderTextColor="#666"
-                  onChangeText={onChange}
-                  value={value}
-                  secureTextEntry
-                />
-                {errors.password && (
-                  <Text className="text-red-500 text-sm mt-1">{errors.password?.message}</Text>
-                )}
-              </View>
-            )}
-          />
-
-          <TouchableOpacity
-            className="bg-black rounded-lg py-4 w-full"
-            onPress={handleSubmit(onSubmit)}
-          >
-            <Text className="text-white text-center font-bold text-lg">
-              Iniciar Sesión
-            </Text>
-          </TouchableOpacity>
-        </View>
+    <SafeAreaView style={styles.mainContainer}>
+      <View>
+        <Text style={styles.titulo}>Iniciar sesión</Text>
       </View>
-    </View>
+      <View style={styles.Text}>
+        <Text style={styles.textContainer}>Email</Text>
+        <TextInput
+          style={styles.TextInput}
+          placeholder="Escribe tu email"
+          placeholderTextColor={"grey"}
+        />
+      </View>
+
+      <View style={styles.Text}>
+        <Text style={styles.textContainer}>Contraseña</Text>
+        <TextInput
+          style={styles.TextInput}
+          placeholder="Escribe tu contraseña"
+          placeholderTextColor={"grey"}
+        />
+      </View>
+
+      <TouchableOpacity
+        style={{ marginTop: height * 0.02, alignSelf: "center", width: "85%" }}
+      >
+        <Text style={{ color: "#D4AF37" }}>¿Has olvidado tu contraseña?</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.buttom} onPress={handleLogin}>
+        <Text style={styles.textButtom}>Inicia sesión</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
+
+
+const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    backgroundColor: '#1A1A1A',
+  },
+  titulo: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    alignSelf: 'center',
+    marginTop: height * 0.05,
+  },
+  Text: {
+    color: '#fff',
+    marginTop: height * 0.03,
+    alignItems: 'center',
+  },
+  TextInput: {
+    borderWidth: 1,
+    borderColor: '#D2D1CE',
+    borderRadius: 5,
+    width: '90%',
+    marginTop: height * 0.01,
+    color: '#fff',
+    height: height * 0.05,
+  },
+  textContainer: {
+    width: '90%',
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+
+
+  buttom: {
+    backgroundColor: '#D4AF37',
+    width: width * 0.4,
+    height: height * 0.06,
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: height * 0.05,
+    borderRadius: 5,
+  },
+  textButtom: {
+    color: 'white',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontWeight: '500',
+  },
+});
