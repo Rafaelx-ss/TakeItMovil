@@ -5,9 +5,9 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#FFD700',
+        tabBarActiveTintColor: '#E0B942',
         tabBarStyle: {
-          backgroundColor: 'black',
+          backgroundColor: '#0A0A0A',
           height: 80,
         },
         tabBarLabelStyle: {
@@ -25,7 +25,7 @@ export default function TabLayout() {
         options={{
           title: 'Eventos',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="calendar" size={24} color={color} />
+            <FontAwesome name="calendar" size={24} className='text-dorado'/>
           ),
         }}
       />
@@ -34,7 +34,7 @@ export default function TabLayout() {
         options={{
           title: 'Resultados',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="bar-chart" size={24} color={color} />
+            <FontAwesome name="bar-chart" size={24} className='text-dorado'/>
           ),
         }}
       />
@@ -43,7 +43,7 @@ export default function TabLayout() {
         options={{
           title: 'Mis Eventos',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="calendar-plus-o" size={24} color={color} />
+            <FontAwesome name="calendar-plus-o" size={24} className='text-dorado'/>
           ),
         }}
       />
@@ -52,7 +52,7 @@ export default function TabLayout() {
         options={{
           title: 'Perfil',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="user" size={24} color={color} />
+            <FontAwesome name="user" size={24} className='text-dorado'/>
           ),
         }}
       />

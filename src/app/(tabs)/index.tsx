@@ -48,15 +48,12 @@ export default function EventosScreen() {
     <View className="flex-1 bg-gray-50">
       {/* Encabezado */}
       <LinearGradient
-        colors={['#4c669f', '#3b5998', '#192f6a']}
+        colors={['#0A0A0A', '#0A0A0A', '#0A0A0A']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="pt-12 pb-6 px-4"
+        className="pt-6 pb-6 px-4"
       >
-        <Text className="text-3xl font-extrabold text-white mb-2">Eventos</Text>
-        <Text className="text-lg text-gray-200">
-          Lista de todos los eventos [API]
-        </Text>
+        <Text className="text-3xl font-extrabold text-text mb-2">Take It</Text>
       </LinearGradient>
 
       {/* Lista de eventos */}
@@ -64,7 +61,7 @@ export default function EventosScreen() {
         data={events}
         className="px-4 mt-4"
         renderItem={({ item }) => (
-          <View className="bg-white p-5 rounded-lg mb-4 shadow-md">
+          <View className="bg-background p-5 rounded-lg mb-4 shadow-md">
             <Text className="text-xl font-bold text-gray-800">{item.title}</Text>
             <Text className="text-sm font-medium text-indigo-600 mt-2">
               📅 {item.date}

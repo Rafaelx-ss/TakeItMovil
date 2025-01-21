@@ -1,3 +1,109 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0; /* Negro */
+  --background-start-rgb: 214, 219, 220; /* Gris claro */
+  --background-end-rgb: 255, 255, 255; /* Blanco */
+}
+
+
+@layer base {
+  :root {
+    /* Colores principales en modo claro */
+    --background: 0 0% 100%; /* Fondo blanco */
+    --foreground: 0 0% 3.9%; /* Texto negro */
+    --card: 0 0% 100%; /* Fondo de tarjetas blanco */
+    --card-foreground: 0 0% 3.9%; /* Texto en tarjetas negro */
+    --popover: 0 0% 100%; /* Fondo de popovers blanco */
+    --popover-foreground: 0 0% 3.9%; /* Texto en popovers negro */
+    --primary: 0 0% 9%; /* Texto primario (negro) */
+    --primary-foreground: 0 0% 98%; /* Texto en elementos primarios blanco */
+    --secondary: 0 0% 96.1%; /* Fondo secundario gris claro */
+    --secondary-foreground: 0 0% 9%; /* Texto secundario negro */
+    --muted: 0 0% 96.1%; /* Fondo desactivado gris claro */
+    --muted-foreground: 0 0% 45.1%; /* Texto desactivado gris oscuro */
+    --accent: 0 0% 96.1%; /* Fondo de acento gris claro */
+    --accent-foreground: 0 0% 9%; /* Texto de acento negro */
+    --destructive: 0 84.2% 60.2%; /* Fondo rojo brillante (destructivo) */
+    --destructive-foreground: 0 0% 98%; /* Texto blanco en destructivo */
+    --border: 0 0% 89.8%; /* Color de borde gris claro */
+    --input: 0 0% 89.8%; /* Fondo de entrada gris claro */
+    --ring: 0 0% 3.9%; /* Anillos negros */
+    --error: 0 75% 50%; /* Rojo estándar */
+    --error-hover: 0 100% 45%; /* Rojo más oscuro */
+    --error-bg: 0 100% 50%; /* Fondo de error */
+    --chart-1: 12 76% 61%; /* Naranja */
+    --chart-2: 173 58% 39%; /* Verde */
+    --chart-3: 197 37% 24%; /* Azul */
+    --chart-4: 43 74% 66%; /* Amarillo */
+    --chart-5: 27 87% 67%; /* Rosa */
+    --radius: 0.5rem; /* Radio de borde */
+    --dorado: 45, 72%, 57%; /* Dorado  #E0B942 */
+    --black: 0, 0%, 7%; /* Negro puro */
+    --text: 0, 0%, 100%; /* Texto blanco */
+    --text-light: 0, 0%, 80%; /* Texto blanco tenue */
+    --success: 145, 50%, 45%; /* Verde éxito */
+    --success-foreground: 0, 0%, 100%; /* Texto en éxito blanco */
+    --warning: 45, 100%, 51%; /* Amarillo advertencia */
+    --warning-foreground: 0, 0%, 7%; /* Texto advertencia negro */
+    --info: 200, 70%, 50%; /* Azul informativo */
+    --info-foreground: 0, 0%, 100%; /* Texto informativo blanco */
+    --alert: 45, 72%, 57%; /* Dorado estilo del proyecto */
+    --alert-foreground: 0, 0%, 10%; /* Texto negro oscuro para contraste */  
+    --notice: 260, 80%, 70%; /* Azul claro */
+    --notice-foreground: 0, 0%, 3.9%; /* Texto en notice negro */
+    --notification: 30, 70%, 60%; /* Naranja */
+    --notification-foreground: 0, 0%, 100%; /* Texto blanco */
+  }
+
+  /* Modos oscuros */
+  .dark {
+    --background: 0 0% 3.9%; /* Fondo negro #0A0A0A */
+    --foreground: 0 0% 98%; /* Texto blanco */
+    --card: 0 0% 3.9%; /* Fondo de tarjetas negro */
+    --card-foreground: 0 0% 98%; /* Texto en tarjetas blanco */
+    --popover: 0 0% 3.9%; /* Fondo de popovers negro */
+    --popover-foreground: 0 0% 98%; /* Texto en popovers blanco */
+    --primary: 0 0% 98%; /* Texto primario blanco */
+    --primary-foreground: 0 0% 9%; /* Texto en elementos primarios negro */
+    --secondary: 0 0% 14.9%; /* Fondo secundario gris oscuro */
+    --secondary-foreground: 0 0% 98%; /* Texto secundario blanco */
+    --muted: 0 0% 14.9%; /* Fondo desactivado gris oscuro */
+    --muted-foreground: 0 0% 63.9%; /* Texto desactivado gris claro */
+    --accent: 0 0% 14.9%; /* Fondo de acento gris oscuro */
+    --accent-foreground: 0 0% 98%; /* Texto de acento blanco */
+    --destructive: 0 62.8% 30.6%; /* Fondo rojo oscuro (destructivo) */
+    --destructive-foreground: 0 0% 98%; /* Texto blanco en destructivo */
+    --border: 0 0% 14.9%; /* Color de borde gris oscuro */
+    --input: 0 0% 14.9%; /* Fondo de entrada gris oscuro */
+    --ring: 0 0% 83.1%; /* Anillos grises claros */
+    --chart-1: 220 70% 50%; /* Azul oscuro */
+    --chart-2: 160 60% 45%; /* Verde oscuro */
+    --chart-3: 30 80% 55%; /* Amarillo oscuro */
+    --chart-4: 280 65% 60%; /* Rosa oscuro */
+    --chart-5: 340 75% 55%; /* Magenta */
+    --success: 145, 50%, 45%; /* Verde éxito */
+    --success-foreground: 0, 0%, 98%; /* Texto en éxito blanco */
+    --warning: 45, 100%, 50%; /* Amarillo advertencia */
+    --warning-foreground: 0, 0%, 7%; /* Texto advertencia negro */
+    --info: 200, 70%, 40%; /* Azul oscuro informativo */
+    --info-foreground: 0, 0%, 98%; /* Texto informativo blanco */
+    --alert: 45, 72%, 40%; /* Dorado más oscuro */
+    --alert-foreground: 0, 0%, 10%; /* Texto negro oscuro para contraste */  
+    --notice: 260, 60%, 50%; /* Azul más oscuro */
+    --notice-foreground: 0, 0%, 98%; /* Texto en notice blanco */
+    --notification: 30, 50%, 40%; /* Naranja oscuro */
+    --notification-foreground: 0, 0%, 98%; /* Texto blanco */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
