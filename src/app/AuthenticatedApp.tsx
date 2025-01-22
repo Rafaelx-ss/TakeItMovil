@@ -16,14 +16,14 @@ const AuthenticatedApp: React.FC = () => {
 
     // Si el usuario está autenticado y está en login, redirigir al grupo de pestañas
     if (isAuthenticated && segments[0] === "login") {
-      router.replace("/(tabs)");
+      router.replace("/home");
     }
   }, [isAuthenticated, segments]);
 
   return (
     <Stack>
       {/* Grupo de pestañas */}
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="home" options={{ headerShown: false }} />
       {/* Pantalla de login */}
       <Stack.Screen name="login/index" options={{ headerShown: false }} />
     </Stack>

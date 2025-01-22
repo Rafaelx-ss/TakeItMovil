@@ -56,7 +56,7 @@ export default function EventosScreen() {
         className="px-4 mt-4"
         renderItem={({ item }) => (
           <View className="bg-background p-5 rounded-lg mb-4 shadow-md">
-            <Text className="text-xl font-bold text-gray-800">{item.nombreEvento}</Text>
+            <Text className="text-xl font-bold text-gray-800">{item.nombreEvento} - ID: {item.eventoID}</Text>
             <Text className="text-sm font-medium text-indigo-600 mt-2">
               📅 {item.fechaEvento}
             </Text>
