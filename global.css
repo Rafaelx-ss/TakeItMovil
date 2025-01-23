@@ -10,7 +10,7 @@
 
 
 @layer base {
-  :root {
+  .root {
     /* Colores principales en modo claro */
     --background: 0 0% 100%; /* Fondo blanco */
     --foreground: 0 0% 3.9%; /* Texto negro */
@@ -59,8 +59,10 @@
   }
 
   /* Modos oscuros */
-  .dark {
+  :root {
     --background: 0 0% 3.9%; /* Fondo negro #0A0A0A */
+    --background-dark: 45 72% 57%; /* Fondo negro #E0B942 */
+    --background-light: 0 0% 10%; /* Fondo negro #1A1A1A */
     --foreground: 0 0% 98%; /* Texto blanco */
     --card: 0 0% 3.9%; /* Fondo de tarjetas negro */
     --card-foreground: 0 0% 98%; /* Texto en tarjetas blanco */
@@ -96,6 +98,11 @@
     --notice-foreground: 0, 0%, 98%; /* Texto en notice blanco */
     --notification: 30, 50%, 40%; /* Naranja oscuro */
     --notification-foreground: 0, 0%, 98%; /* Texto blanco */
+    --radius: 0.5rem; /* Radio de borde */
+    --dorado: 45, 72%, 57%; /* Dorado  #E0B942 */
+    --black: 0, 0%, 7%; /* Negro puro */
+    --text: 0, 0%, 100%; /* Texto blanco */
+    --text-light: 0, 0%, 80%; /* Texto blanco tenue */
   }
 }
 

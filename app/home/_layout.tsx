@@ -8,11 +8,16 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#E0B942',
         tabBarStyle: {
           backgroundColor: '#0A0A0A',
+          borderTopWidth: 1,
+          borderTopColor: '#E0B942',
           height: 80,
+          elevation: 5, 
+          shadowOpacity: 0.5, 
+          shadowOffset: { width: 0, height: -2 }, 
         },
         tabBarLabelStyle: {
           textAlign: 'center',
-          fontSize: 14, 
+          fontSize: 14,
         },
         tabBarIconStyle: {
           marginTop: 10,
@@ -32,7 +37,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="resultados"
         options={{
-          title: 'Resultados',
+          title: 'Patrocinadores',
           tabBarIcon: ({ color }) => (
             <FontAwesome name="bar-chart" size={24} className='text-dorado'/>
           ),
@@ -50,7 +55,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="perfil"
         options={{
-          title: 'Perfil',
+          title: 'Usuarios',
           tabBarIcon: ({ color }) => (
             <FontAwesome name="user" size={24} className='text-dorado'/>
           ),

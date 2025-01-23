@@ -27,6 +27,8 @@ module.exports = {
         'error-hover': 'hsl(var(--error-hover))',
         'error-bg-hover': 'hsl(var(--error-bg) / 0.1)',
         background: 'hsl(var(--background))',
+        backgroundLight: 'hsl(var(--background-light))',
+        backgroundDark: 'hsl(var(--background-dark))',
         foreground: 'hsl(var(--foreground))',
         card: {
           DEFAULT: 'hsl(var(--card))',

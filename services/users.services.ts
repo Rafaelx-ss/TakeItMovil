@@ -1,13 +1,13 @@
 //@/services/events.services.ts
 import axios from 'axios';
-import { Evento } from '@/types/eventos';
+import { User } from '@/types/users';
 import { backend } from '@/context/endpoints';
 
 
-export const EventosService = {
-    geteventos: async (page: number): Promise<{ data: Evento[] }> => {
+export const UsersService = {
+    getusers: async (page: number): Promise<{ data: User[] }> => {
         try {
-            const response = await axios.get(`${backend}/api/eventos/page?page=${page}`, {
+            const response = await axios.get(`${backend}/api/users/page?page=${page}`, {
                 headers: {
                 'Content-Type': 'application/json',
                 },
@@ -15,7 +15,7 @@ export const EventosService = {
 
             return response.data;
         } catch (error) {
-            console.error('Error al obtener los eventos:', error);
+            console.error('Error al obtener los usuarios:', error);
             throw error;
         }
     },
