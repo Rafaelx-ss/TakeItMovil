@@ -9,12 +9,10 @@ const AuthenticatedApp: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    // Si el usuario no está autenticado, redirigir a login
     if (!isAuthenticated && segments[0] !== "login") {
       router.replace("/login");
     }
 
-    // Si el usuario está autenticado y está en login, redirigir al grupo de pestañas
     if (isAuthenticated && segments[0] === "login") {
       router.replace("/home");
     }
@@ -22,9 +20,8 @@ const AuthenticatedApp: React.FC = () => {
 
   return (
     <Stack>
-      {/* Grupo de pestañas */}
       <Stack.Screen name="home" options={{ headerShown: false }} />
-      {/* Pantalla de login */}
+      <Stack.Screen name="home/CrearEvento/index" options={{ title: "Crear Evento" }} />
       <Stack.Screen name="login/index" options={{ headerShown: false }} />
     </Stack>
   );

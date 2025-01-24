@@ -5,7 +5,7 @@ import { backend } from '@/context/endpoints';
 export const EventosService = {
   geteventos: async (page: number): Promise<{ data: Evento[] }> => {
     try {
-      const response = await axios.get(`${backend}/api/eventos?page=${page}`, {
+      const response = await axios.get(`${backend}/api/eventos/page?page=${page}`, {
         headers: {
           'Content-Type': 'application/json',
         },

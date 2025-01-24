@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import { View, Text, Button, TextInput, Alert } from 'react-native';
 import { EventosService } from '@/services/events.services';
-import { Evento } from '@/types/eventos';
-export function CrearEventoScreen() {
+import { useRouter } from 'expo-router';
+
+export default function CrearEventoScreen() {
   const [nombreEvento, setNombreEvento] = useState('');
   const [fechaEvento, setFechaEvento] = useState('');
   const [costoEvento, setCostoEvento] = useState('');
-  const navigation = useNavigation();
+  const router = useRouter();
 
   const createEvent = async () => {
     try {
       await EventosService.createEvento({ nombreEvento, fechaEvento, costoEvento });
       Alert.alert('Evento creado', 'El evento se creó correctamente.');
-      navigation.goBack();
+      router.back();
     } catch (error) {
       console.error('Error al crear el evento:', error);
       Alert.alert('Error', 'No se pudo crear el evento.');
@@ -22,15 +21,29 @@ export function CrearEventoScreen() {
   };
 
   return (
-    <View className="p-4">
-      <Text>Nombre del Evento:</Text>
-      <TextInput className="border p-2 mb-4" value={nombreEvento} onChangeText={setNombreEvento} />
+    <View className="flex-1 p-4 bg-background">
+      <Text className="text-lg font-bold mb-2 text-text">Nombre del Evento:</Text>
+      <TextInput 
+        className="border border-gray-300 p-2 mb-4 rounded text-text" 
+        value={nombreEvento} 
+        onChangeText={setNombreEvento} 
+      />
 
-      <Text>Fecha del Evento:</Text>
-      <TextInput className="border p-2 mb-4" value={fechaEvento} onChangeText={setFechaEvento} />
+      <Text className="text-lg font-bold mb-2 text-text">Fecha del Evento:</Text>
+      <TextInput 
+        className="border border-gray-300 p-2 mb-4 rounded text-text" 
+        value={fechaEvento} 
+        onChangeText={setFechaEvento} 
+        placeholder="YYYY-MM-DD"
+      />
 
-      <Text>Costo del Evento:</Text>
-      <TextInput className="border p-2 mb-4" value={costoEvento} onChangeText={setCostoEvento} />
+      <Text className="text-lg font-bold mb-2 text-text">Costo del Evento:</Text>
+      <TextInput 
+        className="border border-gray-300 p-2 mb-4 rounded text-text" 
+        value={costoEvento} 
+        onChangeText={setCostoEvento} 
+        keyboardType="numeric"
+      />
 
       <Button title="Crear Evento" onPress={createEvent} />
     </View>
