@@ -5,6 +5,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { EventosService } from '@/services/events.services';
 import { Evento } from '@/types/eventos';
 import { useRouter } from 'expo-router';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 export default function EventosScreen() {
   const [events, setEvents] = useState<Evento[]>([]);
@@ -60,7 +63,14 @@ export default function EventosScreen() {
         className="pt-6 pb-6 px-4 flex-row justify-between items-center"
       >
         <Text className="text-3xl font-extrabold text-text">Eventos</Text>
-        <Button title="Crear" onPress={() => route.replace('/home/_CrearEvento/index')} />
+
+        <TouchableOpacity
+          style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, width: 90, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          onPress={() => route.push('/CrearEvento')}
+        >
+          <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Crear</Text>
+          <MaterialIcons name="add" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
       </LinearGradient>
 
       {/* Lista de eventos */}
@@ -71,8 +81,20 @@ export default function EventosScreen() {
           <View className="bg-backgroundLight p-5 rounded-lg mb-4 shadow-md">
             <Text className="text-xl font-bold text-text">{item.nombreEvento} - ID: {item.eventoID}</Text>
             <View className="flex-row justify-end absolute right-5 top-5 space-x-2">
-              <Button title="Editar" onPress={() => route.replace(`/home/_EditarEvento/index?event=${item.eventoID}`)} />
-              <Button title="Eliminar" onPress={() => deleteEvent(item.eventoID)} />
+              <TouchableOpacity
+                style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: 5 }}
+                onPress={() => route.push(`/EditarEvento?event=${item.eventoID}`)}
+              >
+                <MaterialIcons name="edit" size={18} color="#FFFFFF" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+                onPress={() => deleteEvent(item.eventoID)}
+              >
+                <MaterialIcons name="delete" size={18} color="#FFFFFF" />
+              </TouchableOpacity>
+
             </View>
             <Text className="text-sm font-medium text-dorado mt-2">📅 {item.fechaEvento}</Text>
             <Text className="text-sm font-bold text-dorado text-right mt-2">${item.costoEvento} MXN</Text>

@@ -8,8 +8,8 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#E0B942',
         tabBarStyle: {
           backgroundColor: '#0A0A0A',
-          borderTopWidth: 1,
-          borderTopColor: '#E0B942',
+          borderTopWidth: 2, 
+          borderTopColor: '#E0B942', 
           height: 80,
           elevation: 5, 
           shadowOpacity: 0.5, 
@@ -19,10 +19,7 @@ export default function TabLayout() {
           textAlign: 'center',
           fontSize: 14,
         },
-        tabBarIconStyle: {
-          marginTop: 10,
-        },
-        headerShown: false,
+        headerShown: false, 
       }}
     >
       <Tabs.Screen
@@ -30,7 +27,7 @@ export default function TabLayout() {
         options={{
           title: 'Eventos',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="calendar" size={24} className='text-dorado'/>
+            <FontAwesome name="calendar" size={24} color="#E0B942" />
           ),
         }}
       />
@@ -39,7 +36,7 @@ export default function TabLayout() {
         options={{
           title: 'Patrocinadores',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="bar-chart" size={24} className='text-dorado'/>
+            <FontAwesome name="bar-chart" size={24} color="#E0B942" />
           ),
         }}
       />
@@ -48,7 +45,7 @@ export default function TabLayout() {
         options={{
           title: 'Mis Eventos',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="calendar-plus-o" size={24} className='text-dorado'/>
+            <FontAwesome name="calendar-plus-o" size={24} color="#E0B942" />
           ),
         }}
       />
@@ -57,7 +54,7 @@ export default function TabLayout() {
         options={{
           title: 'Usuarios',
           tabBarIcon: ({ color }) => (
-            <FontAwesome name="user" size={24} className='text-dorado'/>
+            <FontAwesome name="user" size={24} color="#E0B942" />
           ),
         }}
       />
