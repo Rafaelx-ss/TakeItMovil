@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { EventosService } from '@/services/events.services';
 import { Evento } from '@/types/eventos';
@@ -10,7 +9,6 @@ export default function EventosScreen() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const navigation = useNavigation();
 
   const fetchData = async () => {
     if (loading || !hasMore) return;

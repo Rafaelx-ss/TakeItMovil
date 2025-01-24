@@ -1,8 +1,11 @@
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { PatrocinadoresService } from '@/services/patrocinadores.services';
 import { Patrocinador } from '@/types/patrocinadores';
+import { useRoute } from '@react-navigation/native';
+import { router } from 'expo-router';
 
 
 export default function ResultadosScreen() {
@@ -10,6 +13,7 @@ export default function ResultadosScreen() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const route = useRoute();
 
   const fetchData = async () => {
     if (loading || !hasMore) return;
@@ -34,6 +38,16 @@ export default function ResultadosScreen() {
     }
   };
 
+  const deletePatrocinador = async (id: number) => {
+      try {
+        await PatrocinadoresService.deletePatrocinador(id); 
+        Alert.alert('Evento eliminado', 'El evento ha sido eliminado con éxito.');
+      } catch (error) {
+        console.error('Error al eliminar el evento:', error);
+        Alert.alert('Error', 'No se pudo eliminar el evento.');
+      }
+    };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -48,6 +62,7 @@ export default function ResultadosScreen() {
         className="pt-6 pb-6 px-4"
       >
         <Text className="text-3xl font-extrabold text-text mb-2">Patrocinadores</Text>
+        <Button title="Crear" onPress={() => router.replace(`/home/CrearEvento/index`)} />
       </LinearGradient>
 
       {/* Lista de eventos */}
@@ -60,6 +75,8 @@ export default function ResultadosScreen() {
             <Text className="text-sm font-light text-dorado mt-2">
               📧 {item.correoPatrocinador}
             </Text>
+            <Button title="Editar" onPress={() => router.replace(`/home/EditarEvento/index`)} />
+            <Button title="Eliminar" onPress={() => deletePatrocinador(item.patrocinadorID)} />
             <Text className="text-sm font-bold text-dorado text-right mt-2">
               🔒 {item.rfcPatrocinador}
             </Text>

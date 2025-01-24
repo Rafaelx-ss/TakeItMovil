@@ -19,4 +19,16 @@ export const PatrocinadoresService = {
             throw error;
         }
     },
+    deletePatrocinador: async (patrocinadorID: number): Promise<void> => {
+        try {
+          await axios.delete(`${backend}/api/patrocinadores/${patrocinadorID}`, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+        } catch (error) {
+          console.error('Error al eliminar el evento:', error);
+          throw error;
+        }
+      },
 };
