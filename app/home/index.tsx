@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { EventosService } from '@/services/events.services';
 import { Evento } from '@/types/eventos';
+import { useRouter } from 'expo-router';
 
 export default function EventosScreen() {
   const [events, setEvents] = useState<Evento[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const navigation = useNavigation();
+  const route = useRouter();
 
   const fetchData = async () => {
     if (loading || !hasMore) return;
@@ -59,7 +59,7 @@ export default function EventosScreen() {
         className="pt-6 pb-6 px-4 flex-row justify-between items-center"
       >
         <Text className="text-3xl font-extrabold text-text">Eventos</Text>
-        <Button title="Crear" onPress={() => navigation.navigate('CrearEvento')} />
+        <Button title="Crear" onPress={() => route.replace('/home/CrearEvento/index')} />
       </LinearGradient>
 
       {/* Lista de eventos */}
@@ -70,7 +70,7 @@ export default function EventosScreen() {
           <View className="bg-backgroundLight p-5 rounded-lg mb-4 shadow-md">
             <Text className="text-xl font-bold text-text">{item.nombreEvento} - ID: {item.eventoID}</Text>
             <View className="flex-row justify-end absolute right-5 top-5 space-x-2">
-              <Button title="Editar" onPress={() => navigation.navigate('EditarEvento', { event: item })} />
+              <Button title="Editar" onPress={() => route.replace(`/home/EditarEvento/index?event=${item.eventoID}`)} />
               <Button title="Eliminar" onPress={() => deleteEvent(item.eventoID)} />
             </View>
             <Text className="text-sm font-medium text-dorado mt-2">📅 {item.fechaEvento}</Text>

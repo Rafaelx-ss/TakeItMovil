@@ -3,7 +3,6 @@ import { Evento } from '@/types/eventos';
 import { backend } from '@/context/endpoints';
 
 export const EventosService = {
-  // Obtener eventos con paginación
   geteventos: async (page: number): Promise<{ data: Evento[] }> => {
     try {
       const response = await axios.get(`${backend}/api/eventos?page=${page}`, {
