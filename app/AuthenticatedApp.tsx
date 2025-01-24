@@ -21,7 +21,6 @@ const AuthenticatedApp: React.FC = () => {
   return (
     <Stack>
       <Stack.Screen name="home" options={{ headerShown: false }} />
-      <Stack.Screen name="home/CrearEvento/index" options={{ title: "Crear Evento" }} />
       <Stack.Screen name="login/index" options={{ headerShown: false }} />
     </Stack>
   );
