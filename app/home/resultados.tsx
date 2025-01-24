@@ -45,9 +45,9 @@ export default function ResultadosScreen() {
         colors={['#0A0A0A', '#0A0A0A', '#0A0A0A']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="pt-6 pb-6 px-4"
+        className="pt-6 px-4 flex-row justify-between items-center"
       >
-        <Text className="text-3xl font-extrabold text-text mb-2">Patrocinadores</Text>
+        <Text className="text-3xl font-extrabold text-text">Patrocinadores</Text>
       </LinearGradient>
 
       {/* Lista de eventos */}

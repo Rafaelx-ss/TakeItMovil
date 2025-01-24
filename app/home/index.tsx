@@ -1,6 +1,5 @@
-//@/app/home/index.tsx
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator, RefreshControl } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { EventosService } from '@/services/events.services';
 import { Evento } from '@/types/eventos';
@@ -8,33 +7,46 @@ import { useRouter } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 
-
 export default function EventosScreen() {
   const [events, setEvents] = useState<Evento[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const route = useRouter();
 
-  const fetchData = async () => {
+  const fetchData = async (pageNumber: number, shouldAppend = true) => {
     if (loading || !hasMore) return;
 
     setLoading(true);
 
     try {
-      const response = await EventosService.geteventos(page);
+      const response = await EventosService.geteventos(pageNumber);
       const fetchedEvents = response?.data || []; 
 
       if (fetchedEvents.length === 0) {
         setHasMore(false); 
       } else {
-        setEvents((prevEvents) => [...prevEvents, ...fetchedEvents]);
-        setPage((prevPage) => prevPage + 1);
+        setEvents(prevEvents => shouldAppend ? [...prevEvents, ...fetchedEvents] : fetchedEvents);
+        setPage(pageNumber + 1);
       }
     } catch (error) {
       console.error('Error fetching events:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setEvents([]);
+    setRefreshing(true);
+    try {
+      setHasMore(true);
+      await fetchData(1, false);
+    } catch (error) {
+      console.error('Error refreshing events:', error);
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -50,8 +62,14 @@ export default function EventosScreen() {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(1, false);
   }, []);
+
+  const loadMore = () => {
+    if (!refreshing) {
+      fetchData(page, true);
+    }
+  };
 
   return (
     <View className="flex-1 bg-background">
@@ -60,16 +78,16 @@ export default function EventosScreen() {
         colors={['#0A0A0A', '#0A0A0A', '#0A0A0A']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="pt-6 pb-6 px-4 flex-row justify-between items-center"
+        className="pt-6 px-4 flex-row justify-between items-center"
       >
         <Text className="text-3xl font-extrabold text-text">Eventos</Text>
 
         <TouchableOpacity
-          style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, width: 90, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+          style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, width: 90, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 0}}
           onPress={() => route.push('/CrearEvento')}
         >
           <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Crear</Text>
-          <MaterialIcons name="add" size={24} color="#FFFFFF" />
+          <MaterialIcons name="add" size={20} color="#FFFFFF" />
         </TouchableOpacity>
       </LinearGradient>
 
@@ -77,6 +95,14 @@ export default function EventosScreen() {
       <FlatList
         data={events}
         className="px-4 mt-4"
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#E0B942']}
+            tintColor="#E0B942"
+          />
+        }
         renderItem={({ item }) => (
           <View className="bg-backgroundLight p-5 rounded-lg mb-4 shadow-md">
             <Text className="text-xl font-bold text-text">{item.nombreEvento} - ID: {item.eventoID}</Text>
@@ -106,10 +132,10 @@ export default function EventosScreen() {
             <Text className="text-center text-gray-500">No hay eventos disponibles</Text>
           </View>
         )}
-        onEndReached={fetchData}
+        onEndReached={loadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={() =>
-          loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
+          loading ? <ActivityIndicator size="large" color="#E0B942" /> : null
         }
       />
     </View>
