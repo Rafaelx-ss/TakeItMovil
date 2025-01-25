@@ -1,11 +1,11 @@
 import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { PatrocinadoresService } from '@/services/patrocinadores.services';
 import { Patrocinador } from '@/types/patrocinadores';
-import { useRoute } from '@react-navigation/native';
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 export default function ResultadosScreen() {
@@ -13,7 +13,7 @@ export default function ResultadosScreen() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const route = useRoute();
+  const route = useRouter();
 
   const fetchData = async () => {
     if (loading || !hasMore) return;
@@ -62,7 +62,13 @@ export default function ResultadosScreen() {
         className="pt-6 px-4 flex-row justify-between items-center"
       >
         <Text className="text-3xl font-extrabold text-text mb-2">Patrocinadores</Text>
-        <Button title="Crear" onPress={() => router.replace(`/home/CrearEvento/index`)} />
+        <TouchableOpacity
+          style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, width: 90, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 0}}
+          onPress={() => route.push('/CrearPatrocinador')}
+        >
+          <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Crear</Text>
+          <MaterialIcons name="add" size={20} color="#FFFFFF" />
+        </TouchableOpacity>
       </LinearGradient>
 
       {/* Lista de eventos */}
@@ -75,8 +81,21 @@ export default function ResultadosScreen() {
             <Text className="text-sm font-light text-dorado mt-2">
               📧 {item.correoPatrocinador}
             </Text>
-            <Button title="Editar" onPress={() => router.replace(`/home/EditarEvento/index`)} />
-            <Button title="Eliminar" onPress={() => deletePatrocinador(item.patrocinadorID)} />
+            <View className="flex-row justify-end absolute right-5 top-5 space-x-2">
+              <TouchableOpacity
+                style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: 5 }}
+                onPress={() => route.push(`/EditarEvento?event=${item.patrocinadorID}`)}
+              >
+                <MaterialIcons name="edit" size={18} color="#FFFFFF" />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+                onPress={() => deletePatrocinador(item.patrocinadorID)}
+              >
+                <MaterialIcons name="delete" size={18} color="#FFFFFF" />
+              </TouchableOpacity>
+            </View>
             <Text className="text-sm font-bold text-dorado text-right mt-2">
               🔒 {item.rfcPatrocinador}
             </Text>

@@ -19,6 +19,7 @@ export const PatrocinadoresService = {
             throw error;
         }
     },
+
     deletePatrocinador: async (patrocinadorID: number): Promise<void> => {
         try {
           await axios.delete(`${backend}/api/patrocinadores/${patrocinadorID}`, {
@@ -31,4 +32,28 @@ export const PatrocinadoresService = {
           throw error;
         }
       },
+
+    createPatrocinador: async (nombrePatrocinador: string,representantePatrocinador: string, rfcPatrocinador: string, correoPatrocinador: string, telefonoPatrocinador: string, numeroRepresentantePatrocinador: string): Promise<void> => {
+        try {
+            await axios.post(`${backend}/api/patrocinadores/post`, 
+                { 
+                    usuarioID:1,
+                    nombrePatrocinador: nombrePatrocinador,
+                    representantePatrocinador: representantePatrocinador,
+                    rfcPatrocinador: rfcPatrocinador,
+                    correoPatrocinador: correoPatrocinador,
+                    telefonoPatrocinador: telefonoPatrocinador,
+                    numeroRepresentantePatrocinador: numeroRepresentantePatrocinador
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                } 
+            );
+        }catch (error){
+            console.error('Error al crear patrocinador:', error);
+            throw error;
+        }
+    },
 };
