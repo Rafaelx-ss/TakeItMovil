@@ -569,9 +569,8 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         control={control}
         render={({ field: { onChange, value } }) => (
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Hora del Evento</Text>
             <TouchableOpacity onPress={() => setShowTimePicker(true)}>
-              <Text style={[styles.dateTimeText, { color: "#fff" }]}>{value.toTimeString()}</Text>
+              <Text style={[styles.dateTimeText, { color: "#fff" }]}>{value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
             </TouchableOpacity>
             {showTimePicker && (
               <DateTimePicker

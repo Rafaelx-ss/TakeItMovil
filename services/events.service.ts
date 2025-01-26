@@ -22,9 +22,9 @@ export const EventosService = {
 
     obtenerEvento: async (eventoID: number): Promise<Evento> => {
         try {
-            const response = await axios.get(`${backend}/api/eventos1/${eventoID}`, {
+            const response = await axios.get(`${backend}/api/eventos/get/${eventoID}`, {
                 headers: {
-                'Content-Type': 'application/json'
+                    'Content-Type': 'application/json'
                 }
             });
             return response.data;
@@ -74,7 +74,7 @@ export const EventosService = {
             costoEvento: Number(eventoData.costoEvento),
         }
 
-        const response = await axios.put(`${backend}/api/eventos/${eventoID}`, formattedData, {
+        const response = await axios.put(`${backend}/api/eventos/actualizar/${eventoID}`, formattedData, {
             headers: {
                 "Content-Type": "application/json",
             },

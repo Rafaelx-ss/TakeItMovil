@@ -113,7 +113,7 @@ export default function EventosScreen() {
               <View className="flex-row justify-end absolute right-5 top-5 space-x-2">
                 <TouchableOpacity
                   style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: 5 }}
-                  onPress={() => route.push(`/EditarEvento?event=${item.eventoID}`)}
+                  onPress={() => route.push(`/EditarEvento?eventoID=${item.eventoID}`)}
                 >
                   <MaterialIcons name="edit" size={18} color="#FFFFFF" />
                 </TouchableOpacity>
