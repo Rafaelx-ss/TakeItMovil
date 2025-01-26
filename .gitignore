@@ -35,3 +35,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+
+# URL DE APIS
+./context/endpoints.ts
+context/endpoints.ts
+context/endpoints.ts
