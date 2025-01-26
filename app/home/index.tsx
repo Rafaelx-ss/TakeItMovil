@@ -13,7 +13,7 @@ import {
   StatusBar,
 } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
-import { EventosService } from "@/services/events.services"
+import { EventosService } from "@/services/events.service"
 import { Evento } from "@/types/eventos"
 import { useRouter } from "expo-router"
 import { TouchableOpacity } from "react-native-gesture-handler"
@@ -34,7 +34,7 @@ export default function EventosScreen() {
     setLoading(true);
 
     try {
-      const response = await EventosService.geteventos(pageNumber);
+      const response = await EventosService.getEventos(pageNumber);
       const fetchedEvents = response?.data || []; 
 
       if (fetchedEvents.length === 0) {
@@ -63,10 +63,10 @@ export default function EventosScreen() {
     }
   };
 
-  const deleteEvent = async (id: number) => {
+  const deleteEvent = async (eventoID: number) => {
     try {
-      await EventosService.deleteEvento(id);
-      setEvents((prevEvents) => prevEvents.filter((event) => event.eventoID !== id));
+      await EventosService.eliminarEvento(eventoID);
+      setEvents((prevEvents) => prevEvents.filter((event) => event.eventoID !== eventoID));
       Alert.alert('Evento eliminado', 'El evento ha sido eliminado con éxito.');
     } catch (error) {
       console.error('Error al eliminar el evento:', error);
@@ -120,7 +120,7 @@ export default function EventosScreen() {
 
                 <TouchableOpacity
                   style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-                  onPress={() => deleteEvent(item.eventoID)}
+                  onPress={() => deleteEvent(item.eventoID || 0)}
                 >
                   <MaterialIcons name="delete" size={18} color="#FFFFFF" />
                 </TouchableOpacity>

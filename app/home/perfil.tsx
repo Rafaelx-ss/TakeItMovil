@@ -1,7 +1,7 @@
 import { View, Text, FlatList, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { UsersService } from '@/services/users.services';
+import { UsersService } from '@/services/users.service';
 import { User } from '@/types/users';
 import { useRouter } from 'expo-router';
 import HeaderGradient from '@/components/HeaderGradient';

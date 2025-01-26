@@ -7,17 +7,22 @@ import AuthenticatedApp from "./AuthenticatedApp"
 import "@/global.css"
 import { StatusBar } from "expo-status-bar"
 import { View, AppState, Platform } from "react-native"
+import { QueryClientProvider } from "@tanstack/react-query"
+import { queryClient } from "@/utils/react-query"
+
 
 const RootLayout: React.FC = () => {
 
   return (
     <AuthProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={{ flex: 1, backgroundColor: "#1A1A1A" }}>
-          <StatusBar style="light" />
-          <AuthenticatedApp />
-        </View>
-      </GestureHandlerRootView>
+      <QueryClientProvider client={queryClient}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <View style={{ flex: 1, backgroundColor: "#1A1A1A" }}>
+            <StatusBar style="light" />
+            <AuthenticatedApp />
+          </View>
+        </GestureHandlerRootView>
+      </QueryClientProvider>
     </AuthProvider>
   )
 }

@@ -1,5 +1,5 @@
 export interface Evento {
-    eventoID: number;
+    eventoID?: number;
     categoriaID: number;
     subCategoriaID: number;
     nombreEvento: string;
@@ -20,4 +20,10 @@ export interface Evento {
     estadoEvento?: boolean;
     created_at?: string;
     updated_at?: string;
+}
+
+export interface EventoFormValues {
+    eventoID?: number;
+    categoriaID: number;
+    subCategoriaID: number;
 }

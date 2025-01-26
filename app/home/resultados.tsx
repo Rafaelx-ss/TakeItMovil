@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
-import { PatrocinadoresService } from '@/services/patrocinadores.services';
+import { PatrocinadoresService } from '@/services/patrocinadores.service';
 import { Patrocinador } from '@/types/patrocinadores';
 import { useRouter } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
