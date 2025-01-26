@@ -3,9 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import { UsersService } from '@/services/users.services';
 import { User } from '@/types/users';
+import { useRouter } from 'expo-router';
+import HeaderGradient from '@/components/HeaderGradient';
 
 
 export default function PerfilScreen() {
+  const route = useRouter();
   const [users, setUsers] = useState<User[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -41,14 +44,13 @@ export default function PerfilScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Encabezado */}
-      <LinearGradient
-        colors={['#0A0A0A', '#0A0A0A', '#0A0A0A']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="pt-6 px-4 flex-row justify-between items-center"
-      >
-        <Text className="text-3xl font-extrabold text-text">Usuarios</Text>
-      </LinearGradient>
+      <HeaderGradient
+        title="Usuarios"
+        rightButtonText="Crear"
+        rightButtonIcon="add"
+        onRightButtonPress={() => route.push("/CrearEvento")}
+      />
+
 
       {/* Lista de eventos */}
       <FlatList

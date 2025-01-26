@@ -18,6 +18,7 @@ import { Evento } from "@/types/eventos"
 import { useRouter } from "expo-router"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { MaterialIcons } from "@expo/vector-icons"
+import HeaderGradient from "@/components/HeaderGradient"
 
 export default function EventosScreen() {
   const [events, setEvents] = useState<Evento[]>([]);
@@ -87,29 +88,12 @@ export default function EventosScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
         <View style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
         {/* Encabezado */}
-        <LinearGradient
-          colors={["#0A0A0A", "#0A0A0A", "#0A0A0A"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={{
-            paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-            paddingHorizontal: 16,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            height: Platform.OS === "ios" ? 88 : 56 + (StatusBar.currentHeight || 0),
-          }}
-        >
-          <Text className="text-3xl font-extrabold text-text">Eventos</Text>
-
-          <TouchableOpacity
-            style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, width: 90, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 0}}
-            onPress={() => route.push('/CrearEvento')}
-          >
-            <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Crear</Text>
-            <MaterialIcons name="add" size={20} color="#FFFFFF" />
-          </TouchableOpacity>
-        </LinearGradient>
+        <HeaderGradient
+          title="Eventos"
+          rightButtonText="Crear"
+          rightButtonIcon="add"
+          onRightButtonPress={() => route.push("/CrearEvento")}
+        />
 
         {/* Lista de eventos */}
         <FlatList

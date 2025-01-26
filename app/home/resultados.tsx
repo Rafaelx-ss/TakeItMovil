@@ -6,6 +6,7 @@ import { Patrocinador } from '@/types/patrocinadores';
 import { useRouter } from 'expo-router';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
+import HeaderGradient from '@/components/HeaderGradient';
 
 
 export default function ResultadosScreen() {
@@ -55,21 +56,13 @@ export default function ResultadosScreen() {
   return (
     <View className="flex-1 bg-background">
       {/* Encabezado */}
-      <LinearGradient
-        colors={['#0A0A0A', '#0A0A0A', '#0A0A0A']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        className="pt-6 px-4 flex-row justify-between items-center"
-      >
-        <Text className="text-3xl font-extrabold text-text mb-2">Patrocinadores</Text>
-        <TouchableOpacity
-          style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, width: 90, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', margin: 0}}
-          onPress={() => route.push('/CrearPatrocinador')}
-        >
-          <Text style={{ color: '#FFFFFF', fontWeight: 'bold' }}>Crear</Text>
-          <MaterialIcons name="add" size={20} color="#FFFFFF" />
-        </TouchableOpacity>
-      </LinearGradient>
+      <HeaderGradient
+        title="Patrocinadores"
+        rightButtonText="Crear"
+        rightButtonIcon="add"
+        onRightButtonPress={() => route.push("/CrearPatrocinador")}
+      />
+
 
       {/* Lista de eventos */}
       <FlatList
