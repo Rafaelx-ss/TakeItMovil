@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Evento } from '@/types/eventos';
 import { backend } from '@/context/endpoints';
+import { format } from "date-fns"
+
 
 export const EventosService = {
     getEventos: async (page: number): Promise<{ data: Evento[] }> => {
@@ -32,32 +34,56 @@ export const EventosService = {
         }
     },
 
-    crearEvento: async (usuarioID: number, eventoData: Omit<Evento, 'eventoID'>): Promise<Evento> => {
-        try {
-            const response = await axios.post(`${backend}/api/eventos/crear/${usuarioID}`, eventoData, {
-                headers: {
-                'Content-Type': 'application/json'
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error al crear el evento:', error);
-            throw error;
+    crearEvento: async (usuarioID: number, eventoData: Omit<Evento, "eventoID">): Promise<Evento> => {
+    try {
+        const formattedData = {
+            ...eventoData,
+            horaEvento: format(new Date(eventoData.horaEvento), "HH:mm"),
+            fechaEvento: format(new Date(eventoData.fechaEvento), "yyyy-MM-dd"),
+            categoriaID: Number(eventoData.categoriaID),
+            subCategoriaID: Number(eventoData.subCategoriaID),
+            estadoID: Number(eventoData.estadoID),
+            maximoParticipantesEvento: Number(eventoData.maximoParticipantesEvento),
+            duracionEvento: Number(eventoData.duracionEvento),
+            costoEvento: Number(eventoData.costoEvento),
         }
+
+        const response = await axios.post(`${backend}/api/eventos/crear/${usuarioID}`, formattedData, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        })
+        return response.data
+    } catch (error) {
+        console.error("Error al crear el evento:", error)
+        throw error
+    }
     },
 
     actualizarEvento: async (eventoID: number, eventoData: Partial<Evento>): Promise<Evento> => {
-        try {
-            const response = await axios.put(`${backend}/api/eventos3/${eventoID}`, eventoData, {
-                headers: {
-                'Content-Type': 'application/json'
-                }
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error al actualizar el evento:', error);
-            throw error;
+    try {
+        const formattedData = {
+            ...eventoData,
+            horaEvento: format(new Date(eventoData.horaEvento || ""), "HH:mm"),
+            fechaEvento: format(new Date(eventoData.fechaEvento || ""), "yyyy-MM-dd"),
+            categoriaID: Number(eventoData.categoriaID),
+            subCategoriaID: Number(eventoData.subCategoriaID),
+            estadoID: Number(eventoData.estadoID),
+            maximoParticipantesEvento: Number(eventoData.maximoParticipantesEvento),
+            duracionEvento: Number(eventoData.duracionEvento),
+            costoEvento: Number(eventoData.costoEvento),
         }
+
+        const response = await axios.put(`${backend}/api/eventos/${eventoID}`, formattedData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        return response.data
+    } catch (error) {
+        console.error("Error al actualizar el evento:", error)
+        throw error
+    }
     },
 
     eliminarEvento: async (eventoID: number): Promise<void> => {

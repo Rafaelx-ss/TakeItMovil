@@ -12,14 +12,23 @@ import { useQuery } from "@tanstack/react-query"
 // import { getUsuario } from "@/context/auth"
 
 const formSchema = z.object({
-  nombreEvento: z.string().min(1, "El nombre del evento es requerido"),
+  nombreEvento: z
+    .string()
+    .min(1, "El nombre del evento es requerido")
+    .max(255, "El nombre no debe exceder 255 caracteres"),
   categoriaID: z.string().min(1, "La categoría del evento es requerida"),
   subCategoriaID: z.string().min(1, "La subcategoría del evento es requerida"),
-  lugarEvento: z.string().min(1, "El lugar del evento es requerido"),
+  lugarEvento: z
+    .string()
+    .min(1, "El lugar del evento es requerido")
+    .max(255, "El lugar no debe exceder 255 caracteres"),
   maximoParticipantesEvento: z
     .string()
     .min(1, "El máximo de participantes es requerido")
-    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, "Debe ser un número positivo"),
+    .refine(
+      (val) => !isNaN(Number(val)) && Number(val) > 0 && Number(val) <= 10000,
+      "Debe ser un número entre 1 y 10000",
+    ),
   costoEvento: z
     .string()
     .min(1, "El costo del evento es requerido")
@@ -32,9 +41,12 @@ const formSchema = z.object({
     .string()
     .length(5, "El código postal debe tener exactamente 5 dígitos")
     .regex(/^\d+$/, "El código postal solo debe contener números"),
-  municioEvento: z.string().min(1, "El municipio es requerido"),
+  municioEvento: z.string().min(1, "El municipio es requerido").max(100, "El municipio no debe exceder 100 caracteres"),
   estadoID: z.string().min(1, "El estado es requerido"),
-  direccionEvento: z.string().min(5, "La dirección debe tener al menos 5 caracteres"),
+  direccionEvento: z
+    .string()
+    .min(5, "La dirección debe tener al menos 5 caracteres")
+    .max(255, "La dirección no debe exceder 255 caracteres"),
   telefonoEvento: z
     .string()
     .length(10, "El teléfono debe tener exactamente 10 dígitos")
@@ -45,10 +57,11 @@ const formSchema = z.object({
     .string()
     .min(1, "La duración es requerida")
     .regex(/^\d+$/, "Solo se permiten números")
-    .refine((val) => Number(val) > 0 && Number(val) <= 24, "La duración debe estar entre 1 y 24 horas"),
-  kitEvento: z.string().optional(),
+    .refine((val) => Number(val) > 0 && Number(val) <= 48, "La duración debe estar entre 1 y 48 horas"),
+  kitEvento: z.string().min(1, "El kit del evento es requerido").max(255, "El kit no debe exceder 255 caracteres"),
   nuevaSubcategoria: z.string().optional(),
 })
+
 
 type EventFormValues = z.infer<typeof formSchema>
 
@@ -65,7 +78,7 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
   const [showTimePicker, setShowTimePicker] = useState(false)
   const usuarioID = 1 // getUsuario().usuarioID
 
-  const { control, handleSubmit, setValue, watch } = useForm<EventFormValues>({
+  const { control, handleSubmit, setValue, watch, formState } = useForm<EventFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       categoriaID: event?.categoriaID || "",
@@ -161,6 +174,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               placeholder="Ej: Carrera 5K Mérida"
               placeholderTextColor="#858585"
             />
+            {formState.errors.nombreEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.nombreEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="nombreEvento"
@@ -180,17 +198,32 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
                 setValue("nuevaSubcategoria", "")
                 setShowOtherSubcategory(false)
               }}
-              style={styles.inputDropdown}
+              style={{
+                backgroundColor: "#1A1A1A",
+                color: "#fff",
+                height: 50,
+                borderWidth: 1,
+                borderColor: "#E0B942",
+                borderRadius: 8,
+                marginTop: 5,
+                paddingHorizontal: 10,
+              }}
             >
-              <Picker.Item label="Selecciona una categoría" value="" />
+              <Picker.Item label="Selecciona una categoría" value="" style={styles.pickerItem} />
               {categorias.map((categoria) => (
                 <Picker.Item
                   key={categoria.categoriaID}
                   label={categoria.nombreCategoria}
                   value={categoria.categoriaID.toString()}
+                  style={styles.pickerItem}
                 />
               ))}
             </Picker>
+            {formState.errors.categoriaID && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.categoriaID?.message}
+              </Text>
+            )}
           </View>
         )}
         name="categoriaID"
@@ -208,26 +241,42 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
                 setShowOtherSubcategory(itemValue === "0")
               }}
               enabled={!!selectedCategoryId}
-              style={styles.inputDropdown}
+              style={{
+                backgroundColor: "#1A1A1A",
+                color: "#fff", 
+                height: 50,
+                borderWidth: 1,
+                borderColor: "#E0B942",
+                borderRadius: 8,
+                marginTop: 5,
+                paddingHorizontal: 10,
+              }}
             >
               <Picker.Item
                 label={selectedCategoryId ? "Selecciona una subcategoría" : "Primero selecciona una categoría"}
                 value=""
-                style={styles.inputDropdown}
+                style={{ color: "#000000" }}
               />
               {subCategorias.map((subCategoria) => (
                 <Picker.Item
                   key={subCategoria.subcategoriaID}
                   label={subCategoria.nombreSubcategoria}
                   value={subCategoria.subcategoriaID.toString()}
+                  style={styles.pickerItem}
                 />
               ))}
-              <Picker.Item label="Otro (Agregar subcategoría)" value="0" />
+              <Picker.Item label="Otro (Agregar subcategoría)" value="0" style={{ color: "#000000" }} />
             </Picker>
+            {formState.errors.subCategoriaID && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.subCategoriaID?.message}
+              </Text>
+            )}
           </View>
         )}
         name="subCategoriaID"
       />
+
 
       {showOtherSubcategory && (
         <Controller
@@ -243,6 +292,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
                 placeholder="Ingrese la nueva subcategoría"
                 placeholderTextColor="#858585"
               />
+              {formState.errors.nuevaSubcategoria && (
+                <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                  {formState.errors.nuevaSubcategoria?.message}
+                </Text>
+              )}
             </View>
           )}
           name="nuevaSubcategoria"
@@ -262,6 +316,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               placeholder="Ej: Parque de las Américas"
               placeholderTextColor="#858585"
             />
+            {formState.errors.lugarEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.lugarEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="lugarEvento"
@@ -281,6 +340,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               keyboardType="numeric"
               placeholderTextColor="#858585"
             />
+            {formState.errors.maximoParticipantesEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.maximoParticipantesEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="maximoParticipantesEvento"
@@ -300,6 +364,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               keyboardType="numeric"
               placeholderTextColor="#858585"
             />
+            {formState.errors.costoEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.costoEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="costoEvento"
@@ -320,6 +389,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               numberOfLines={4}
               placeholderTextColor="#858585"
             />
+            {formState.errors.descripcionEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.descripcionEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="descripcionEvento"
@@ -340,6 +414,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               maxLength={5}
               placeholderTextColor="#858585"
             />
+            {formState.errors.cpEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.cpEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="cpEvento"
@@ -358,6 +437,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               placeholder="Ej: Mérida"
               placeholderTextColor="#858585"
             />
+            {formState.errors.municioEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.municioEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="municioEvento"
@@ -368,12 +452,35 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         render={({ field: { onChange, value } }) => (
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Estado</Text>
-            <Picker selectedValue={value} onValueChange={onChange}>
-              <Picker.Item label="Selecciona un estado" value="" />
+            <Picker
+              selectedValue={value}
+              onValueChange={onChange}
+              style={{
+                backgroundColor: "#1A1A1A",
+                color: "#fff",
+                height: 50,
+                borderWidth: 1,
+                borderColor: "#E0B942",
+                borderRadius: 8,
+                marginTop: 5,
+                paddingHorizontal: 10,
+              }}
+            >
+              <Picker.Item label="Selecciona un estado" value="" style={styles.pickerItem} />
               {estados.map((estado) => (
-                <Picker.Item key={estado.estadoID} label={estado.nombreEstado} value={estado.estadoID.toString()} />
+                <Picker.Item
+                  key={estado.estadoID}
+                  label={estado.nombreEstado}
+                  value={estado.estadoID.toString()}
+                  style={styles.pickerItem}
+                />
               ))}
             </Picker>
+            {formState.errors.estadoID && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.estadoID?.message}
+              </Text>
+            )}
           </View>
         )}
         name="estadoID"
@@ -392,6 +499,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               placeholder="Ej: Calle 20 x 25 y 27, Col. Centro"
               placeholderTextColor="#858585"
             />
+            {formState.errors.direccionEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.direccionEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="direccionEvento"
@@ -412,6 +524,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               maxLength={10}
               placeholderTextColor="#858585"
             />
+            {formState.errors.telefonoEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.telefonoEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="telefonoEvento"
@@ -423,7 +540,7 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Fecha del Evento</Text>
             <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-              <Text style={{ color: "#fff" }}>{value.toDateString()}</Text>
+              <Text style={[styles.dateTimeText, { color: "#fff" }]}>{value.toDateString()}</Text>
             </TouchableOpacity>
             {showDatePicker && (
               <DateTimePicker
@@ -438,6 +555,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
                 }}
               />
             )}
+            {formState.errors.fechaEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.fechaEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="fechaEvento"
@@ -449,7 +571,7 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Hora del Evento</Text>
             <TouchableOpacity onPress={() => setShowTimePicker(true)}>
-              <Text style={styles.dateTimeText}>{value.toTimeString()}</Text>
+              <Text style={[styles.dateTimeText, { color: "#fff" }]}>{value.toTimeString()}</Text>
             </TouchableOpacity>
             {showTimePicker && (
               <DateTimePicker
@@ -463,6 +585,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
                   }
                 }}
               />
+            )}
+            {formState.errors.horaEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.horaEvento?.message}
+              </Text>
             )}
           </View>
         )}
@@ -481,7 +608,13 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               value={value}
               placeholder="Ej: 2"
               keyboardType="numeric"
+              placeholderTextColor="#858585"
             />
+            {formState.errors.duracionEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.duracionEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="duracionEvento"
@@ -498,7 +631,13 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
               onChangeText={onChange}
               value={value}
               placeholder="Ej: Playera, medalla, número"
+              placeholderTextColor="#858585"
             />
+            {formState.errors.kitEvento && (
+              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                {formState.errors.kitEvento?.message}
+              </Text>
+            )}
           </View>
         )}
         name="kitEvento"
@@ -520,54 +659,59 @@ const styles = StyleSheet.create({
     backgroundColor: "#0A0A0A",
   },
   inputContainer: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   label: {
     fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
+    fontWeight: "600",
+    marginBottom: 8,
     color: "#fff",
+    letterSpacing: 0.5,
   },
   input: {
     borderWidth: 1,
     borderColor: "#E0B942",
-    borderRadius: 5,
+    borderRadius: 8,
     color: "#fff",
-    padding: 10,
+    padding: 12,
     fontSize: 16,
     backgroundColor: "#1A1A1A",
-  },
-  inputDropdown: {
-    borderWidth: 1,
-    borderColor: "#E0B942",
-    borderRadius: 5,
-    color: "#fff",
-    backgroundColor: "#1A1A1A",
+    height: 50,
   },
   textArea: {
-    height: 100,
+    height: 120,
     textAlignVertical: "top",
+    paddingTop: 12,
   },
   dateTimeText: {
     fontSize: 16,
-    padding: 10,
+    padding: 12,
     backgroundColor: "#1A1A1A",
     borderWidth: 1,
     borderColor: "#E0B942",
-    borderRadius: 5,
+    borderRadius: 8,
+    color: "#fff",
+    height: 50,
   },
   submitButton: {
     backgroundColor: "#E0B942",
-    padding: 15,
-    borderRadius: 5,
+    padding: 16,
+    borderRadius: 8,
     alignItems: "center",
-    marginTop: 20,
+    marginTop: 32,
     marginBottom: 40,
+    height: 56,
+    justifyContent: "center",
   },
   submitButtonText: {
-    color: "#fff",
+    color: "#0A0A0A",
     fontSize: 18,
     fontWeight: "bold",
+    letterSpacing: 0.5,
+  },
+  pickerItem: {
+    color: "#fff",
+    backgroundColor: "#1A1A1A",
   },
 })
 
