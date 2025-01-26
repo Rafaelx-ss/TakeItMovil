@@ -56,4 +56,14 @@ export const PatrocinadoresService = {
             throw error;
         }
     },
+
+    getPatrocinador: async (id: number): Promise<any> => {
+        try {
+            const response = await axios.get(`${backend}/api/patrocinadores/${id}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error al obtener patrocinador:', error);
+            throw error;
+        }
+    },
 };

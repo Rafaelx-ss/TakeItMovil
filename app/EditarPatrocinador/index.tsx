@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator, RefreshControl, Dimensions } from 'react-native';
-import { PatrocinadoresService } from '@/services/patrocinadores.service';
+import { PatrocinadoresService } from '@/services/patrocinadores.services';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Patrocinador } from '@/types/patrocinadores';
@@ -18,19 +18,19 @@ export default function CrearPatrocinadorScreen() {
   const router = useRouter();
   const width = Dimensions.get('window').width;
   const height = Dimensions.get('window').height;
-
-    
-
-  const createPatrocinador = async () => {
+  const obtenerPatrocinador = async () => {
     try {
-      await PatrocinadoresService.createPatrocinador(nombrePatrocinador, representantePatrocinador, rfcPatrocinador, correoPatrocinador, telefonoPatrocinador, numeroRepresentantePatrocinador);
-      Alert.alert('Patrocinador creado', 'El patrocinador se creó correctamente.');
+        const response = await PatrocinadoresService.getPatrocinador(patrocinadorID);
+        setNombrePatrocinador(response.nombrePatrocinador);      Alert.alert('Patrocinador creado', 'El patrocinador se creó correctamente.');
       router.back();
     } catch (error) {
       console.error('Error al crear el patrocinador:', error);
       Alert.alert('Error', 'No se pudo crear el patrocinador.');
     }
   };
+  useEffect(() => {
+      obtenerPatrocinador();
+    }, []);
 
   return (
     <View className="flex-1 bg-background">
@@ -89,3 +89,4 @@ export default function CrearPatrocinadorScreen() {
     </View>
   );
 }
+
