@@ -10,7 +10,7 @@ export default function TabLayout() {
           backgroundColor: "#0A0A0A",
           borderTopWidth: 2,
           borderColor: "#E0B942",
-          height: 80,
+          height: 90,
           elevation: 5,
           shadowOpacity: 0.5,
           shadowOffset: { width: 0, height: -2 },
@@ -19,7 +19,7 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: {
           textAlign: "center",
-          fontSize: 14,
+          fontSize: 10,
         },
         headerShown: false,
       }}
