@@ -9,6 +9,7 @@ import { EventosService } from "@/services/events.service"
 import { CategoriasService } from "@/services/categorias.service"
 import { EstadosService } from "@/services/estados.service"
 import { useQuery } from "@tanstack/react-query"
+import { set } from "date-fns"
 // import { getUsuario } from "@/context/auth"
 
 const formSchema = z.object({
@@ -101,6 +102,8 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
     },
   })
 
+
+
   const { data: estados = [] } = useQuery({
     queryKey: ["estados"],
     queryFn: () => EstadosService.obtenerEstados(),
@@ -122,6 +125,13 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
     staleTime: 2 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })
+
+  useEffect(() => {
+    if (event?.categoriaID) {
+      setSelectedCategoryId(event.categoriaID)
+      setValue("subCategoriaID", event.subCategoriaID)
+    }
+  }, [event?.categoriaID, setValue])
 
   const onSubmit = async (values: EventFormValues) => {
     setIsSubmitting(true)

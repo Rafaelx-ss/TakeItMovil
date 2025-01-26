@@ -88,7 +88,7 @@ export const EventosService = {
 
     eliminarEvento: async (eventoID: number): Promise<void> => {
         try {
-            await axios.delete(`${backend}/api/eventos4/${eventoID}`, {
+            await axios.delete(`${backend}/api/eventos/delete/${eventoID}`, {
                 headers: {
                 'Content-Type': 'application/json'
                 }
