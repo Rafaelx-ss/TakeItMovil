@@ -1,58 +1,115 @@
 import { stripBaseUrl } from "expo-router/build/fork/getStateFromPath-forks";
-import { View, Text,TextInput, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
+import { View, Text,TextInput, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native";
 import {SafeAreaView} from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useAuth } from "../../context/AuthContext";// Asegúrate de la ruta correcta
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
-export default function LoginScreen() {
-  const router = useRouter(); // Hook para manejar la navegación
 
-  const { login } = useAuth();
 
-  const handleLogin = () => {
-    // Aquí puedes validar credenciales antes de iniciar sesión
-    login();
+export default function index() {
+  const route = useRouter();
+
+  const index = () => {
+    
   };
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <View>
-        <Text style={styles.titulo}>Iniciar sesión</Text>
-      </View>
+    <Image
+        source={require('../../image/Container.png')}
+      style={{width: width, height: height * 0.40, alignSelf: 'center'}}
+      />
+
       <View style={styles.Text}>
-        <Text style={styles.textContainer}>Email</Text>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Escribe tu email"
-          placeholderTextColor={"grey"}
-        />
+        <Text style={styles.principal}>Take It !</Text>
       </View>
 
       <View style={styles.Text}>
-        <Text style={styles.textContainer}>Contraseña</Text>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Escribe tu contraseña"
-          placeholderTextColor={"grey"}
-        />
+      <Text style={styles.eslogan}>Disfruta tus eventos y vive al máximo</Text>
       </View>
 
-      <TouchableOpacity
-        style={{ marginTop: height * 0.02, alignSelf: "center", width: "85%" }}
-      >
-        <Text style={{ color: "#D4AF37" }}>¿Has olvidado tu contraseña?</Text>
+      <TouchableOpacity style={styles.buttom} onPress={() =>route.push('/login/ReguistreGenerar')} >
+        <Text style={styles.textButtom}>Registrarse</Text>
       </TouchableOpacity>
+      <View style={styles.container}>
+      <View style={styles.line} />
+         <Text style={ {marginHorizontal: 20, color : '#fff'}}>O regístrate con</Text>
+      <View style={styles.line} />
+    </View>
 
-      <TouchableOpacity style={styles.buttom} onPress={handleLogin}>
-        <Text style={styles.textButtom}>Inicia sesión</Text>
+    <View style={styles.icon}>
+    
+    <TouchableOpacity style={styles.icon} >
+    <Icon name="google" size={40} color="#DB4437" style={{margin: 10}} />
+    </TouchableOpacity>
+    <TouchableOpacity style={styles.icon} >
+    <Icon name="facebook" size={40} color="#3b5998"  style={{margin: 10}} />
+    </TouchableOpacity>
+    </View>
+
+    <View style={styles.Text} >
+        <Text style ={styles.textContainer}>¿Ya tienes cuenta? 
+          <TouchableOpacity style={{marginTop: height* 0.01}} onPress={() => route.push('/login/LoginScreen')}>
+        <Text style = {styles.inicio}>Inicia sesión</Text>
       </TouchableOpacity>
+      </Text>
+    
+    </View>
+
+
+    <View  style={styles.Text} >
+    <Text style ={styles.textContainer}>Al registrarse usted acepta nuestra </Text>
+    <Text style = {styles.textContainertaik}>Condiciones de uso <Text style ={styles.textContainer}>y</Text> <Text></Text>política de privacidad</Text>
+    </View>
+    
+     
     </SafeAreaView>
   );
 }
 
 
 const styles = StyleSheet.create({
+  principal: {
+    color: '#D4AF37',
+    alignSelf: 'center',
+  
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+
+  icon:{
+    flexDirection: 'row', 
+    justifyContent: 'center',
+  },
+
+  container: {
+    flexDirection: 'row', 
+ 
+    alignItems: 'center', 
+    marginVertical: 20, 
+    justifyContent: 'center'
+    
+  },
+
+  line: {
+    
+    width: 80,
+    height: 1, 
+    backgroundColor: '#ccc', 
+    alignSelf: 'center',
+  },
+ 
+
+  eslogan: {
+    color: '#fff',
+    fontSize: 25,
+    width: '90%',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+
   mainContainer: {
     flex: 1,
     backgroundColor: '#1A1A1A',
@@ -79,15 +136,23 @@ const styles = StyleSheet.create({
     height: height * 0.05,
   },
   textContainer: {
-    width: '90%',
     color: '#fff',
     fontWeight: 'bold',
   },
-
-
+  textContainertaik: {
+    color: '#D4AF37',
+    fontWeight: 'bold',
+  },
+  inicio: {
+   
+    color: '#D4AF37',
+    fontWeight: 'bold',
+     marginLeft: width * 0.02,
+  
+  },
   buttom: {
     backgroundColor: '#D4AF37',
-    width: width * 0.4,
+    width: width * 0.6,
     height: height * 0.06,
     justifyContent: 'center',
     alignSelf: 'center',
@@ -98,6 +163,7 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontWeight: '500',
+    fontWeight:'500',
+    fontSize: 19,
   },
 });
