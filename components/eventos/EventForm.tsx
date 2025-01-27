@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, Alert } from "react-native"
+import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, Alert, TouchableWithoutFeedback, Keyboard  } from "react-native"
 import { Picker } from "@react-native-picker/picker"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { useForm, Controller } from "react-hook-form"
@@ -9,7 +9,9 @@ import { EventosService } from "@/services/events.service"
 import { CategoriasService } from "@/services/categorias.service"
 import { EstadosService } from "@/services/estados.service"
 import { useQuery } from "@tanstack/react-query"
-import { set } from "date-fns"
+import { Platform } from "react-native"
+import Modal from 'react-native-modal';
+
 // import { getUsuario } from "@/context/auth"
 
 const formSchema = z.object({
@@ -77,6 +79,11 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showDatePicker, setShowDatePicker] = useState(false)
   const [showTimePicker, setShowTimePicker] = useState(false)
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisible2, setModalVisible2] = useState(false);
+  const [isModalVisible3, setModalVisible3] = useState(false);
+
+
   const usuarioID = 1 // getUsuario().usuarioID
 
   const { control, handleSubmit, setValue, watch, formState } = useForm<EventFormValues>({
@@ -101,8 +108,6 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
       kitEvento: event?.kitEvento || "",
     },
   })
-
-
 
   const { data: estados = [] } = useQuery({
     queryKey: ["estados"],
@@ -169,6 +174,41 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
     }
   }
 
+  const pickerStyles = StyleSheet.create({
+    inputIOS: {
+      maxHeight: 50,
+      fontSize: 16,
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderWidth: 1,
+      borderColor: '#E0B942',
+      borderRadius: 8,
+      color: '#fff',
+      backgroundColor: '#1A1A1A',
+      marginTop: 5,
+    },
+    inputAndroid: {
+      maxHeight: 50,
+      fontSize: 16,
+      paddingHorizontal: 10,
+      paddingVertical: 8,
+      borderWidth: 1,
+      borderColor: '#E0B942',
+      borderRadius: 8,
+      color: '#fff',
+      backgroundColor: '#1A1A1A',
+      marginTop: 5,
+    },
+    pickerItem: {
+      color: Platform.select({
+        ios: '#000', 
+        android: '#fff'
+      }),
+      backgroundColor: '#1A1A1A',
+    },
+
+  });
+
   return (
     <ScrollView style={styles.container}>
       <Controller
@@ -199,38 +239,85 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         render={({ field: { onChange, value } }) => (
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Categoría</Text>
-            <Picker
-              selectedValue={value}
-              onValueChange={(itemValue) => {
-                onChange(itemValue)
-                setSelectedCategoryId(itemValue)
-                setValue("subCategoriaID", "")
-                setValue("nuevaSubcategoria", "")
-                setShowOtherSubcategory(false)
-              }}
-              style={{
-                backgroundColor: "#1A1A1A",
-                color: "#fff",
-                height: 50,
-                borderWidth: 1,
-                borderColor: "#E0B942",
-                borderRadius: 8,
-                marginTop: 5,
-                paddingHorizontal: 10,
-              }}
-            >
-              <Picker.Item label="Selecciona una categoría" value="" style={styles.pickerItem} />
-              {categorias.map((categoria) => (
-                <Picker.Item
-                  key={categoria.categoriaID}
-                  label={categoria.nombreCategoria}
-                  value={categoria.categoriaID.toString()}
-                  style={styles.pickerItem}
-                />
-              ))}
-            </Picker>
+            
+            {Platform.OS === 'ios' ? (
+              <TouchableOpacity onPress={() => { 
+                if (!isModalVisible2) { 
+                  setModalVisible(true); 
+                } 
+              }}>
+                <Text style={styles.selectText}>
+                  {value ? categorias.find(cat => cat.categoriaID === Number(value))?.nombreCategoria : "Selecciona una categoría"}
+                </Text>
+              </TouchableOpacity>      
+            ) : (
+              <Picker
+                selectedValue={value}
+                onValueChange={(itemValue) => {
+                  onChange(itemValue);
+                  setSelectedCategoryId(itemValue);
+                  setValue("subCategoriaID", "");
+                  setValue("nuevaSubcategoria", "");
+                  setShowOtherSubcategory(false);
+                }}
+                style={pickerStyles.inputAndroid}
+              >
+                <Picker.Item label="Selecciona una categoría" value="" style={styles.pickerItem} />
+                {categorias.map((categoria) => (
+                  <Picker.Item
+                    key={categoria.categoriaID}
+                    label={categoria.nombreCategoria}
+                    value={categoria.categoriaID.toString()}
+                    style={styles.pickerItem}
+                  />
+                ))}
+              </Picker>
+            )}
+
+            <Modal isVisible={isModalVisible}>
+              <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+                <View style={styles.modalContainer}>
+                  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                    <View style={styles.modalContent}>
+                      <View style={styles.modalHeader}>
+                        <TouchableOpacity onPress={() => setModalVisible(false)}>
+                          <Text style={styles.modalCancelButton}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setModalVisible(false);
+                          }}
+                        >
+                          <Text style={styles.modalDoneButton}>Listo</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <Picker
+                        selectedValue={value}
+                        onValueChange={(itemValue) => {
+                          onChange(itemValue);
+                          setSelectedCategoryId(itemValue);
+                          setValue("subCategoriaID", "");
+                          setValue("nuevaSubcategoria", "");
+                          setShowOtherSubcategory(false);
+                        }}
+                      >
+                        <Picker.Item label="Selecciona una categoría" value="" />
+                        {categorias.map((categoria) => (
+                          <Picker.Item
+                            key={categoria.categoriaID}
+                            label={categoria.nombreCategoria}
+                            value={categoria.categoriaID.toString()}
+                          />
+                        ))}
+                      </Picker>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
+
             {formState.errors.categoriaID && (
-              <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+              <Text style={styles.errorText}>
                 {formState.errors.categoriaID?.message}
               </Text>
             )}
@@ -244,39 +331,97 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         render={({ field: { onChange, value } }) => (
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Subcategoría</Text>
-            <Picker
-              selectedValue={value}
-              onValueChange={(itemValue) => {
-                onChange(itemValue)
-                setShowOtherSubcategory(itemValue === "0")
-              }}
-              enabled={!!selectedCategoryId}
-              style={{
-                backgroundColor: "#1A1A1A",
-                color: "#fff", 
-                height: 50,
-                borderWidth: 1,
-                borderColor: "#E0B942",
-                borderRadius: 8,
-                marginTop: 5,
-                paddingHorizontal: 10,
-              }}
-            >
-              <Picker.Item
-                label={selectedCategoryId ? "Selecciona una subcategoría" : "Primero selecciona una categoría"}
-                value=""
-                style={{ color: "#000000" }}
-              />
-              {subCategorias.map((subCategoria) => (
+            {Platform.OS === 'ios' ? (
+              <TouchableOpacity  onPress={() => { 
+                if (!isModalVisible) { 
+                  setModalVisible2(true); 
+                }}}
+                disabled={!selectedCategoryId} 
+              >
+                <Text style={[styles.selectText, !selectedCategoryId ? { color: "#858585" } : { color: "#fff" }]}>
+                  {value ? subCategorias.find(cat => cat.subcategoriaID === Number(value))?.nombreSubcategoria : selectedCategoryId ? "Selecciona una subcategoría" : "Primero selecciona una categoría"}
+                </Text>
+
+              </TouchableOpacity>  
+            ) : (
+              <Picker
+                selectedValue={value}
+                onValueChange={(itemValue) => {
+                  onChange(itemValue)
+                  setShowOtherSubcategory(itemValue === "0")
+                }}
+                enabled={!!selectedCategoryId}
+                style={{
+                  backgroundColor: "#1A1A1A",
+                  color: "#fff", 
+                  height: 50,
+                  borderWidth: 1,
+                  borderColor: "#E0B942",
+                  borderRadius: 8,
+                  marginTop: 5,
+                  paddingHorizontal: 10,
+                }}
+              >
                 <Picker.Item
-                  key={subCategoria.subcategoriaID}
-                  label={subCategoria.nombreSubcategoria}
-                  value={subCategoria.subcategoriaID.toString()}
-                  style={styles.pickerItem}
+                  label={selectedCategoryId ? "Selecciona una subcategoría" : "Primero selecciona una categoría"}
+                  value=""
+                  style={{ color: "#000000" }}
                 />
-              ))}
-              <Picker.Item label="Otro (Agregar subcategoría)" value="0" style={{ color: "#000000" }} />
-            </Picker>
+                {subCategorias.map((subCategoria) => (
+                  <Picker.Item
+                    key={subCategoria.subcategoriaID}
+                    label={subCategoria.nombreSubcategoria}
+                    value={subCategoria.subcategoriaID.toString()}
+                    style={styles.pickerItem}
+                  />
+                ))}
+                <Picker.Item label="Otro (Agregar subcategoría)" value="0" style={{ color: "#000000" }} />
+              </Picker>
+            )}
+
+            <Modal isVisible={isModalVisible2}>
+              <TouchableWithoutFeedback onPress={() => setModalVisible2(false)}>
+                <View style={styles.modalContainer}>
+                  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                    <View style={styles.modalContent}>
+                      <View style={styles.modalHeader}>
+                        <TouchableOpacity onPress={() => setModalVisible2(false)}>
+                          <Text style={styles.modalCancelButton}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setModalVisible2(false);
+                          }}
+                        >
+                          <Text style={styles.modalDoneButton}>Listo</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <Picker
+                        selectedValue={value}
+                        onValueChange={(itemValue) => {
+                          onChange(itemValue)
+                          setShowOtherSubcategory(itemValue === "0")
+                        }}
+                        enabled={!!selectedCategoryId}
+                      >
+                        <Picker.Item
+                          label={selectedCategoryId ? "Selecciona una subcategoría" : "Primero selecciona una categoría"}
+                          value=""
+                        />
+                        {subCategorias.map((subCategoria) => (
+                          <Picker.Item
+                            key={subCategoria.subcategoriaID}
+                            label={subCategoria.nombreSubcategoria}
+                            value={subCategoria.subcategoriaID.toString()}
+                          />
+                        ))}
+                        <Picker.Item label="Otro (Agregar subcategoría)" value="0" />
+                      </Picker>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
             {formState.errors.subCategoriaID && (
               <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
                 {formState.errors.subCategoriaID?.message}
@@ -462,30 +607,84 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         render={({ field: { onChange, value } }) => (
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Estado</Text>
-            <Picker
-              selectedValue={value}
-              onValueChange={onChange}
-              style={{
-                backgroundColor: "#1A1A1A",
-                color: "#fff",
-                height: 50,
-                borderWidth: 1,
-                borderColor: "#E0B942",
-                borderRadius: 8,
-                marginTop: 5,
-                paddingHorizontal: 10,
-              }}
-            >
-              <Picker.Item label="Selecciona un estado" value="" style={styles.pickerItem} />
-              {estados.map((estado) => (
-                <Picker.Item
-                  key={estado.estadoID}
-                  label={estado.nombreEstado}
-                  value={estado.estadoID.toString()}
-                  style={styles.pickerItem}
-                />
-              ))}
-            </Picker>
+
+            {Platform.OS === 'ios' ? (
+              <TouchableOpacity
+                onPress={() => {
+                  if (!isModalVisible3) {
+                    setModalVisible3(true);
+                  }
+                }}
+              >
+                <Text style={[styles.selectText, !value ? { color: "#858585" } : { color: "#fff" }]}>
+                  {value
+                    ? estados.find((estado) => estado.estadoID === Number(value))?.nombreEstado
+                    : "Selecciona un estado"}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <Picker
+                selectedValue={value}
+                onValueChange={onChange}
+                style={{
+                  backgroundColor: "#1A1A1A",
+                  color: "#fff",
+                  height: 50,
+                  borderWidth: 1,
+                  borderColor: "#E0B942",
+                  borderRadius: 8,
+                  marginTop: 5,
+                  paddingHorizontal: 10,
+                }}
+              >
+                <Picker.Item label="Selecciona un estado" value="" style={styles.pickerItem} />
+                {estados.map((estado) => (
+                  <Picker.Item
+                    key={estado.estadoID}
+                    label={estado.nombreEstado}
+                    value={estado.estadoID.toString()}
+                    style={styles.pickerItem}
+                  />
+                ))}
+              </Picker>
+            )}
+
+            <Modal isVisible={isModalVisible3}>
+              <TouchableWithoutFeedback onPress={() => setModalVisible3(false)}>
+                <View style={styles.modalContainer}>
+                  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                    <View style={styles.modalContent}>
+                      <View style={styles.modalHeader}>
+                        <TouchableOpacity onPress={() => setModalVisible3(false)}>
+                          <Text style={styles.modalCancelButton}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() => {
+                            setModalVisible3(false);
+                          }}
+                        >
+                          <Text style={styles.modalDoneButton}>Listo</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <Picker
+                        selectedValue={value}
+                        onValueChange={onChange}
+                      >
+                        <Picker.Item label="Selecciona un estado" value="" />
+                        {estados.map((estado) => (
+                          <Picker.Item
+                            key={estado.estadoID}
+                            label={estado.nombreEstado}
+                            value={estado.estadoID.toString()}
+                          />
+                        ))}
+                      </Picker>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
+            </Modal>
+
             {formState.errors.estadoID && (
               <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
                 {formState.errors.estadoID?.message}
@@ -495,6 +694,7 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         )}
         name="estadoID"
       />
+
 
       <Controller
         control={control}
@@ -549,14 +749,28 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         render={({ field: { onChange, value } }) => (
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Fecha del Evento</Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-              <Text style={[styles.dateTimeText, { color: "#fff" }]}>{value.toDateString()}</Text>
-            </TouchableOpacity>
+            {Platform.OS !== "ios" ? (
+              <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+                <Text style={[styles.dateTimeText, { color: "#fff" }]}>{value.toDateString()}</Text>
+              </TouchableOpacity>
+            ) : (
+              <DateTimePicker
+                value={value}
+                mode="date"
+                display={Platform.OS === "ios" ? "compact" : "default"}  // Usar compact en iOS
+                onChange={(event, selectedDate) => {
+                  setShowDatePicker(false)
+                  if (selectedDate) {
+                    onChange(selectedDate)
+                  }
+                }}
+              />
+            )}
             {showDatePicker && (
               <DateTimePicker
                 value={value}
                 mode="date"
-                display="default"
+                display={Platform.OS === "ios" ? "compact" : "default"}  // Usar compact en iOS
                 onChange={(event, selectedDate) => {
                   setShowDatePicker(false)
                   if (selectedDate) {
@@ -579,22 +793,40 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
         control={control}
         render={({ field: { onChange, value } }) => (
           <View style={styles.inputContainer}>
-            <TouchableOpacity onPress={() => setShowTimePicker(true)}>
-              <Text style={[styles.dateTimeText, { color: "#fff" }]}>{value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-            </TouchableOpacity>
+            <Text style={styles.label}>Hora del evento</Text>
+            {Platform.OS !== "ios" ? (
+              <TouchableOpacity onPress={() => setShowTimePicker(true)}>
+                <Text style={[styles.dateTimeText, { color: "#fff" }]}>
+                  {value.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </Text>
+              </TouchableOpacity>
+            ) : 
+            <DateTimePicker
+              value={value}
+              mode="time"
+              display={Platform.OS === "ios" ? "compact" : "default"}  // Usar compact en iOS
+              onChange={(event, selectedTime) => {
+                setShowTimePicker(false);
+                if (selectedTime) {
+                  onChange(selectedTime);
+                }
+              }}
+            />
+            }
             {showTimePicker && (
               <DateTimePicker
                 value={value}
                 mode="time"
-                display="default"
+                display={Platform.OS === "ios" ? "compact" : "default"}  
                 onChange={(event, selectedTime) => {
-                  setShowTimePicker(false)
+                  setShowTimePicker(false);
                   if (selectedTime) {
-                    onChange(selectedTime)
+                    onChange(selectedTime);
                   }
                 }}
               />
             )}
+
             {formState.errors.horaEvento && (
               <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
                 {formState.errors.horaEvento?.message}
@@ -719,8 +951,56 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   pickerItem: {
-    color: "#fff",
-    backgroundColor: "#1A1A1A",
+    color: Platform.select({
+      ios: '#000', 
+      android: '#fff'
+    }),
+    backgroundColor: '#1A1A1A',
+  },
+  selectText: {
+    fontSize: 16,
+    color: '#fff',
+    paddingHorizontal: 12,
+    textAlign: 'left',
+    backgroundColor: '#1A1A1A',
+    paddingTop: 13,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#E0B942",
+    padding: 12,
+    height: 50,
+  },
+  modalContent: {
+    backgroundColor: '#333',
+    padding: 20,
+    borderRadius: 10,
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#e5e5e5',
+  },
+  modalCancelButton: {
+    color: '#007AFF',
+    fontSize: 17,
+  },
+  modalDoneButton: {
+    color: '#007AFF',
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  errorText: {
+    color: "#ff4444",
+    fontSize: 14,
+    marginTop: 4,
+    marginLeft: 4,
   },
 })
 

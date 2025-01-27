@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator, RefreshControl, Dimensions } from 'react-native';
-import { PatrocinadoresService } from '@/services/patrocinadores.services';
+import { PatrocinadoresService } from '@/services/patrocinadores.service';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Patrocinador } from '@/types/patrocinadores';
