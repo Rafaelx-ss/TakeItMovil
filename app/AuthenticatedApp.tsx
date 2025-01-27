@@ -24,6 +24,8 @@ const AuthenticatedApp: React.FC = () => {
       <Stack.Screen name="CrearEvento/index" options={{ headerShown: false }} />
       <Stack.Screen name="EditarEvento/index" options={{ headerShown: false }} />
       <Stack.Screen name="CrearPatrocinador/index" options={{ headerShown: false }} />
+      <Stack.Screen name="EditarUsuario/index" options={{ headerShown: false }} />
+      <Stack.Screen name="CrearUsuario/index" options={{ headerShown: false }} />
       <Stack.Screen name="login/index" options={{ headerShown: false }} />
       <Stack.Screen name="login/LoginScreen" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguistreGenerar" options={{ headerShown: false }} />

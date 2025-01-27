@@ -85,64 +85,62 @@ export default function EventosScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
-        <View style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
-        {/* Encabezado */}
-        <HeaderGradient
-          title="Eventos"
-          rightButtonText="Crear"
-          rightButtonIcon="add"
-          onRightButtonPress={() => route.push("/CrearEvento")}
+    <View style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
+    {/* Encabezado */}
+    <HeaderGradient
+      title="Eventos"
+      rightButtonText="Crear"
+      rightButtonIcon="add"
+      onRightButtonPress={() => route.push("/CrearEvento")}
+    />
+
+    {/* Lista de eventos */}
+    <FlatList
+      data={events}
+      className="px-4 mt-4"
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={['#E0B942']}
+          tintColor="#E0B942"
         />
+      }
+      renderItem={({ item }) => (
+        <View className="bg-backgroundLight p-5 rounded-lg mb-4 shadow-md">
+          <Text className="text-xl font-bold text-text">{item.nombreEvento} - ID: {item.eventoID}</Text>
+          <View className="flex-row justify-end absolute right-5 top-5 space-x-2">
+            <TouchableOpacity
+              style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: 5 }}
+              onPress={() => route.push(`/EditarEvento?eventoID=${item.eventoID}`)}
+            >
+              <MaterialIcons name="edit" size={18} color="#FFFFFF" />
+            </TouchableOpacity>
 
-        {/* Lista de eventos */}
-        <FlatList
-          data={events}
-          className="px-4 mt-4"
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={['#E0B942']}
-              tintColor="#E0B942"
-            />
-          }
-          renderItem={({ item }) => (
-            <View className="bg-backgroundLight p-5 rounded-lg mb-4 shadow-md">
-              <Text className="text-xl font-bold text-text">{item.nombreEvento} - ID: {item.eventoID}</Text>
-              <View className="flex-row justify-end absolute right-5 top-5 space-x-2">
-                <TouchableOpacity
-                  style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: 5 }}
-                  onPress={() => route.push(`/EditarEvento?eventoID=${item.eventoID}`)}
-                >
-                  <MaterialIcons name="edit" size={18} color="#FFFFFF" />
-                </TouchableOpacity>
+            <TouchableOpacity
+              style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+              onPress={() => deleteEvent(item.eventoID || 0)}
+            >
+              <MaterialIcons name="delete" size={18} color="#FFFFFF" />
+            </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-                  onPress={() => deleteEvent(item.eventoID || 0)}
-                >
-                  <MaterialIcons name="delete" size={18} color="#FFFFFF" />
-                </TouchableOpacity>
-
-              </View>
-              <Text className="text-sm font-medium text-dorado mt-2">📅 {item.fechaEvento}</Text>
-              <Text className="text-sm font-bold text-dorado text-right mt-2">${item.costoEvento} MXN</Text>
-            </View>
-          )}
-          ItemSeparatorComponent={() => <View className="h-2" />}
-          ListEmptyComponent={() => (
-            <View className="mt-10">
-              <Text className="text-center text-gray-500">No hay eventos disponibles</Text>
-            </View>
-          )}
-          onEndReached={loadMore}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={() =>
-            loading ? <ActivityIndicator size="large" color="#E0B942" /> : null
-          }
-        />
-      </View>
-    </SafeAreaView>
+          </View>
+          <Text className="text-sm font-medium text-dorado mt-2">📅 {item.fechaEvento}</Text>
+          <Text className="text-sm font-bold text-dorado text-right mt-2">${item.costoEvento} MXN</Text>
+        </View>
+      )}
+      ItemSeparatorComponent={() => <View className="h-2" />}
+      ListEmptyComponent={() => (
+        <View className="mt-10">
+          <Text className="text-center text-gray-500">No hay eventos disponibles</Text>
+        </View>
+      )}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={() =>
+        loading ? <ActivityIndicator size="large" color="#E0B942" /> : null
+      }
+    />
+  </View>
   );
 }

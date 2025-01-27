@@ -47,10 +47,10 @@ const HeaderGradient: React.FC<HeaderGradientProps> = ({
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight ? StatusBar.currentHeight + 20 : 40,
+        paddingTop: Platform.OS === "ios" ? 50 : StatusBar.currentHeight ? StatusBar.currentHeight + 20 : 40,
         paddingHorizontal: 16,
         alignItems: "center",
-        height: Platform.OS === "ios" ? 88 : 88 + (StatusBar.currentHeight || 0),
+        height: Platform.OS === "ios" ? 110 : 88 + (StatusBar.currentHeight || 0),
     },
     containerWithBackButton: {
         flexDirection: "row",

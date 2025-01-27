@@ -19,4 +19,81 @@ export const UsersService = {
             throw error;
         }
     },
+    crearUser: async (nombreUsuario: string, usuario: string, email: string, password: string, telefonoUsuario: string, generoUsuario: string, rolUsuario: string): Promise<void> => {
+        try {
+            await axios.post(`${backend}/api/auth/register`, 
+                {
+                    nombreUsuario: nombreUsuario,
+                    usuario: usuario,
+                    email: email,
+                    password: password,
+                    telefonoUsuario: telefonoUsuario,
+                    generoUsuario: generoUsuario,
+                    rolUsuario: rolUsuario
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                } 
+            );
+        }catch (error){
+            console.error('Error al crear usuario:', error);
+            throw error;
+        }
+    },
+
+    editarUsuario: async (usuarioID: number, nombreUsuario: string, usuario: string, email: string, password: string, telefonoUsuario: string, generoUsuario: string, rolUsuario: string): Promise<void> => {
+        try {
+            await axios.post(`${backend}/api/users/update/${usuarioID}`, 
+                { 
+                    nombreUsuario: nombreUsuario,
+                    usuario: usuario,
+                    email: email,
+                    password: password,
+                    telefonoUsuario: telefonoUsuario,
+                    generoUsuario: generoUsuario,
+                    rolUsuario: rolUsuario
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                } 
+            );
+        }catch (error){
+            console.error('Error al crear usuario:', error);
+            throw error;
+        }
+    }, 
+
+    getUsuario: async (usuarioID: number): Promise<User> => {
+        try {
+            const response = await axios.get(`${backend}/api/users/get/${usuarioID}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error al obtener los usuarios:', error);
+            throw error;
+        }
+    },
+    
+    deleteUser: async (usuarioID: number): Promise<User> => {
+        try {
+            const response = await axios.delete(`${backend}/api/users/delete/${usuarioID}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            return response.data;
+        } catch (error) {
+            console.error('Error al obtener los usuarios:', error);
+            throw error;
+        }
+    }
 };

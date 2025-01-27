@@ -1,15 +1,14 @@
 import React from "react"
 import { View, StyleSheet, ActivityIndicator } from "react-native"
 import { EventForm } from "@/components/eventos/EventForm"
-import { useNavigation, useRoute } from "@react-navigation/native"
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import HeaderGradient from "@/components/HeaderGradient"
 import { useQuery } from "@tanstack/react-query"
 import { EventosService } from "@/services/events.service"
 
 export default function EditarEventoScreen() {
-  const navigation = useNavigation()
-  const route = useRoute<{ key: string; name: string; params: { eventoID: string } }>()
-  const eventoID = route.params?.eventoID
+  const route = useRouter()
+  const { eventoID } = useLocalSearchParams<{ eventoID: string }>()
 
   const { data: evento, isLoading } = useQuery({
     queryKey: ["evento", eventoID],
@@ -19,13 +18,13 @@ export default function EditarEventoScreen() {
   })
 
   const handleSubmitSuccess = () => {
-    navigation.goBack()
+    route.back()
   }
 
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <HeaderGradient title="Editar Evento" showBackButton onBackPress={() => navigation.goBack()} />
+        <HeaderGradient title="Editar Evento" showBackButton onBackPress={() =>  route.back()} />
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#E0B942" />
         </View>
@@ -35,7 +34,7 @@ export default function EditarEventoScreen() {
 
   return (
     <View style={styles.container}>
-      <HeaderGradient title="Editar Evento" showBackButton onBackPress={() => navigation.goBack()} />
+      <HeaderGradient title="Editar Evento" showBackButton onBackPress={() =>  route.back()} />
       <EventForm
         event={
           evento
