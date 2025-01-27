@@ -1,21 +1,51 @@
-import { stripBaseUrl } from "expo-router/build/fork/getStateFromPath-forks";
-import { View, Text,TextInput, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
-import {SafeAreaView} from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
-import { useAuth } from "../../context/AuthContext";// Asegúrate de la ruta correcta
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
+import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+
+
+
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+
 export default function LoginScreen() {
-  
-  const router = useRouter(); // Hook para manejar la navegación
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
   const { login } = useAuth();
 
-  const log = () => {
-    // Aquí puedes validar credenciales antes de iniciar sesión
-    login();
+  const handleLogin = async () => {
+    try {
+     
+      const response = await axios.post(`https://cody.mx/sopmex/Takeitapis/public/api/auth/login`, {
+        email,
+        password,
+      });
+  
+     
+      const data = response.data;
+  
+      
+      login(data.token);
+  
+  
+      router.replace("/home");
+    } catch (error) {
+    
+      if (axios.isAxiosError(error) && error.response) {
+      
+        Alert.alert("Error", error.response.data.message || "Credenciales incorrectas.");
+      } else {
+    
+        Alert.alert("Error", "No se pudo conectar al servidor.");
+      }
+    }
   };
+
+
   return (
     <SafeAreaView style={styles.mainContainer}>
       <View>
@@ -27,6 +57,8 @@ export default function LoginScreen() {
           style={styles.TextInput}
           placeholder="Escribe tu email"
           placeholderTextColor={"grey"}
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
 
@@ -36,6 +68,9 @@ export default function LoginScreen() {
           style={styles.TextInput}
           placeholder="Escribe tu contraseña"
           placeholderTextColor={"grey"}
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
         />
       </View>
 
@@ -45,7 +80,7 @@ export default function LoginScreen() {
         <Text style={{ color: "#D4AF37" }}>¿Has olvidado tu contraseña?</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.buttom} onPress={log}>
+      <TouchableOpacity style={styles.buttom} onPress={handleLogin}>
         <Text style={styles.textButtom}>Inicia sesión</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -82,6 +117,7 @@ const styles = StyleSheet.create({
     marginTop: height * 0.01,
     color: '#fff',
     height: height * 0.05,
+    paddingLeft: width * 0.03,
   },
   textContainer: {
     width: '90%',

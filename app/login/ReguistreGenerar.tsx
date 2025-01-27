@@ -127,6 +127,7 @@ const styles = StyleSheet.create({
         marginTop: height * 0.01,
         color: '#fff',
         height: height * 0.05,
+        paddingLeft: width * 0.03,
       },
       TextInputConfirm: {
         borderWidth: 3,
@@ -137,6 +138,7 @@ const styles = StyleSheet.create({
         color: '#000',
         height: height * 0.05,
         backgroundColor: '#fff',
+        paddingLeft: width * 0.03,
       },
       progress: {
         height: '100%',

@@ -1,33 +1,50 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Definir los tipos
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  token: string | null;
+  login: (token: string) => void;
   logout: () => void;
 }
 
-// Crear el contexto con los valores iniciales
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Proveedor de autenticación
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
 
-  // Función para iniciar sesión
-  const login = () => setIsAuthenticated(true);
+  useEffect(() => {
+    // Leer el token al iniciar la app
+    const loadToken = async () => {
+      const storedToken = await AsyncStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+        setIsAuthenticated(true);
+      }
+    };
+    loadToken();
+  }, []);
 
-  // Función para cerrar sesión
-  const logout = () => setIsAuthenticated(false);
+  const login = async (newToken: string) => {
+    setToken(newToken);
+    setIsAuthenticated(true);
+    await AsyncStorage.setItem("token", newToken);
+  };
+
+  const logout = async () => {
+    setToken(null);
+    setIsAuthenticated(false);
+    await AsyncStorage.removeItem("token");
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, token, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Hook para usar el contexto de forma sencilla
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

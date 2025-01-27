@@ -77,7 +77,7 @@ export default function ReguisteData() {
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.buttom} onPress={() => router.push('/login')}>
+                    <TouchableOpacity style={styles.buttom} onPress={() => router.replace('/login')}>
                                     <Text style={styles.textButtom}>Continuar</Text>
                     </TouchableOpacity>
 
@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
         marginTop: height * 0.01,
         color: '#fff',
         height: height * 0.05,
+        paddingLeft: width * 0.03,
       },
       buttom: {
         backgroundColor: '#D4AF37',

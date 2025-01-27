@@ -54,7 +54,7 @@ export default function index() {
       <View style={styles.Text}>
         <Text style={styles.textContainer}>
           ¿Ya tienes cuenta?
-          <TouchableOpacity style={{ marginTop: height * 0.01 }} onPress={() => route.push("/login/LoginScreen")}>
+          <TouchableOpacity style={{marginTop: 9}} onPress={() => route.push('/login/LoginScreen')}>
             <Text style={styles.inicio}>Inicia sesión</Text>
           </TouchableOpacity>
         </Text>
