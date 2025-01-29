@@ -1,114 +1,229 @@
-import { View, Text, FlatList, ActivityIndicator, Alert } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { UsersService } from '@/services/users.service';
-import { User } from '@/types/users';
-import { useRouter } from 'expo-router';
-import HeaderGradient from '@/components/HeaderGradient';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import React, { useState } from "react";
+import {
+  View,
+  ScrollView,
+  Image,
+  StyleSheet,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 
 
 export default function PerfilScreen() {
-  const route = useRouter();
-  const [users, setUsers] = useState<User[]>([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
 
-  const fetchData = async () => {
-    if (loading || !hasMore) return;
-
-    setLoading(true);
-
-    try {
-      const response = await UsersService.getusers(page);
-
-      const fetchedUsers = response?.data || []; 
-
-      if (fetchedUsers.length === 0) {
-        setHasMore(false); 
-      } else {
-        setUsers((prevUsers) => [...prevUsers, ...fetchedUsers]);
-        setPage((prevPage) => prevPage + 1);
-      }
-    } catch (error) {
-      console.error('Error fetching users:', error);
-    } finally {
-      setLoading(false);
+  const profileData = {
+    user: {
+      firstName: "Pepe",
+      lastName: "Pol",
+      email: "pepe@gmail.com",
+      birthDate: "6 de Diciembre del 2002",
+      address: "Calle 6 #123, Pacantún, 77400",
+      website: "pepe@gmail.com",
+      phone: "5555 555 010",
+      profileImage: require("@/images/profile.png")
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-    const deleteUsuario = async (usuarioID: number) => {
-      try {
-        await UsersService.deleteUser(usuarioID);
-        setUsers((prevUsers) => prevUsers.filter((user) => user.usuarioID !== usuarioID));
-        Alert.alert('Usuario eliminado', 'El usuario ha sido eliminado con éxito.');
-      } catch (error) {
-        console.error('Error al eliminar el usuario:', error);
-        Alert.alert('Error', 'No se pudo eliminar el usuario.');
-      }
-    };
-  
+  const { user } = profileData;
 
   return (
-    <View className="flex-1 bg-background">
-      {/* Encabezado */}
-      <HeaderGradient
-        title="Usuarios"
-        rightButtonText="Crear"
-        rightButtonIcon="add"
-        onRightButtonPress={() => route.push("/forms/CrearUsuario")}
-      />
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View style={styles.content}>
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Perfil</Text>
+            <TouchableOpacity>
+              <MaterialIcons name="settings" size={24} color="#E0B942" />
+            </TouchableOpacity>
+          </View>
 
-      {/* Lista de eventos */}
-      <FlatList
-        data={users}
-        className="px-4 mt-4"
-        renderItem={({ item }) => (
-          <View className="bg-backgroundLight p-5 rounded-lg mb-4 shadow-md">
-            <Text className="text-xl font-bold text-text">{item.nombreUsuario} - ID: {item.usuarioID}</Text>
-            <View className="flex-row justify-end absolute right-5 top-5 space-x-2">
-              <TouchableOpacity
-                style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginRight: 5 }}
-                onPress={() => route.push(`/EditarUsuario?usuarioID=${item.usuarioID}`)}
-              >
-                <MaterialIcons name="edit" size={18} color="#FFFFFF" />
-              </TouchableOpacity>
+          {/* User Info */}
+          <View style={styles.infoSection}>
+            {/* Profile Info */}
+            <View style={styles.profileSection}>
+              <Image
+                source={user.profileImage}
+                style={styles.profileImage}
+              />
+              <View style={styles.nameContainer}>
+                <Text style={styles.name}>{user.firstName}</Text>
+                <Text style={styles.name}>{user.lastName}</Text>
+              </View>
+            </View>
 
-              <TouchableOpacity
-                style={{ backgroundColor: '#E0B942', padding: 10, borderRadius: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
-                onPress={() => deleteUsuario(item.usuarioID || 0)}
-              >
-                <MaterialIcons name="delete" size={18} color="#FFFFFF" />
+          
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Email</Text>
+              <Text style={styles.infoValue}>{user.email}</Text>
+            </View>
+
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Fecha de nacimiento</Text>
+              <Text style={styles.infoValue}>{user.birthDate}</Text>
+            </View>
+
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Dirección</Text>
+              <Text style={styles.infoValue}>{user.address}</Text>
+            </View>
+          </View>
+
+          {/* Social Media */}
+          <View style={styles.socialSection}>
+            <Text style={styles.sectionTitle}>Redes sociales</Text>
+            <View style={styles.socialButtons}>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialButtonText}>in</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialButtonText}>𝕏</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialButtonText}>f</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.socialButton}>
+                <Text style={styles.socialButtonText}>📸</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-            <Text className="text-sm font-light text-dorado mt-2">
-              📧 {item.email}
-            </Text>
-            <Text className="text-sm font-bold text-dorado text-right mt-2">
-              🔒 {item.rolUsuario}
-            </Text>
+
+          {/* Contact Info */}
+          <View style={styles.contactSection}>
+            <View style={styles.contactItem}>
+              <Text style={styles.contactLabel}>Sitio WEB</Text>
+              <Text style={styles.contactValue}>{user.website}</Text>
+            </View>
+            <View style={styles.contactItem}>
+              <Text style={styles.contactLabel}>Teléfono</Text>
+              <Text style={styles.contactValue}>{user.phone}</Text>
+            </View>
           </View>
-        )}
-        // keyExtractor={(item) => item.id}
-        ItemSeparatorComponent={() => <View className="h-2" />}
-        ListEmptyComponent={() => (
-          <View className="mt-10">
-            <Text className="text-center text-gray-500">
-              No hay usuarios disponibles
-            </Text>
-          </View>
-        )}
-        onEndReached={fetchData}
-        onEndReachedThreshold={0.5} 
-        ListFooterComponent={() =>
-          loading ? <ActivityIndicator size="large" color="#0000ff" /> : null
-        }
-      />
-    </View>
+
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+export const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0F0F0F",
+    width: "100%",
+    height: "100%",
+  },
+  content: {
+    flex: 1,
+    marginTop: 50,
+    zIndex: 3,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#FFFFFF",
+    marginBottom: 16,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingBottom: 16,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+  },
+  profileSection: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 20,
+  },
+  profileImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    marginBottom: 16,
+  },
+  nameContainer: {
+    alignItems: 'flex-start',
+    marginTop: 10,
+  },
+  name: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    lineHeight: 34,
+  },
+  infoSection: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 20,
+    marginTop: 24,
+  },
+  infoItem: {
+    marginBottom: 20,
+  },
+  infoLabel: {
+    fontSize: 13,
+    color: '#E0B942',
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 15,
+    color: '#FFFFFF',
+  },
+  socialSection: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    padding: 16,
+    paddingBottom: 20,
+    marginHorizontal: 20,
+    marginTop: 24,
+  },
+  socialButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 40,
+  },
+  socialButton: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#E0B942',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  socialButtonText: {
+    fontSize: 18,
+    color: '#0A0A0A',
+    fontWeight: '600',
+  },
+  contactSection: {
+    backgroundColor: '#1A1A1A',
+    borderRadius: 12,
+    padding: 16,
+    marginHorizontal: 20,
+    marginTop: 24,
+    gap: 16,
+  },
+  contactItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  contactLabel: {
+    fontSize: 13,
+    color: '#E0B942',
+  },
+  contactValue: {
+    fontSize: 13,
+    color: '#FFFFFF',
+  },
+});
