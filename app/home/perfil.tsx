@@ -61,7 +61,7 @@ export default function PerfilScreen() {
         title="Usuarios"
         rightButtonText="Crear"
         rightButtonIcon="add"
-        onRightButtonPress={() => route.push("/CrearUsuario")}
+        onRightButtonPress={() => route.push("/forms/CrearUsuario")}
       />
 
       {/* Lista de eventos */}

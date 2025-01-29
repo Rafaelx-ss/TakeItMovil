@@ -15,7 +15,7 @@ export default function MisEventosScreen() {
         title="Mis Eventos"
         rightButtonText="Crear"
         rightButtonIcon="add"
-        onRightButtonPress={() => route.push("/CrearEvento")}
+        onRightButtonPress={() => route.push("/forms/CrearEvento")}
       />
 
       {/* Contenido centrado */}

@@ -21,11 +21,11 @@ const AuthenticatedApp: React.FC = () => {
   return (
     <Stack>
       <Stack.Screen name="home" options={{ headerShown: false }} />
-      <Stack.Screen name="CrearEvento/index" options={{ headerShown: false }} />
-      <Stack.Screen name="EditarEvento/index" options={{ headerShown: false }} />
       <Stack.Screen name="CrearPatrocinador/index" options={{ headerShown: false }} />
-      <Stack.Screen name="EditarUsuario/index" options={{ headerShown: false }} />
-      <Stack.Screen name="CrearUsuario/index" options={{ headerShown: false }} />
+      <Stack.Screen name="forms/CrearEvento/index" options={{ headerShown: false }} />
+      <Stack.Screen name="forms/EditarEvento/index" options={{ headerShown: false }} />
+      <Stack.Screen name="forms/EditarUsuario/index" options={{ headerShown: false }} />
+      <Stack.Screen name="forms/CrearUsuario/index" options={{ headerShown: false }} />
       <Stack.Screen name="login/index" options={{ headerShown: false }} />
       <Stack.Screen name="login/LoginScreen" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguistreGenerar" options={{ headerShown: false }} />

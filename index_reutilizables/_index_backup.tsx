@@ -91,7 +91,7 @@ export default function EventosScreen() {
       title="Eventos"
       rightButtonText="Crear"
       rightButtonIcon="add"
-      onRightButtonPress={() => route.push("/CrearEvento")}
+      onRightButtonPress={() => route.push("/forms/CrearEvento")}
     />
 
     {/* Lista de eventos */}
