@@ -1,28 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Button, TextInput, Alert, ActivityIndicator, RefreshControl, Dimensions } from 'react-native';
 import { PatrocinadoresService } from '@/services/patrocinadores.service';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Patrocinador } from '@/types/patrocinadores';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function CrearPatrocinadorScreen() {
+export default function EditarPatrocinadorScreen() {
   const [nombrePatrocinador, setNombrePatrocinador] = useState('');
   const [representantePatrocinador, setRepresentantePatrocinador] = useState('');
   const [rfcPatrocinador, setRfcPatrocinador] = useState('');
   const [correoPatrocinador, setCorreoPatrocinador] = useState('');
   const [telefonoPatrocinador, setTelefonoPatrocinador] = useState('');
   const [numeroRepresentantePatrocinador, setNumeroRepresentantePatrocinador] = useState('');
-
+  const { patrocinadorID } = useLocalSearchParams<{ patrocinadorID: string }>()
+  
+const editarPatrocinador = async () => {
+    try {
+      await PatrocinadoresService.editarPatrocinador(nombrePatrocinador,representantePatrocinador, rfcPatrocinador, correoPatrocinador, telefonoPatrocinador, numeroRepresentantePatrocinador, Number(patrocinadorID));
+      Alert.alert('Usuario creado', 'El usuario se creó correctamente.');
+      router.back();
+    } catch (error) {
+      console.error('Error al crear el patrocinador:', error);
+      Alert.alert('Error', 'No se pudo crear el patrocinador.');
+    }
+  };
   const router = useRouter();
   const width = Dimensions.get('window').width;
   const height = Dimensions.get('window').height;
+  
   const obtenerPatrocinador = async () => {
     try {
-        const response = await PatrocinadoresService.getPatrocinador(patrocinadorID);
-        setNombrePatrocinador(response.nombrePatrocinador);      Alert.alert('Patrocinador creado', 'El patrocinador se creó correctamente.');
-      router.back();
+        const response = await PatrocinadoresService.getPatrocinador(Number(patrocinadorID));
+        setNombrePatrocinador(response.nombrePatrocinador);
+        setRepresentantePatrocinador(response.representantePatrocinador);
+        setRfcPatrocinador(response.rfcPatrocinador);
+        setCorreoPatrocinador(response.correoPatrocinador);
+        setTelefonoPatrocinador(response.telefonoPatrocinador);
+        setNumeroRepresentantePatrocinador(response.numeroRepresentantePatrocinador);      
+        Alert.alert('Patrocinador creado', 'El patrocinador se creó correctamente.');
     } catch (error) {
       console.error('Error al crear el patrocinador:', error);
       Alert.alert('Error', 'No se pudo crear el patrocinador.');
@@ -84,7 +101,7 @@ export default function CrearPatrocinadorScreen() {
           value={numeroRepresentantePatrocinador} 
           onChangeText={setNumeroRepresentantePatrocinador} 
         />
-        <Button title="Agregar Patrocinador" onPress={createPatrocinador} />
+        <Button title="Guardar cambios" onPress={editarPatrocinador} />
       </View>
     </View>
   );
