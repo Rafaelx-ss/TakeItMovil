@@ -118,7 +118,7 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginTop: 50,
+    marginTop: 18,
     zIndex: 3,
   },
   sectionTitle: {
