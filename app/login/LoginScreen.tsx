@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
+import { backend } from '@/context/endpoints';
 
 
 
@@ -20,7 +21,7 @@ export default function LoginScreen() {
   const handleLogin = async () => {
     try {
      
-      const response = await axios.post(`https://cody.mx/sopmex/Takeitapis/public/api/auth/login`, {
+      const response = await axios.post(`${backend}/api/auth/login`, {
         email,
         password,
       });
