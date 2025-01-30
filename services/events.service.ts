@@ -20,6 +20,21 @@ export const EventosService = {
         }
     },
 
+    eventosstarting: async (): Promise<{ data: Evento[] }> => {
+        try {
+            const response = await axios.get(`${backend}/api/eventos/eventosstarting`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+        return response.data;
+        } catch (error) {
+            console.error('Error al obtener los eventos:', error);
+            throw error;
+        }
+    },
+
     obtenerEvento: async (eventoID: number): Promise<Evento> => {
         try {
             const response = await axios.get(`${backend}/api/eventos/get/${eventoID}`, {

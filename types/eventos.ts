@@ -1,5 +1,6 @@
 export interface Evento {
     eventoID?: number;
+    imagenEvento?: string;
     categoriaID: number;
     subCategoriaID: number;
     nombreEvento: string;

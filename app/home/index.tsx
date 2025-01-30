@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   ScrollView,
@@ -8,30 +8,74 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { EventosService } from "@/services/events.service"
+import { useRouter } from "expo-router"
+import { Evento } from "@/types/eventos"
+
 
 export default function EventosScreen() {
-  const [events, setEvents] = useState([]);
+  const route = useRouter();
+  const [eventosstarting, setEventosstarting] = useState<Evento[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  const featuredEvents = [
-    {
-      id: 1,
-      title: "Torneo Mario Kart",
-      image: require("@/images/mario-kart.png"),
-      startTime: "Inicia mañana",
-    },
-    {
-      id: 2,
-      title: "Competencia",
-      image: require("@/images/swimming.png"),
-      startTime: "Inicia en 2 días",
-    },
-  ];
+
+  const fetchData = async () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+
+    try {
+      const response = await EventosService.eventosstarting();
+      const featuredEvents = response?.data || []; 
+
+      if (featuredEvents.length === 0) {
+        setHasMore(false); 
+      } else {
+        setEventosstarting(featuredEvents);
+      }
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = async () => {
+    setEventosstarting([]);
+    setRefreshing(true);
+    try {
+      await fetchData();
+    } catch (error) {
+      console.error('Error refreshing events:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+      fetchData();
+    }, []);
+
+  // const featuredEvents = [
+  //   {
+  //     id: 1,
+  //     title: "Torneo Mario Kart",
+  //     image: require("@/images/mario-kart.png"),
+  //     startTime: "Inicia mañana",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Competencia",
+  //     image: require("@/images/swimming.png"),
+  //     startTime: "Inicia en 2 días",
+  //   },
+  // ];
 
   const upcomingEvents = [
     {
@@ -48,7 +92,17 @@ export default function EventosScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView 
+        contentContainerStyle={{ flexGrow: 1 }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#E0B942']}
+            tintColor="#E0B942"
+          />
+        }
+      >
         <View style={styles.imageContainer}>
           <Image
             source={require("@/images/eventhome.png")}
@@ -67,15 +121,32 @@ export default function EventosScreen() {
             <Text style={styles.startSubtitle}>Inscríbete al evento, quedan pocos lugares...</Text>
             
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.featuredScroll}>
-              {featuredEvents.map((event) => (
-                <TouchableOpacity key={event.id} style={styles.featuredCard}>
-                  <Image source={event.image} style={styles.featuredImage} />
+            {loading ? (
+              // Skeleton loader mientras carga
+              Array.from({ length: 3 }).map((_, index) => (
+                <View key={index} style={styles.featuredCard}>
+                  <View style={[styles.featuredImage, { backgroundColor: "#2A2A2A" }]} />
                   <View style={styles.featuredInfo}>
-                    <Text style={styles.featuredTitle}>{event.title}</Text>
-                    <Text style={styles.featuredTime}>{event.startTime}</Text>
+                    <View style={[styles.skeletonText, { width: "70%", backgroundColor: "#2A2A2A" }]} />
+                    <View style={[styles.skeletonText, { width: "50%", backgroundColor: "#2A2A2A", marginTop: 8 }]} />
+                  </View>
+                </View>
+              ))
+            ) : (
+              // Contenido real cuando ya ha cargado
+              eventosstarting.map((event) => (
+                <TouchableOpacity key={event.eventoID} style={styles.featuredCard} onPress={() => event.eventoID && route.push(`/inscriptions/${event.eventoID}`)}>
+                  <Image
+                    source={event.imagenEvento ? event.imagenEvento : require("@/images/mario-kart.png")}
+                    style={styles.featuredImage}
+                  />
+                  <View style={styles.featuredInfo}>
+                    <Text style={styles.featuredTitle}>{event.nombreEvento}</Text>
+                    <Text style={styles.featuredTime}>{event.fechaEvento}</Text>
                   </View>
                 </TouchableOpacity>
-              ))}
+              ))
+            )}
             </ScrollView>
           </View>
 
@@ -196,6 +267,11 @@ export const styles = StyleSheet.create({
     overflow: "hidden",
     backgroundColor: "#1A1A1A",
   },
+  skeletonText: {
+    height: 17,
+    borderRadius: 6,
+    backgroundColor: "#2A2A2A", 
+  },
   featuredImage: {
     width: "100%",
     height: 120,
@@ -212,7 +288,7 @@ export const styles = StyleSheet.create({
   },
   featuredTime: {
     fontSize: 12,
-    color: "#FFA500",
+    color: "#E0B942",
   },
   upcomingSection: {
     flex: 1,
@@ -264,7 +340,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   categoryActiveText: {
-    color: "#FFA500",
+    color: "#E0B942",
   },
   eventCard: {
     backgroundColor: "#1A1A1A",
@@ -294,7 +370,7 @@ export const styles = StyleSheet.create({
   eventPrice: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#FFA500",
+    color: "#E0B942",
   },
   eventCategory: {
     fontSize: 14,
@@ -319,7 +395,7 @@ export const styles = StyleSheet.create({
     color: "#4CAF50",
   },
   detailsButton: {
-    backgroundColor: "#FFA500",
+    backgroundColor: "#E0B942",
     borderRadius: 8,
     paddingVertical: 12,
     alignItems: "center",
@@ -345,6 +421,6 @@ export const styles = StyleSheet.create({
     color: "#999999",
   },
   tabActive: {
-    color: "#FFA500",
+    color: "#E0B942",
   },
 });
