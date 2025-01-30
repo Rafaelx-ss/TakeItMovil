@@ -26,7 +26,7 @@ export default function index() {
         <Text style={styles.eslogan}>Disfruta tus eventos y vive al máximo</Text>
       </View>
 
-      <TouchableOpacity style={styles.buttom} onPress={() => route.push("/login/ReguistreGenerar")}>
+      <TouchableOpacity style={styles.buttom} onPress={() => route.push("/login/ReguisteData")}>
         <Text style={styles.textButtom}>Registrarse</Text>
       </TouchableOpacity>
       <View style={styles.container}>
