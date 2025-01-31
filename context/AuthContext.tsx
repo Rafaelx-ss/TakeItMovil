@@ -6,7 +6,22 @@ interface AuthContextType {
   isAuthenticated: boolean;
   token: string | null;
   usuarioID: number | null;
-  login: (token: string, usuarioID: number) => void;
+  email: string | null;
+  username: string | null;
+  rol: string | null;
+  telefonoUsuario: string | null;
+  generoUsuario: string | null;
+  fechaNacimientoUsuario: Date | null;
+  login: (
+    token: string,
+    usuarioID: number,
+    email: string,
+    username: string,
+    rol: string,
+    telefonoUsuario: string,
+    generoUsuario: string,
+    fechaNacimientoUsuario: Date
+  ) => void;
   logout: () => void;
 }
 
@@ -18,6 +33,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [usuarioID, setUsuarioID] = useState<number | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [rol, setRol] = useState<string | null>(null);
+  const [telefonoUsuario, setTelefonoUsuario] = useState<string | null>(null);
+  const [generoUsuario, setGeneroUsuario] = useState<string | null>(null);
+  const [fechaNacimientoUsuario, setFechaNacimientoUsuario] = useState<Date | null>(null);
 
   // Cargar datos de autenticación al iniciar la app
   useEffect(() => {
@@ -25,10 +46,22 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       try {
         const storedToken = await AsyncStorage.getItem("token");
         const storedUsuarioID = await AsyncStorage.getItem("usuarioID");
+        const storedEmail = await AsyncStorage.getItem("email");
+        const storedUsername = await AsyncStorage.getItem("username");
+        const storedRol = await AsyncStorage.getItem("rol");
+        const storedTelefonoUsuario = await AsyncStorage.getItem("telefonoUsuario");
+        const storedGeneroUsuario = await AsyncStorage.getItem("generoUsuario");
+        const storedFechaNacimientoUsuario = await AsyncStorage.getItem("fechaNacimientoUsuario");
 
-        if (storedToken && storedUsuarioID) {
+        if (storedToken && storedUsuarioID && storedEmail && storedUsername) {
           setToken(storedToken);
-          setUsuarioID(parseInt(storedUsuarioID, 10)); // Convertir a número
+          setUsuarioID(parseInt(storedUsuarioID, 10));
+          setEmail(storedEmail);
+          setUsername(storedUsername);
+          setRol(storedRol);
+          setTelefonoUsuario(storedTelefonoUsuario);
+          setGeneroUsuario(storedGeneroUsuario);
+          setFechaNacimientoUsuario(storedFechaNacimientoUsuario ? new Date(storedFechaNacimientoUsuario) : null);
           setIsAuthenticated(true);
         }
       } catch (error) {
@@ -40,16 +73,35 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   // Función para iniciar sesión
-  const login = async (newToken: string, newUsuarioID: number) => {
+  const login = async (
+    newToken: string,
+    newUsuarioID: number,
+    newEmail: string,
+    newUsername: string,
+    newRol: string,
+    newTelefonoUsuario: string,
+    newGeneroUsuario: string,
+    newFechaNacimientoUsuario: any
+  ) => {
     try {
-      const usuarioIDString = newUsuarioID.toString(); // Convertir número a string para almacenar
-
       setToken(newToken);
       setUsuarioID(newUsuarioID);
+      setEmail(newEmail);
+      setUsername(newUsername);
+      setRol(newRol);
+      setTelefonoUsuario(newTelefonoUsuario);
+      setGeneroUsuario(newGeneroUsuario);
+      setFechaNacimientoUsuario(newFechaNacimientoUsuario);
       setIsAuthenticated(true);
 
       await AsyncStorage.setItem("token", newToken);
-      await AsyncStorage.setItem("usuarioID", usuarioIDString);
+      await AsyncStorage.setItem("usuarioID", newUsuarioID.toString());
+      await AsyncStorage.setItem("email", newEmail);
+      await AsyncStorage.setItem("username", newUsername);
+      await AsyncStorage.setItem("rol", newRol);
+      await AsyncStorage.setItem("telefonoUsuario", newTelefonoUsuario);
+      await AsyncStorage.setItem("generoUsuario", newGeneroUsuario);
+      await AsyncStorage.setItem("fechaNacimientoUsuario", newFechaNacimientoUsuario.toISOString());
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
     }
@@ -60,17 +112,43 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       setToken(null);
       setUsuarioID(null);
+      setEmail(null);
+      setUsername(null);
+      setRol(null);
+      setTelefonoUsuario(null);
+      setGeneroUsuario(null);
+      setFechaNacimientoUsuario(null);
       setIsAuthenticated(false);
 
       await AsyncStorage.removeItem("token");
       await AsyncStorage.removeItem("usuarioID");
+      await AsyncStorage.removeItem("email");
+      await AsyncStorage.removeItem("username");
+      await AsyncStorage.removeItem("rol");
+      await AsyncStorage.removeItem("telefonoUsuario");
+      await AsyncStorage.removeItem("generoUsuario");
+      await AsyncStorage.removeItem("fechaNacimientoUsuario");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, token, usuarioID, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        token,
+        usuarioID,
+        email,
+        username,
+        rol,
+        telefonoUsuario,
+        generoUsuario,
+        fechaNacimientoUsuario,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

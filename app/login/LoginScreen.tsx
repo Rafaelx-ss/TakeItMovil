@@ -27,12 +27,19 @@ export default function LoginScreen() {
       });
   
      
-    const { data } = response;
-     const usuarioID = response.data.data.user.usuarioID;
-     const { token } = data.data;
+      const { data } = response;
+      const usuarioID = response.data.data.user.usuarioID;
+      const { token } = data.data;
+    
+       
+      console.log(usuarioID);console.log( data.data.user.email);console.log( data.data.user.telefonoUsuario);console.log(token)
+      console.log( data.data.user.generoUsuario);
+      console.log( data.data.user.rolUsuario);
+      console.log( data.data.user.nombreUsuario);
+      console.log( data.data.user.fechaNacimientoUsuario);
   
       
-        login(token, usuarioID);
+        login(token, usuarioID,data.data.user.email,data.data.user.nombreUsuario,data.data.user.rolUsuario,data.data.user.telefonoUsuario,data.data.user.generoUsuario,data.data.user.fechaNacimientoUsuario);
   
   
       router.replace("/home");

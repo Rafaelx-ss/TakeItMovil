@@ -14,7 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { EventosService } from "@/services/events.service"
 import { useRouter } from "expo-router"
 import { Evento } from "@/types/eventos"
-
+import { useAuth } from "../../context/AuthContext";
 
 export default function EventosScreen() {
   const route = useRouter();
@@ -23,7 +23,10 @@ export default function EventosScreen() {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const {  usuarioID, token,rol, fechaNacimientoUsuario } = useAuth()
 
+  console.log(usuarioID)
+  console.log(fechaNacimientoUsuario)
 
   const fetchData = async () => {
     if (loading || !hasMore) return;

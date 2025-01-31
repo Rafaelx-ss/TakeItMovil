@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext";
 const AuthenticatedApp: React.FC = () => {
   const router = useRouter();
   const segments = useSegments();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, rol } = useAuth();
 
   useEffect(() => {
     if (!isAuthenticated && segments[0] !== "login") {
@@ -14,7 +14,13 @@ const AuthenticatedApp: React.FC = () => {
     }
 
     if (isAuthenticated && segments[0] === "login") {
+      if (rol == 'Participante'){
       router.replace("/home");
+       }
+       if(rol == 'Organizador'){
+        router.replace("../adminScreen");
+
+       }
     }
   }, [isAuthenticated, segments]);
 
@@ -32,7 +38,7 @@ const AuthenticatedApp: React.FC = () => {
       <Stack.Screen name="forms/EditarUsuario/index" options={{ headerShown: false }} />
       <Stack.Screen name="forms/CrearUsuario/index" options={{ headerShown: false }} />
       <Stack.Screen name="inscriptions/[id]" options={{ headerShown: false }} />
-
+      <Stack.Screen name="adminScreen/index" options={{ headerShown: false }} />
     </Stack>
   );
 };

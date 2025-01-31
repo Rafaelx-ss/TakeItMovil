@@ -13,61 +13,10 @@ export default function index() {
   const index = () => {}
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <Image
-        source={require("@/images/Container.png")}
-        style={{ width: width, height: height * 0.4, alignSelf: "center" }}
-      />
-
       <View style={styles.Text}>
-        <Text style={styles.principal}>Take It !</Text>
-      </View>
-
-      <View style={styles.Text}>
-        <Text style={styles.eslogan}>Disfruta tus eventos y vive al máximo</Text>
-      </View>
-
-      <TouchableOpacity style={styles.buttom} onPress={() => route.push("/login/ReguistreGenerar")}>
-        <Text style={styles.textButtom}>Registrarse</Text>
-      </TouchableOpacity>
-      <View style={styles.container}>
-        <View style={styles.line} />
-        <Text style={{ marginHorizontal: 20, color: "#fff" }}>O regístrate con</Text>
-        <View style={styles.line} />
-      </View>
-
-      <View style={styles.socialButtonsContainer}>
-        <TouchableOpacity style={styles.socialButton}>
-          <Image source={require("@/images/google.png")} style={styles.googleIcon} />
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.socialButton, styles.facebookButton]}>
-          <Image source={require("@/images/facebook.png")} style={styles.facebookIcon} />
-        </TouchableOpacity>
-
-        {Platform.OS === "ios" && (
-          <TouchableOpacity style={[styles.socialButton, styles.appleButton]}>
-            <Image source={require("@/images/apple.png")} style={[styles.appleIcon, { tintColor: "white" }]} />
-          </TouchableOpacity>
-        )}
-      </View>
-
-      <View style={styles.Text}>
-        <Text style={styles.textContainer}>
-          ¿Ya tienes cuenta?
-          <TouchableOpacity style={{marginTop: 9}} onPress={() => route.push('/login/LoginScreen')}>
-            <Text style={styles.inicio}>Inicia sesión</Text>
-          </TouchableOpacity>
-        </Text>
-      </View>
-
-      <View style={styles.footerContainer}>
-        <Text style={styles.textContainerfooter}>
-          Al registrarse usted acepta nuestra{"\n"}
-          <Text style={styles.textContainertaik}>Condiciones de uso</Text>
-          <Text style={styles.textContainerfooter}> y </Text>
-          <Text style={styles.textContainertaik}>política de privacidad</Text>
-        </Text>
-      </View>
+              <Text style={styles.eslogan}>ADMIN</Text>
+            </View>
+      
     </SafeAreaView>
   )
 }
