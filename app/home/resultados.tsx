@@ -42,10 +42,10 @@ export default function ResultadosScreen() {
   const deletePatrocinador = async (id: number) => {
       try {
         await PatrocinadoresService.deletePatrocinador(id); 
-        Alert.alert('Evento eliminado', 'El evento ha sido eliminado con éxito.');
+        Alert.alert('Patrocinador eliminado', 'El patrocinador ha sido eliminado con éxito.');
       } catch (error) {
-        console.error('Error al eliminar el evento:', error);
-        Alert.alert('Error', 'No se pudo eliminar el evento.');
+        console.error('Error al eliminar el patrocinador:', error);
+        Alert.alert('Error', 'No se pudo eliminar el patrocinador.');
       }
     };
 

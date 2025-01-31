@@ -28,7 +28,7 @@ export const PatrocinadoresService = {
             },
           });
         } catch (error) {
-          console.error('Error al eliminar el evento:', error);
+          console.error('Error al eliminar el patrocinador:', error);
           throw error;
         }
       },
