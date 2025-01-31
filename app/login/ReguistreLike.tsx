@@ -1,8 +1,11 @@
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, FlatList, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/FontAwesome";
 import React, { useState } from "react";
+import axios from "axios";
+import { backend } from '@/context/endpoints'
+import { useLocalSearchParams } from "expo-router";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -10,6 +13,10 @@ const height = Dimensions.get("window").height;
 export default function ReguistreLike() {
   const progress = 45;
   const router = useRouter();
+  const params = useLocalSearchParams();
+
+  const { fullname, usuario, email, password } = params;
+  console.log(fullname);
 
   const [preferences, setPreferences] = useState([
     { id: 1, name: "Deportes", selected: false },
@@ -27,6 +34,26 @@ export default function ReguistreLike() {
         item.id === id ? { ...item, selected: !item.selected } : item
       )
     );
+  };
+
+  // Función para validar si hay al menos una opción seleccionada
+  const validarSeleccion = () => {
+    const seleccionados = preferences.some((item) => item.selected);
+    if (!seleccionados) {
+      Alert.alert("Error", "Debes seleccionar al menos una opción.");
+      return;
+    }
+ 
+      
+      router.push({
+        pathname: '/login/ReguisteData',
+        params: { 
+          nombreUsuario: fullname,
+          usuario: usuario,
+          email: email,
+          password: password
+        }
+      });
   };
 
   const renderPreference = ({ item }) => (
@@ -84,12 +111,13 @@ export default function ReguistreLike() {
         style={styles.preferenceList}
       />
 
-      <TouchableOpacity style={styles.buttom} onPress={() => router.push('/login/ReguisteData')}>
-                      <Text style={styles.textButtom}>Continuar</Text>
-                    </TouchableOpacity>
+      <TouchableOpacity style={styles.buttom} onPress={validarSeleccion}>
+        <Text style={styles.textButtom}>Continuar</Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {

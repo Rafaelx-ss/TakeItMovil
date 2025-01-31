@@ -27,10 +27,12 @@ export default function LoginScreen() {
       });
   
      
-      const data = response.data;
+    const { data } = response;
+     const usuarioID = response.data.data.user.usuarioID;
+     const { token } = data.data;
   
       
-      login(data.token);
+        login(token, usuarioID);
   
   
       router.replace("/home");
