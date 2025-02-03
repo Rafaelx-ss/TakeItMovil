@@ -11,7 +11,7 @@ interface AuthContextType {
   rol: string | null;
   telefonoUsuario: string | null;
   generoUsuario: string | null;
-  fechaNacimientoUsuario: Date | null;
+  fechaNacimientoUsuario: string | null;
   login: (
     token: string,
     usuarioID: number,
@@ -20,7 +20,7 @@ interface AuthContextType {
     rol: string,
     telefonoUsuario: string,
     generoUsuario: string,
-    fechaNacimientoUsuario: Date
+    fechaNacimientoUsuario: string
   ) => void;
   logout: () => void;
 }
@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [rol, setRol] = useState<string | null>(null);
   const [telefonoUsuario, setTelefonoUsuario] = useState<string | null>(null);
   const [generoUsuario, setGeneroUsuario] = useState<string | null>(null);
-  const [fechaNacimientoUsuario, setFechaNacimientoUsuario] = useState<Date | null>(null);
+  const [fechaNacimientoUsuario, setFechaNacimientoUsuario] = useState<string | null>(null);
 
   // Cargar datos de autenticación al iniciar la app
   useEffect(() => {
@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setRol(storedRol);
           setTelefonoUsuario(storedTelefonoUsuario);
           setGeneroUsuario(storedGeneroUsuario);
-          setFechaNacimientoUsuario(storedFechaNacimientoUsuario ? new Date(storedFechaNacimientoUsuario) : null);
+          setFechaNacimientoUsuario(storedFechaNacimientoUsuario);
           setIsAuthenticated(true);
         }
       } catch (error) {
@@ -81,7 +81,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     newRol: string,
     newTelefonoUsuario: string,
     newGeneroUsuario: string,
-    newFechaNacimientoUsuario: any
+    newFechaNacimientoUsuario: string
   ) => {
     try {
       setToken(newToken);
@@ -101,7 +101,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await AsyncStorage.setItem("rol", newRol);
       await AsyncStorage.setItem("telefonoUsuario", newTelefonoUsuario);
       await AsyncStorage.setItem("generoUsuario", newGeneroUsuario);
-      await AsyncStorage.setItem("fechaNacimientoUsuario", newFechaNacimientoUsuario.toISOString());
+      await AsyncStorage.setItem("fechaNacimientoUsuario", newFechaNacimientoUsuario);
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
     }

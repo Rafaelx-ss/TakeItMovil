@@ -17,11 +17,12 @@ export default function ReguistreGenerar() {
   const [fullname, setfullname] = useState("");
   const [password, setpassword] = useState("");
   const [signedpassword, setsignedpassword] = useState("");
+
   
   const progress = 25;
   const router = useRouter();
 
-  const validarEmail = (email) => {
+  const  validarEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };

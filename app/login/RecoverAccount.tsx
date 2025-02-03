@@ -12,49 +12,57 @@ import { backend } from '@/context/endpoints';
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
 
-export default function LoginScreen() {
+export default function RecoverAccount() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-  const { login } = useAuth();
 
-  const handleLogin = async () => {
+
+  const recover = async () => {
     try {
+
+      console.log('hola')
+      console.log(email)
+      if(!email){
+        Alert.alert('Tienes que introducir el email')
+      }
      
-      const response = await axios.post(`${backend}/api/auth/login`, {
-        email,
-        password,
+      const response = await axios.post(`${backend}/api/auth/enviarcorreo`, {
+        correo : email,
       });
-  
-     
-      const { data } = response;
-      const usuarioID = response.data.data.user.usuarioID;
-      const { token } = data.data;
-    
-  
       
-        login(token, usuarioID,data.data.user.email,data.data.user.nombreUsuario,data.data.user.rolUsuario,data.data.user.telefonoUsuario,data.data.user.generoUsuario,data.data.user.fechaNacimientoUsuario);
-  
-  
+     console.log(response.data.success)
+     if(response.data.success == true){
+      router.push({
+        pathname: '/login/CodigoVerifiacion',
+        params: { 
+          email: email,
+        }
+      });
+
+     }else{
+      Alert.alert(response.data.message)
+     }
     
     } catch (error) {
     
-      if (axios.isAxiosError(error) && error.response) {
-      
-        Alert.alert("Error", error.response.data.message || "Credenciales incorrectas.");
-      } else {
-    
-        Alert.alert("Error", "No se pudo conectar al servidor.");
-      }
     }
   };
 
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <View>
-        <Text style={styles.titulo}>Iniciar sesión</Text>
-      </View>
+      <Text style={styles.title}>Restablece tu contraseña</Text>
+      <Text style={styles.description}>
+        Introduce
+        <Text style={{fontWeight: 'bold'}}>
+          {' '}
+          el email con el que te registraste previamente.{' '}
+        </Text>
+        Enviaremos un enlace al{'\n'} correo para que puedas recuperar tu {'\n'}
+        cuenta.
+      </Text>
+
       <View style={styles.Text}>
         <Text style={styles.textContainer}>Email</Text>
         <TextInput
@@ -66,41 +74,31 @@ export default function LoginScreen() {
         />
       </View>
 
-      <View style={styles.Text}>
-        <Text style={styles.textContainer}>Contraseña</Text>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Escribe tu contraseña"
-          placeholderTextColor={"grey"}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-      </View>
 
-      <TouchableOpacity
-        style={{ marginTop: height * 0.02, alignSelf: "center", width: "85%" }}
-        onPress={()=>router.push('/login/RecoverAccount')}
-      >
-        <Text style={{ color: "#D4AF37" }}>¿Has olvidado tu contraseña?</Text>
-      </TouchableOpacity>  
-
-      <TouchableOpacity style={styles.buttom} onPress={handleLogin}>
-        <Text style={styles.textButtom}>Inicia sesión</Text>
+      <TouchableOpacity style={styles.buttom} onPress={recover}>
+        <Text style={styles.textButtom}>Continual</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
 
-export const screenOptions = {
-  headerShown: false,
-};
-
-
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: '#1A1A1A',
+  },
+  title: {
+    fontSize: width * 0.05,
+    fontWeight: 'bold',
+    marginTop: height * 0.1,
+    textAlign: 'center',
+    color: '#fff',
+  },
+  description: {
+    fontSize: width * 0.045,
+    marginTop: height * 0.02,
+    textAlign: 'center',
+    color: '#fff',
   },
   titulo: {
     fontSize: 20,

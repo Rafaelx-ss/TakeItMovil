@@ -11,24 +11,28 @@ const AuthenticatedApp: React.FC = () => {
   useEffect(() => {
     if (!isAuthenticated && segments[0] !== "login") {
       router.replace("/login");
+      return;
     }
 
     if (isAuthenticated && segments[0] === "login") {
-      if (rol == 'Participante'){
-      router.replace("/home");
-       }
-       if(rol == 'Organizador'){
+      console.log(rol)
+      if(rol === 'Organizador'){
         router.replace("../adminScreen");
-
        }
+       else{
+        router.replace("/home");
+       }
+      
     }
-  }, [isAuthenticated, segments]);
+  }, [isAuthenticated, rol, segments, router]);
 
   return (
     <Stack>
       <Stack.Screen name="home" options={{ headerShown: false }} />
       <Stack.Screen name="login/index" options={{ headerShown: false }} />
       <Stack.Screen name="login/LoginScreen" options={{ headerShown: false }} />
+      <Stack.Screen name="login/RecoverAccount" options={{ headerShown: false }} />
+      <Stack.Screen name="login/CodigoVerifiacion" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguistreGenerar" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguistreLike" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguisteData" options={{ headerShown: false }} />

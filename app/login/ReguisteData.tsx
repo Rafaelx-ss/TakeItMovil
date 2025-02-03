@@ -27,10 +27,10 @@ export default function ReguisteData() {
   const [ubicacion, setUbicacion] = useState("");
 
   // Función para validar número
-  const validarNumero = (num) => /^[0-9]{8,}$/.test(num);
+  const validarNumero = (num : string) => /^[0-9]{8,}$/.test(num);
 
   // Formatear fecha a YYYY-MM-DD
-  const formatearFecha = (fecha) => fecha.toISOString().split("T")[0]; 
+  const formatearFecha = (fecha : Date  ) => fecha.toISOString().split("T")[0]; 
 
   // Validar formulario antes de enviar
   const validarFormulario = () => {
@@ -71,7 +71,6 @@ export default function ReguisteData() {
         rolUsuario: "participante",
       });
 
-      console.log("Registro exitoso:", response.data);
       router.replace("/login");
     } catch (error) {
       console.error("Error en el registro:", error.response?.data || error.message);

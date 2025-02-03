@@ -28,7 +28,7 @@ export default function ReguistreLike() {
     { id: 7, name: "Cultura", selected: false },
   ]);
 
-  const togglePreference = (id) => {
+  const togglePreference = (id : number) => {
     setPreferences((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, selected: !item.selected } : item
