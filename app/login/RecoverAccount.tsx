@@ -21,8 +21,6 @@ export default function RecoverAccount() {
   const recover = async () => {
     try {
 
-      console.log('hola')
-      console.log(email)
       if(!email){
         Alert.alert('Tienes que introducir el email')
       }
@@ -40,8 +38,11 @@ export default function RecoverAccount() {
         }
       });
 
+      console.log(response.data)
+
      }else{
       Alert.alert(response.data.message)
+      console.log(response.data)
      }
     
     } catch (error) {
