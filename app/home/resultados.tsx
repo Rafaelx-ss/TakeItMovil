@@ -63,7 +63,6 @@ export default function ResultadosScreen() {
         onRightButtonPress={() => route.push("/CrearPatrocinador")}
       />
 
-
       {/* Lista de eventos */}
       <FlatList
         data={patrocinadores}
