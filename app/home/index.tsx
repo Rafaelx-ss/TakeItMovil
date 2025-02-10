@@ -15,6 +15,8 @@ import { EventosService } from "@/services/events.service"
 import { useRouter } from "expo-router"
 import { Evento } from "@/types/eventos"
 import { useAuth } from "@/context/AuthContext";
+import { backend } from '@/context/endpoints';
+
 
 export default function EventosScreen() {
   const route = useRouter();
@@ -137,14 +139,27 @@ export default function EventosScreen() {
               eventosstarting.map((event) => (
                 <TouchableOpacity key={event.eventoID} style={styles.featuredCard} onPress={() => event.eventoID && route.push(`/inscriptions/${event.eventoID}`)}>
                   <Image
-                    source={event.imagenEvento ? event.imagenEvento : require("@/images/mario-kart.png")}
+                    source={
+                      event.imagenEvento
+                        ? { uri: `${backend}/${event.imagenEvento.replace(/\\/g, "")}` }
+                        : require("@/images/mario-kart.png")
+                    }
                     style={styles.featuredImage}
                   />
+
                   <View style={styles.featuredInfo}>
                     <Text style={styles.featuredTitle}>{event.nombreEvento}</Text>
                     <Text style={styles.featuredTime}>{event.fechaEvento}</Text>
                   </View>
+                  {/* <View>
+                  <Text>
+                    Aquí: {event.imagenEvento
+                      ? `${backend}/${event.imagenEvento.replace(/\\/g, "")}`
+                      : "@/images/mario-kart.png"}
+                  </Text>
+                </View> */}
                 </TouchableOpacity>
+                
               ))
             )}
             </ScrollView>

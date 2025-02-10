@@ -1,5 +1,5 @@
 import type React from "react"
-import { View, Text, TouchableOpacity, Platform, StatusBar, StyleSheet } from "react-native"
+import { View, Text, TouchableOpacity, Platform, StatusBar, StyleSheet, StyleProp, ViewStyle } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
 import { MaterialIcons } from "@expo/vector-icons"
 
@@ -10,6 +10,7 @@ interface HeaderGradientProps {
     onRightButtonPress?: () => void
     showBackButton?: boolean
     onBackPress?: () => void
+    style?: StyleProp<ViewStyle>
 }
 
 const HeaderGradient: React.FC<HeaderGradientProps> = ({
@@ -19,13 +20,14 @@ const HeaderGradient: React.FC<HeaderGradientProps> = ({
     onRightButtonPress,
     showBackButton,
     onBackPress,
+    style,
 }) => {
     return (
         <LinearGradient
             colors={["#0A0A0A", "#0A0A0A", "#0A0A0A"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={[styles.container, showBackButton ? styles.containerWithBackButton : styles.containerWithoutBackButton]}
+            style={[styles.container, showBackButton ? styles.containerWithBackButton : styles.containerWithoutBackButton, style]}
         >
         {showBackButton && (
             <TouchableOpacity onPress={onBackPress}>

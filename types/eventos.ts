@@ -21,6 +21,7 @@ export interface Evento {
     estadoEvento?: boolean;
     created_at?: string;
     updated_at?: string;
+    data?: any;
 }
 
 export interface EventoFormValues {

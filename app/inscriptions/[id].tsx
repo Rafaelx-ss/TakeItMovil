@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, ScrollView, Image, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { router, useLocalSearchParams, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import { backend } from '@/context/endpoints';
+import { useQuery } from '@tanstack/react-query';
+import { EventosService } from '@/services/events.service';
+import { Evento } from '@/types/eventos';
 import { MaterialIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import SkeletonLoader from '@/components/eventos/SkeletonLoader';
 
 const { width } = Dimensions.get('window');
 
@@ -10,30 +15,19 @@ export default function EventoDetalle() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [registering, setRegistering] = useState(false);
+  const [event, setEvent] = useState<Evento | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Datos de ejemplo basados en la interfaz Evento
-  const event = {
-    eventoID: Number(id),
-    imagenEvento: require("@/images/mario-kart.png"),
-    categoriaID: 1,
-    subCategoriaID: 1,
-    nombreEvento: "Gran Torneo Mario Kart 8 Deluxe",
-    lugarEvento: "Centro de Convenciones Gaming Zone",
-    maximoParticipantesEvento: "64",
-    costoEvento: "299.99",
-    descripcionEvento: "¡Prepárate para la competencia definitiva de Mario Kart! Este torneo reunirá a los mejores jugadores de la región en una batalla épica por la corona del mejor piloto. Contaremos con todas las pistas DLC, reglas profesionales y premios increíbles para los ganadores. ¡No te pierdas la oportunidad de demostrar tus habilidades y convertirte en leyenda!",
-    cpEvento: "12345",
-    municioEvento: "Monterrey",
-    estadoID: 1,
-    direccionEvento: "Av. de los Gamers #123, Col. Digital",
-    telefonoEvento: "81-1234-5678",
-    fechaEvento: "2024-02-28",
-    horaEvento: "14:00",
-    duracionEvento: "6 horas",
-    kitEvento: "Playera oficial del torneo, Gorra exclusiva, Pase VIP para área de práctica, Snacks y bebidas durante el evento",
-    activoEvento: true,
-    estadoEvento: true
-  };
+  useEffect(() => {
+    EventosService.obtenerEvento(Number.parseInt(Array.isArray(id) ? id[0] : id))
+      .then((response) => {
+        setEvent(response.data);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
   const handleRegistration = () => {
     setRegistering(true);
@@ -57,10 +51,22 @@ export default function EventoDetalle() {
     });
   };
 
+  if (isLoading) {
+    return <SkeletonLoader />;
+  }
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.imageContainer}>
-        <Image source={event.imagenEvento} style={styles.image} />
+        <Image
+          source={
+            event?.imagenEvento
+              ? { uri: `${backend}/${event.imagenEvento.replace(/\\/g, "")}` }
+              : require("@/images/mario-kart.png")
+          }
+
+          style={styles.image}
+        />
         <LinearGradient
           colors={['transparent', 'rgba(26, 26, 26, 0.8)', '#1A1A1A']}
           style={styles.gradient}
@@ -75,18 +81,20 @@ export default function EventoDetalle() {
 
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={styles.title}>{event.nombreEvento}</Text>
+          <Text style={styles.title}>{event?.nombreEvento}</Text>
           <View style={styles.dateTimeContainer}>
             <View style={styles.dateTimeItem}>
+
               <MaterialIcons name="event" size={20} color="#E0B942" />
-              <Text style={styles.dateTimeText}>{formatDate(event.fechaEvento)}</Text>
+              <Text style={styles.dateTimeText}>{formatDate(event?.fechaEvento || '')}</Text>
             </View>
             <View style={styles.dateTimeItem}>
               <MaterialIcons name="access-time" size={20} color="#E0B942" />
-              <Text style={styles.dateTimeText}>{event.horaEvento} hrs</Text>
+              <Text style={styles.dateTimeText}>{event?.horaEvento} hrs</Text>
             </View>
           </View>
         </View>
+
 
         <View style={styles.mainInfoCard}>
           <View style={styles.infoRow}>
@@ -95,11 +103,12 @@ export default function EventoDetalle() {
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Ubicación</Text>
-              <Text style={styles.infoText}>{event.lugarEvento}</Text>
-              <Text style={styles.infoSubtext}>{event.direccionEvento}</Text>
-              <Text style={styles.infoSubtext}>{event.municioEvento}, CP: {event.cpEvento}</Text>
+              <Text style={styles.infoText}>{event?.lugarEvento}</Text>
+              <Text style={styles.infoSubtext}>{event?.direccionEvento}</Text>
+              <Text style={styles.infoSubtext}>{event?.municioEvento}, CP: {event?.cpEvento}</Text>
             </View>
           </View>
+
 
           <View style={styles.divider} />
 
@@ -109,9 +118,10 @@ export default function EventoDetalle() {
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Capacidad</Text>
-              <Text style={styles.infoText}>{event.maximoParticipantesEvento} participantes</Text>
+              <Text style={styles.infoText}>{event?.maximoParticipantesEvento} participantes</Text>
             </View>
           </View>
+
 
           <View style={styles.divider} />
 
@@ -121,9 +131,10 @@ export default function EventoDetalle() {
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Costo de Inscripción</Text>
-              <Text style={styles.infoText}>${event.costoEvento} MXN</Text>
+              <Text style={styles.infoText}>${event?.costoEvento} MXN</Text>
             </View>
           </View>
+
 
           <View style={styles.divider} />
 
@@ -133,20 +144,22 @@ export default function EventoDetalle() {
             </View>
             <View style={styles.infoContent}>
               <Text style={styles.infoLabel}>Duración</Text>
-              <Text style={styles.infoText}>{event.duracionEvento}</Text>
+              <Text style={styles.infoText}>{event?.duracionEvento}</Text>
             </View>
           </View>
+
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Descripción del Evento</Text>
-          <Text style={styles.description}>{event.descripcionEvento}</Text>
+          <Text style={styles.description}>{event?.descripcionEvento}</Text>
         </View>
+
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Kit del Participante</Text>
           <View style={styles.kitContainer}>
-            {event.kitEvento.split(',').map((item, index) => (
+            {event?.kitEvento?.split(',').map((item, index) => (
               <View key={index} style={styles.kitItem}>
                 <MaterialIcons name="star" size={20} color="#E0B942" />
                 <Text style={styles.kitText}>{item.trim()}</Text>
@@ -159,9 +172,10 @@ export default function EventoDetalle() {
           <Text style={styles.sectionTitle}>Contacto</Text>
           <TouchableOpacity style={styles.contactButton}>
             <Ionicons name="call" size={20} color="#FFFFFF" />
-            <Text style={styles.contactButtonText}>{event.telefonoEvento}</Text>
+            <Text style={styles.contactButtonText}>{event?.telefonoEvento}</Text>
           </TouchableOpacity>
         </View>
+
 
         <TouchableOpacity
           style={[styles.registerButton, registering && styles.registeringButton]}
@@ -179,6 +193,11 @@ export default function EventoDetalle() {
 }
 
 const styles = StyleSheet.create({
+  skeletonBg: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
   container: {
     flex: 1,
     backgroundColor: '#1A1A1A',

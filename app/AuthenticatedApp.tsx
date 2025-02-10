@@ -18,34 +18,62 @@ const AuthenticatedApp: React.FC = () => {
       console.log(rol)
       if(rol === 'Organizador'){
         router.replace("../adminScreen");
-       }
-       else{
+      }
+      else{
         router.replace("/home");
-       }
+      }
       
     }
   }, [isAuthenticated, rol, segments, router]);
 
+  const screens = [
+    //Inicio
+    "home",
+
+    
+    //Inicio de sesión
+    "login/LoginScreen",
+    //Recuperar cuenta
+    "login/RecoverAccount",
+    //Código de verificación
+    "login/CodigoVerifiacion",
+    //Registro de usuario
+    "login/ReguistreGenerar",
+    "login/ReguistreLike",
+    "login/ReguisteData",
+
+
+    //Usuarios participantees:
+    "login/index",
+    //Crear patrocinador
+    "forms/CrearPatrocinador/index",
+    //Editar patrocinador
+    "forms/EditarPatrocinador/index",
+    //Crear evento
+    "forms/CrearEvento/index",
+    //Editar evento
+    "forms/EditarEvento/index",
+    //Crear usuario
+    "forms/CrearUsuario/index",
+    //Editar usuario
+    "forms/EditarUsuario/index",
+    //Inscripción
+    "inscriptions/[id]",
+
+
+    //Usuarios organizadores:
+    "adminScreen/index",
+
+  ];
+  
   return (
     <Stack>
-      <Stack.Screen name="home" options={{ headerShown: false }} />
-      <Stack.Screen name="login/index" options={{ headerShown: false }} />
-      <Stack.Screen name="login/LoginScreen" options={{ headerShown: false }} />
-      <Stack.Screen name="login/RecoverAccount" options={{ headerShown: false }} />
-      <Stack.Screen name="login/CodigoVerifiacion" options={{ headerShown: false }} />
-      <Stack.Screen name="login/NewPassword" options={{ headerShown: false }} />
-      <Stack.Screen name="login/ReguistreGenerar" options={{ headerShown: false }} />
-      <Stack.Screen name="login/ReguistreLike" options={{ headerShown: false }} />
-      <Stack.Screen name="login/ReguisteData" options={{ headerShown: false }} />
-      <Stack.Screen name="CrearPatrocinador/index" options={{ headerShown: false }} />
-      <Stack.Screen name="forms/CrearEvento/index" options={{ headerShown: false }} />
-      <Stack.Screen name="forms/EditarEvento/index" options={{ headerShown: false }} />
-      <Stack.Screen name="forms/EditarUsuario/index" options={{ headerShown: false }} />
-      <Stack.Screen name="forms/CrearUsuario/index" options={{ headerShown: false }} />
-      <Stack.Screen name="inscriptions/[id]" options={{ headerShown: false }} />
-      <Stack.Screen name="adminScreen/index" options={{ headerShown: false }} />
+      {screens.map((screen) => (
+        <Stack.Screen key={screen} name={screen} options={{ headerShown: false }} />
+      ))}
     </Stack>
   );
+
 };
 
 export default AuthenticatedApp;
