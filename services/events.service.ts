@@ -2,6 +2,7 @@ import axios from 'axios';
 import { Evento } from '@/types/eventos';
 import { backend } from '@/context/endpoints';
 import { format } from "date-fns"
+import { Alert } from 'react-native';
 
 
 export const EventosService = {
@@ -112,5 +113,36 @@ export const EventosService = {
             console.error('Error al eliminar el evento:', error);
             throw error;
         }
+    },
+
+    obtenerEventosUsuario: async (usuarioID: number): Promise<Evento[]> => {
+        try {
+            const response = await axios.get(`${backend}/api/eventos/usuario/${usuarioID}`);
+
+            return response.data;
+        } catch (error) {
+            console.error('Error al obtener los eventos del usuario:', error);
+            throw error;
+        }
+    },
+
+    inscribirUsuario: async (eventoID: number, usuarioID: number): Promise<any> => {
+        try {
+            const response = await axios.post(`${backend}/api/eventos/inscribirUsuario`, {
+                eventoID: eventoID,
+                usuarioID: usuarioID
+            });
+            return response.data;
+        } catch (error: any) {
+            // {
+            // "success": false,
+            // "message": "Prueba de error",
+            // "errors": []
+            // }
+            // Alert.alert('Error al inscribirse al evento:', error.response.data.message);
+            throw error;
+        }
+
+
     }
 };

@@ -2,7 +2,9 @@ export interface Evento {
     eventoID?: number;
     imagenEvento?: string;
     categoriaID: number;
+    categoriaNombre: string;
     subCategoriaID: number;
+    subCategoriaNombre: string;
     nombreEvento: string;
     lugarEvento: string;
     maximoParticipantesEvento: string;
