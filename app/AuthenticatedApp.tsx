@@ -36,6 +36,7 @@ const AuthenticatedApp: React.FC = () => {
     //Recuperar cuenta
     "login/RecoverAccount",
     //Código de verificación
+    "login/NewPassword",
     "login/CodigoVerifiacion",
     //Registro de usuario
     "login/ReguistreGenerar",
