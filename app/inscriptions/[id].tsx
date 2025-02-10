@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, Image, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import { View, ScrollView, Image, Text, StyleSheet, TouchableOpacity, Alert, Dimensions, Platform } from 'react-native';
 import { router, useLocalSearchParams, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { backend } from '@/context/endpoints';
-import { useQuery } from '@tanstack/react-query';
 import { EventosService } from '@/services/events.service';
 import { Evento } from '@/types/eventos';
+import { useAuth } from '@/context/AuthContext';
 import { MaterialIcons, Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import SkeletonLoader from '@/components/eventos/SkeletonLoader';
+import Modal from 'react-native-modal';
+import { SvgUri } from 'react-native-svg';
 
 const { width } = Dimensions.get('window');
 
 export default function EventoDetalle() {
   const { id } = useLocalSearchParams();
+  const { usuarioID } = useAuth();
   const router = useRouter();
   const [registering, setRegistering] = useState(false);
   const [event, setEvent] = useState<Evento | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [qrCode, setQrCode] = useState<string | null>(null);
 
   useEffect(() => {
     EventosService.obtenerEvento(Number.parseInt(Array.isArray(id) ? id[0] : id))
@@ -31,17 +36,24 @@ export default function EventoDetalle() {
 
   const handleRegistration = () => {
     setRegistering(true);
-    setTimeout(() => {
-      setRegistering(false);
-      Alert.alert(
-        "¡Registro Exitoso! 🎮",
-        "¡Felicidades! Te has registrado exitosamente al torneo. Te enviaremos un correo con todos los detalles y tu código QR de acceso.",
-        [{ text: "¡Genial!", onPress: () => router.back() }]
-      );
-    }, 1500);
+    if (usuarioID) {
+      EventosService.inscribirUsuario(Number.parseInt(Array.isArray(id) ? id[0] : id), usuarioID)
+        .then((response: any) => {
+          console.log('Respuesta del backend:', response); // Agrega este log
+
+          setRegistering(false);
+          setQrCode(response.data[0].rutaqr); 
+          setModalVisible(true); 
+        })
+        .catch((error) => {
+          setRegistering(false);
+          Alert.alert('Error al inscribirse al evento:', error.response.data.message || 'Error desconocido');
+        });
+    }
   };
 
   const formatDate = (dateStr: string) => {
+
     const date = new Date(dateStr);
     return date.toLocaleDateString('es-MX', {
       weekday: 'long',
@@ -188,6 +200,40 @@ export default function EventoDetalle() {
           {!registering && <MaterialIcons name="arrow-forward" size={24} color="#FFFFFF" />}
         </TouchableOpacity>
       </View>
+      {/* Modal de éxito */}
+      <Modal isVisible={modalVisible} animationIn="slideInUp" animationOut="slideOutDown" backdropColor="black" backdropOpacity={0.5}>
+        <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, alignItems: 'center' }}>
+          <Text style={{ fontSize: 18, fontWeight: 'bold' }}>¡Registro Exitoso! 🎮</Text>
+          <Text style={{ marginTop: 10, textAlign: 'center', marginBottom: 20 }}>¡Felicidades! Te has registrado exitosamente al evento.</Text>
+
+          {qrCode && (
+            <>
+            {Platform.OS === 'web' ? (
+                <Image 
+                    source={{ uri: `${backend}/storage/${qrCode.replace(/\\/g, "")}` }} 
+                    style={{ width: 100, height: 100, marginTop: 10 }} 
+                />
+            ) : (
+                <SvgUri 
+                    uri={`${backend}/storage/${qrCode.replace(/\\/g, "")}`} 
+                    width={250} 
+                    height={250} 
+                />
+            )}
+              {/* <Text style={{ fontSize: 14, color: '#555' }}>{`${backend}/storage/${qrCode.replace(/\\/g, "")}`}</Text> */}
+            </>
+          )}
+
+          <Text style={{ marginTop: 10, textAlign: 'center', fontSize: 18, fontWeight: 'bold' }}>¡Tomale captura de pantalla!</Text>
+          <Text style={{ textAlign: 'center'}}>Esta es tu entrada para el evento</Text>
+
+
+          <TouchableOpacity onPress={() => router.back()}>
+
+            <Text style={{ color: '#E0B942', fontSize: 16, fontWeight: 'bold', marginTop: 10 }}>¡Excelente!</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </ScrollView>
   );
 }
