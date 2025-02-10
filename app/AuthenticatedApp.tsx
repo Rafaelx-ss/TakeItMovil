@@ -33,6 +33,7 @@ const AuthenticatedApp: React.FC = () => {
       <Stack.Screen name="login/LoginScreen" options={{ headerShown: false }} />
       <Stack.Screen name="login/RecoverAccount" options={{ headerShown: false }} />
       <Stack.Screen name="login/CodigoVerifiacion" options={{ headerShown: false }} />
+      <Stack.Screen name="login/NewPassword" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguistreGenerar" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguistreLike" options={{ headerShown: false }} />
       <Stack.Screen name="login/ReguisteData" options={{ headerShown: false }} />

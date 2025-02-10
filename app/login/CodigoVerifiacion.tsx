@@ -41,19 +41,27 @@ export default function CodigoVerifiacion() {
     }
   };
 
+  console.log(value)
+
 
   const verificarCodigo = async () => {
     try {
-      const response = await axios.post(`${backend}/api/auth/verificarcodigo`, {
+      const response = await axios.post(`${backend}/api/auth/codigoverificacion`, {
         correo: email,
         codigo: value,
       });
 
       if (response.data.success) {
-        Alert.alert("Código Correcto", "Tu cuenta ha sido verificada.");
+        router.push({
+          pathname: '/login/NewPassword',
+          params: { 
+            email: email,
+          }
+        });
    
       } else {
         Alert.alert("Código Incorrecto", "El código ingresado no es válido.");
+        
       }
     } catch (error) {
       Alert.alert("Error", "No se pudo verificar el código.");
@@ -88,8 +96,8 @@ export default function CodigoVerifiacion() {
         <Text style={styles.textButtom}>Continuar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.buttom]} onPress={recover}>
-        <Text style={styles.textButtom}>Reenviar Código</Text>
+      <TouchableOpacity style={[styles.Textcontainer]} onPress={recover}>
+        <Text style={styles.Text}>Reenviar Código</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -102,15 +110,17 @@ const styles = StyleSheet.create({
      alignItems: "center"
   },
   Textcontainer :{
-
+    marginTop: height * 0.03,
   },
   Text:{
-
+    color: "#D4AF37",
+    fontWeight: "bold",
   },
 
   title: {
+    
     marginTop: height * 0.05,
-    fontSize: width * 0.05,
+    fontSize: 30,
     fontWeight: "bold",
     textAlign: "center",
     color: "#D4AF37",
