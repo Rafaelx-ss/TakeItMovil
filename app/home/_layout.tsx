@@ -34,7 +34,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="resultados"
         options={{
-          title: "Patrocinadores",
+          title: "Resultados",
           tabBarIcon: ({ color }) => <FontAwesome name="bar-chart" size={24} color="#E0B942" />,
         }}
       />
