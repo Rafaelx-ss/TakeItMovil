@@ -1,6 +1,6 @@
 import { Platform } from 'react-native';
 
-// backend local (TENER PRENDIDO EL BACKEND)
+// // backend local (TENER PRENDIDO EL BACKEND)
 export const backend =
     Platform.OS === 'web'
         ? "http://127.0.0.1:8000"
@@ -8,4 +8,4 @@ export const backend =
 
 
 // backend de produccion
-//  export const backend = "https://cody.mx/sopmex/Takeitapis/public";  
+// export const backend = "https://cody.mx/sopmex/Takeitapis/public";  
