@@ -7,6 +7,8 @@ export const CategoriasService = {
         const response = await axios.get(`${backend}/api/categorias/form`);
         return response.data;
     },
+
+    
     obtenerSubCategorias: async (categoriaID: number): Promise<SubCategoria[]> => {
         const response = await axios.get(`${backend}/api/categorias/subcategoria/${categoriaID}`);
         return response.data;

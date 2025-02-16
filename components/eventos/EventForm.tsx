@@ -11,6 +11,8 @@ import { EstadosService } from "@/services/estados.service"
 import { useQuery } from "@tanstack/react-query"
 import { Platform } from "react-native"
 import Modal from 'react-native-modal';
+import { useAuth } from "@/context/AuthContext";
+
 
 // import { getUsuario } from "@/context/auth"
 
@@ -66,12 +68,15 @@ const formSchema = z.object({
 })
 
 
+
+
 type EventFormValues = z.infer<typeof formSchema>
 
 interface EventFormProps {
   event?: EventFormValues & { eventoID?: number }
   onSubmitSuccess: () => void
 }
+
 
 export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("")
@@ -83,8 +88,8 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
   const [isModalVisible2, setModalVisible2] = useState(false);
   const [isModalVisible3, setModalVisible3] = useState(false);
 
+const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
 
-  const usuarioID = 1 // getUsuario().usuarioID
 
   const { control, handleSubmit, setValue, watch, formState } = useForm<EventFormValues>({
     resolver: zodResolver(formSchema),
@@ -109,6 +114,14 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
     },
   })
 
+  var tipoRol = ''
+ if(rol === 'Organizador'){
+        tipoRol = 'O'
+      }
+      else{
+        tipoRol = 'P';
+      }
+
   const { data: estados = [] } = useQuery({
     queryKey: ["estados"],
     queryFn: () => EstadosService.obtenerEstados(),
@@ -116,20 +129,31 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
     gcTime: 10 * 60 * 1000,
   })
 
-  const { data: categorias = [] } = useQuery({
+
+    const { data: categoriasResponse = [] } = useQuery({
     queryKey: ["categorias"],
     queryFn: () => CategoriasService.obtenerCategoriasForm(),
     staleTime: 30 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })
 
-  const { data: subCategorias = [] } = useQuery({
+  console.log(categoriasResponse);
+
+  const categorias = categoriasResponse?.data ?? []
+  console.log(categorias);
+
+ 
+
+  const { data: subCategoriasResponse = [] } = useQuery({
     queryKey: ["subcategorias", selectedCategoryId],
     queryFn: () => CategoriasService.obtenerSubCategorias(Number.parseInt(selectedCategoryId)),
     enabled: !!selectedCategoryId,
     staleTime: 2 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })
+
+
+  const subCategorias = subCategoriasResponse?.data ?? []
 
   useEffect(() => {
     if (event?.categoriaID) {
@@ -150,6 +174,7 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
           maximoParticipantesEvento: values.maximoParticipantesEvento.toString(),
           categoriaID: Number.parseInt(values.categoriaID),
           subCategoriaID: Number.parseInt(values.subCategoriaID),
+        
         })
         Alert.alert("¡Éxito!", "El evento se ha actualizado correctamente")
       } else {
@@ -162,6 +187,9 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
           categoriaID: Number.parseInt(values.categoriaID),
           subCategoriaID: Number.parseInt(values.subCategoriaID),
           kitEvento: values.kitEvento || "",
+          categoriaNombre: "",
+          subCategoriaNombre: "",
+          tipo_creador : tipoRol
         })
         Alert.alert("¡Éxito!", "El evento se ha creado correctamente")
       }

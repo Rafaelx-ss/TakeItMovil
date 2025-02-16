@@ -110,9 +110,8 @@ export default function ReguisteData() {
       <TouchableOpacity style={styles.Text} onPress={() => setMostrarFecha(true)}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Fecha de Nacimiento (YYYY-MM-DD)"
+          placeholder="Fecha de Nacimiento"
           placeholderTextColor={"grey"}
-          value={formatearFecha(fecha)}
           editable={false}
         />
       </TouchableOpacity>
@@ -135,9 +134,9 @@ export default function ReguisteData() {
           selectedValue={genero}
           onValueChange={(itemValue) => setGenero(itemValue)}
           style={styles.picker}
-          dropdownIconColor={"#000000"}
+          dropdownIconColor={"grey"}
         >
-          <Picker.Item label="Selecciona tu género" value="" color="#000000" />
+          <Picker.Item label="Selecciona tu género" value="" color="grey" />
           <Picker.Item label="Masculino" value="MASCULINO" color="#000000" />
           <Picker.Item label="Femenino" value="FEMENINO" color="#000000" />
           <Picker.Item label="Otro" value="OTRO" color="#000000" />
@@ -214,11 +213,21 @@ const styles = StyleSheet.create({
     borderColor: '#fff',
     borderRadius: 5,
     marginTop: height * 0.03,
+    height: height * 0.07,
+    alignItems: 'center', // Centra el Picker verticalmente
+   
   },
+
   picker: {
-    color: '#fff',
+    color: '#FFFFFF',
     backgroundColor: '#1A1A1A',
+    fontSize: 12,
+    width: '100%',
+    textAlignVertical: 'center', // Asegura que el texto no se corte en la parte superior/inferior
   },
+
+
+
   buttom: {
     backgroundColor: '#D4AF37',
     width: width * 0.9,

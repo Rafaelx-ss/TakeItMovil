@@ -62,6 +62,7 @@ export const EventosService = {
             maximoParticipantesEvento: Number(eventoData.maximoParticipantesEvento),
             duracionEvento: Number(eventoData.duracionEvento),
             costoEvento: Number(eventoData.costoEvento),
+             tipo_creador : 'O'
         }
 
         const response = await axios.post(`${backend}/api/eventos/crear/${usuarioID}`, formattedData, {
@@ -125,6 +126,35 @@ export const EventosService = {
             throw error;
         }
     },
+
+    obtenerEventosAdmin: async (usuarioID: number, page = 1, limit = 10): Promise<Evento[]> => {
+
+       
+        try {
+            const response = await axios.get(`${backend}/api/eventos/admin/${usuarioID}`, {
+                params: { page, limit }
+            });
+    
+            console.log("Respuesta completa de la API:", response.data);
+    
+            // Acceder correctamente a los eventos
+            const eventos = response.data.data ?? []; 
+    
+            if (!Array.isArray(eventos)) {
+                console.warn("La API no devolvió un array en 'data':", eventos);
+                return [];
+            }
+    
+            return eventos;
+        } catch (error) {
+            console.log(`${backend}/api/eventos/admin/${usuarioID}`);
+            console.error('Error al obtener los eventos del administrador:', error);
+            return [];
+        }
+    },
+    
+    
+    
 
     inscribirUsuario: async (eventoID: number, usuarioID: number): Promise<any> => {
         try {
