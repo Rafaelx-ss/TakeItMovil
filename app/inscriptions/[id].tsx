@@ -210,17 +210,16 @@ export default function EventoDetalle() {
             <>
             {Platform.OS === 'web' ? (
                 <Image 
-                    source={{ uri: `${backend}/${qrCode.replace(/\\/g, "")}` }} 
-                    style={{ width: 100, height: 100, marginTop: 10 }} 
+                  source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
+                  style={{ width: 100, height: 100, marginTop: 10 }} 
                 />
             ) : (
                 <SvgUri 
-                    uri={`${backend}/${qrCode.replace(/\\/g, "")}`} 
-                    width={250} 
-                    height={250} 
+                  uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`} 
+                  width={250} 
+                  height={250} 
                 />
             )}
-              <Text style={{ fontSize: 14, color: '#555' }}>{`${backend}/storage/${qrCode.replace(/\\/g, "")}`}</Text>
             </>
           )}
 
