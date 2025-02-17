@@ -25,12 +25,27 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="index"
+        options={{
+          title: "Dasboard",
+          tabBarIcon: ({ color }) => <FontAwesome name="bar-chart" size={24} color="#E0B942" />,
+        }}
+      />
+      <Tabs.Screen
+        name="miseventosadmin"
+        options={{
+          title: "Mis Eventos",
+          tabBarIcon: ({ color }) => <FontAwesome name="calendar-plus-o" size={24} color="#E0B942" />,
+        }}
+      />
+      <Tabs.Screen
         name="perfil"
         options={{
           title: "Usuarios",
           tabBarIcon: ({ color }) => <FontAwesome name="user" size={24} color="#E0B942" />,
         }}
       />
+      
     </Tabs>
   )
 }
