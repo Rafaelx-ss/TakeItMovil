@@ -36,50 +36,7 @@ export default function MisEventosScreen() {
     setRefreshing(true);
   };
 
-  // const upcomingEvents = [
-  //   {
-  //     eventoID: 1,
-  //     nombreEvento: "Relevos 10KM",
-  //     categoriaNombre: "Deporte",
-
-  //     fechaEvento: "09 de Septiembre, 2024",
-  //     lugarEvento: "Mérida, Centro",
-  //     costoEvento: "300MNX",
-  //     imagenEvento: require("@/images/running.png"),
-  //   },
-  //   {
-  //     eventoID: 2,
-  //     nombreEvento: "Relevos 10KM",
-  //     categoriaNombre: "Deporte",
-  //     fechaEvento: "09 de Septiembre, 2024",
-  //     lugarEvento: "Mérida, Centro",
-  //     costoEvento: "300MNX",
-  //     imagenEvento: require("@/images/running.png"),
-
-  //   },
-  //   {
-  //     eventoID: 3,
-  //     nombreEvento: "Relevos 10KM",
-  //     categoriaNombre: "Deporte",
-  //     fechaEvento: "09 de Septiembre, 2024",
-  //     lugarEvento: "Mérida, Centro",
-  //     costoEvento: "300MNX",
-  //     imagenEvento: require("@/images/running.png"),
-
-
-  //   },
-  //   {
-  //     eventoID: 4,
-  //     nombreEvento: "Relevos 10KM",
-  //     categoriaNombre: "Deporte",
-  //     fechaEvento: "09 de Septiembre, 2024",
-  //     lugarEvento: "Mérida, Centro",
-  //     costoEvento: "300MNX",
-  //     imagenEvento: require("@/images/running.png"),
-
-  //   },
-  // ];
-
+ 
   return (
     <SafeAreaView style={styles.container}>
       <HeaderGradient
@@ -99,7 +56,11 @@ export default function MisEventosScreen() {
         <View style={styles.content}>
           <View style={styles.upcomingSection}>
             {myEvents.map((event) => (
-              <View key={event.eventoID} style={styles.eventCard}>
+              <TouchableOpacity
+              key={event.eventoID}
+              style={styles.eventCard}
+              onPress={() => route.push(`/InfoMiEvento/${event.eventoID}`)}
+              >
                 <Image
                   source={
                     event.imagenEvento
@@ -122,8 +83,7 @@ export default function MisEventosScreen() {
                     <Text style={styles.eventLocation}>{event.lugarEvento}</Text>
                   </View>
                 </View>
-
-              </View>
+                </TouchableOpacity>
             ))}
           </View>
         </View>
