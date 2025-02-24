@@ -174,9 +174,22 @@ export default function EventoDetalle() {
         <View style={styles.section}>
         <Text style={styles.sectionTitle}>Códigos QR</Text>
         <View style={styles.qrContainer}>
-          {qrCode && qrCode.split(',').map((qrCode: string, index: number) => (
-            <Image key={index} source={{ uri: `${backend}/${qrCode}` }} style={styles.qrImage} />
-          ))}
+          {qrCode && (
+            <>
+            {Platform.OS === 'web' ? (
+                <Image 
+                  source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
+                  style={{ width: 100, height: 100, marginTop: 10 }} 
+                />
+            ) : (
+                <SvgUri 
+                  uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`} 
+                  width={250} 
+                  height={250} 
+                />
+            )}
+            </>
+          )}
         </View>
       </View>
 
