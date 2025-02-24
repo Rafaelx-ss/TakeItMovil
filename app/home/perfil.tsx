@@ -11,11 +11,20 @@ import {
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "@/context/AuthContext"
+import { useNavigation, useRoute } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RouteProp } from '@react-navigation/native';
 
+type RootStackParamList = {
+  Perfil: undefined;
+  Settings: undefined;
+  'settings/settings': undefined;
+};
 
 export default function PerfilScreen() {
-
-  const {username,email,fechaNacimientoUsuario,telefonoUsuario} = useAuth();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'Perfil'>>();
+  const {username,email,fechaNacimientoUsuario,telefonoUsuario, logout} = useAuth();
 
   const profileData = {
     user: {
@@ -37,10 +46,16 @@ export default function PerfilScreen() {
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.content}>
           {/* Header */}
+          
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Perfil</Text>
-            <TouchableOpacity>
+            <TouchableOpacity 
+              onPress={() => navigation.navigate('settings/settings' as never)}
+            >
               <MaterialIcons name="settings" size={24} color="#E0B942" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={logout}>
+              <MaterialIcons name="logout" size={24} color="#E0B942" />
             </TouchableOpacity>
           </View>
 

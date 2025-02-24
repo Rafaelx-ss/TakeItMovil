@@ -60,6 +60,10 @@ const AuthenticatedApp: React.FC = () => {
     "forms/EditarUsuario/index",
     //Inscripción
     "inscriptions/[id]",
+    //Informacion de mis eventos
+    "InfoMiEvento/[id]",
+    //Configuracion de usuario
+    "settings/settings",
 
 
     //Usuarios organizadores:
