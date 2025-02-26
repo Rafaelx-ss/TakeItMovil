@@ -1,7 +1,8 @@
-export interface Categoria   {
+export interface Categoria {
     categoriaID: number;
     nombreCategoria: string;
     descripcionCategoria: string;
+    data?: any;
 }
 
 export interface SubCategoria {
@@ -10,3 +11,4 @@ export interface SubCategoria {
     nombreSubcategoria: string;
     descripcionSubcategoria: string;
 }
+

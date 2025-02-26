@@ -16,16 +16,19 @@ import { useRouter } from "expo-router"
 import { Evento } from "@/types/eventos"
 import { useAuth } from "@/context/AuthContext";
 import { backend } from '@/context/endpoints';
-
+import { CategoriasService } from "@/services/categorias.service";
+import { Categoria } from "@/types/categorias";
 
 export default function EventosScreen() {
   const route = useRouter();
   const [eventosstarting, setEventosstarting] = useState<Evento[]>([]);
+  const [categories, setCategories] = useState<Categoria[]>([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const fetchData = async () => {
     if (loading || !hasMore) return;
@@ -48,6 +51,15 @@ export default function EventosScreen() {
     }
   };
 
+  const fetchCategories = async () => {
+    try {
+      const response = await CategoriasService.obtenerCategoriasForm();
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
   const onRefresh = async () => {
     setEventosstarting([]);
     setRefreshing(true);
@@ -62,6 +74,7 @@ export default function EventosScreen() {
 
   useEffect(() => {
       fetchData();
+      fetchCategories();
     }, []);
 
   // const featuredEvents = [
@@ -178,22 +191,18 @@ export default function EventosScreen() {
 
             <View style={styles.filterContainer}>
               <TouchableOpacity style={styles.filterButton}>
-                <Text style={styles.filterButtonText}>Sep ▼</Text>
+                <Text style={styles.filterButtonText}>{selectedDate.toLocaleDateString()}</Text>
               </TouchableOpacity>
-              <View style={styles.categories}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.categories}>
                 <TouchableOpacity style={styles.categoryButton}>
                   <Text style={styles.categoryText}>All</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.categoryButton, styles.categoryActive]}>
-                  <Text style={[styles.categoryText, styles.categoryActiveText]}>Deportes</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.categoryButton}>
-                  <Text style={styles.categoryText}>Arte</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.categoryButton}>
-                  <Text style={styles.categoryText}>Tecnología</Text>
-                </TouchableOpacity>
-              </View>
+                {categories.map((category) => (
+                  <TouchableOpacity style={styles.categoryButton} key={category.categoriaID}>
+                    <Text style={styles.categoryText}>{category.nombreCategoria}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
             </View>
 
             {upcomingEvents.map((event) => (
