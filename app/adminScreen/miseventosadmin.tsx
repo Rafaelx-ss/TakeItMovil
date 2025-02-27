@@ -89,7 +89,7 @@ export default function MisEventosAdminScreen() {
             <View style={styles.eventInfo}>
               <View style={styles.eventHeader}>
                 <Text style={styles.eventTitle}>{item.nombreEvento}</Text>
-                <Text style={styles.eventPrice}>Inscrito</Text>
+                <Text style={styles.eventPrice}>{item.categoriaNombre}</Text>
               </View>
               <Text style={styles.eventCategory}>{item.categoriaNombre}</Text>
               <View style={styles.eventDetails}>

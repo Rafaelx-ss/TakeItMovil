@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Alert, Dimensions, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, Dimensions, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -7,6 +7,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import axios from "axios";
 import { Picker } from "@react-native-picker/picker";
 import { backend } from '@/context/endpoints';
+import { ScrollView } from "react-native-gesture-handler";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -16,51 +17,38 @@ export default function ReguisteData() {
   const router = useRouter();
   const params = useLocalSearchParams();
 
-  // Extraer datos enviados desde ReguistreGenerar
   const { nombreUsuario, usuario, email, password } = params;
 
-  // Estado de los inputs
   const [numero, setNumero] = useState("");
   const [fecha, setFecha] = useState(new Date());
   const [mostrarFecha, setMostrarFecha] = useState(false);
   const [genero, setGenero] = useState("");
   const [ubicacion, setUbicacion] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // Función para validar número
-  const validarNumero = (num : string) => /^[0-9]{8,}$/.test(num);
+  const validarNumero = (num) => /^[0-9]{8,}$/.test(num);
+  const formatearFecha = (fecha) => fecha.toISOString().split("T")[0];
 
-  // Formatear fecha a YYYY-MM-DD
-  const formatearFecha = (fecha : Date  ) => fecha.toISOString().split("T")[0]; 
-
-  // Validar formulario antes de enviar
   const validarFormulario = () => {
     if (!validarNumero(numero)) {
       Alert.alert("Error", "El número debe contener al menos 8 dígitos.");
       return;
     }
-
     if (!genero) {
       Alert.alert("Error", "Selecciona un género.");
       return;
     }
-
     if (!ubicacion.trim()) {
       Alert.alert("Error", "La ubicación no puede estar vacía.");
       return;
     }
-
-    // Si todo está correcto, continuar con el registro
     ReguisData();
   };
 
-
-
-  // Enviar datos al backend
   const ReguisData = async () => {
-
-    console.log(nombreUsuario,usuario,email)
+    setLoading(true);
     try {
-      const response = await axios.post(`${backend}/api/auth/register`, {
+      await axios.post(`${backend}/api/auth/register`, {
         nombreUsuario,
         usuario,
         email,
@@ -70,101 +58,111 @@ export default function ReguisteData() {
         generoUsuario: genero,
         rolUsuario: "participante",
       });
-
+      setLoading(false);
       router.replace("/login");
     } catch (error) {
+      setLoading(false);
       console.error("Error en el registro:", error.response?.data || error.message);
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity
-        style={{ flexDirection: "row", marginTop: height * 0.05, marginLeft: width * 0.05 }}
-        onPress={() => router.back()}
-      >
-        <Icon style={{ marginTop: height * 0.005 }} name="chevron-left" size={20} color="#FCA311" />
-      </TouchableOpacity>
+      <Modal transparent={true} animationType="fade" visible={loading}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <ActivityIndicator size="large" color="#D4AF37" />
+            <Text style={styles.modalText}>En proceso...</Text>
+          </View>
+        </View>
+      </Modal>
+      <ScrollView>
 
-      <View style={styles.progressContainer}>
-        <View style={[styles.progressBar, { width: `${progress}%` }]} />
-      </View>
+        <TouchableOpacity style={{ flexDirection: "row", marginTop: height * 0.05, marginLeft: width * 0.05 }} onPress={() => router.back()}>
+          <Icon style={{ marginTop: height * 0.005 }} name="chevron-left" size={20} color="#FCA311" />
+        </TouchableOpacity>
 
-      <View>
-        <Text style={styles.titulo}>¡Ya casi terminas!</Text>
-        <Text style={styles.subtitulo}>Solo necesitamos unos datos más...</Text>
-      </View>
+        <View style={styles.progressContainer}>
+          <View style={[styles.progressBar, { width: `${progress}%` }]} />
+        </View>
 
-      <View style={styles.Text}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Número"
-          placeholderTextColor={"grey"}
-          keyboardType="numeric"
-          value={numero}
-          onChangeText={setNumero}
-        />
-      </View>
+        <View>
+          <Text style={styles.titulo}>¡Ya casi terminas!</Text>
+          <Text style={styles.subtitulo}>Solo necesitamos unos datos más...</Text>
+        </View>
 
-      {/* Botón para abrir el DateTimePicker */}
-      <TouchableOpacity style={styles.Text} onPress={() => setMostrarFecha(true)}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Fecha de Nacimiento"
-          placeholderTextColor={"grey"}
-          editable={false}
-        />
-      </TouchableOpacity>
+        <View style={styles.Text}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Número"
+            placeholderTextColor="grey"
+            keyboardType="numeric"
+            value={numero}
+            onChangeText={setNumero}
+          />
+        </View>
+        <TouchableOpacity style={styles.Text} onPress={() => setMostrarFecha(true)}>
+          <TextInput style={styles.TextInput} placeholder="Fecha de Nacimiento" placeholderTextColor="grey" editable={false} />
+        </TouchableOpacity>
+        {mostrarFecha && (
+          <DateTimePicker
+            value={fecha}
+            mode="date"
+            display="spinner"
+            onChange={(event, selectedDate) => {
+              setMostrarFecha(false);
+              if (selectedDate) setFecha(selectedDate);
+            }}
+          />
+        )}
 
-      {mostrarFecha && (
-        <DateTimePicker
-          value={fecha}
-          mode="date"
-          display="spinner"
-          onChange={(event, selectedDate) => {
-            setMostrarFecha(false);
-            if (selectedDate) setFecha(selectedDate);
-          }}
-        />
-      )}
+        <View style={styles.pickerContainer}>
+          <Picker selectedValue={genero} onValueChange={setGenero} style={styles.picker} dropdownIconColor="grey">
+            <Picker.Item label="Selecciona tu género" value="" color="grey" />
+            <Picker.Item label="Masculino" value="MASCULINO" color="#000000" />
+            <Picker.Item label="Femenino" value="FEMENINO" color="#000000" />
+            <Picker.Item label="Otro" value="OTRO" color="#000000" />
+          </Picker>
+        </View>
 
-      {/* Picker para seleccionar el género */}
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={genero}
-          onValueChange={(itemValue) => setGenero(itemValue)}
-          style={styles.picker}
-          dropdownIconColor={"grey"}
-        >
-          <Picker.Item label="Selecciona tu género" value="" color="grey" />
-          <Picker.Item label="Masculino" value="MASCULINO" color="#000000" />
-          <Picker.Item label="Femenino" value="FEMENINO" color="#000000" />
-          <Picker.Item label="Otro" value="OTRO" color="#000000" />
-        </Picker>
-      </View>
+        <View style={styles.Text}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Ubicación"
+            placeholderTextColor="grey"
+            value={ubicacion}
+            onChangeText={setUbicacion}
+          />
+        </View>
 
-      <View style={styles.Text}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Ubicación"
-          placeholderTextColor={"grey"}
-          value={ubicacion}
-          onChangeText={setUbicacion}
-        />
-      </View>
-
-      <TouchableOpacity style={styles.buttom} onPress={validarFormulario}>
-        <Text style={styles.textButtom}>Continuar</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.buttom} onPress={validarFormulario}>
+          <Text style={styles.textButtom}>Continuar</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#1A1A1A',
   },
+  modalContainer: { 
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContent: { 
+    backgroundColor: '#fff', 
+    padding: 20, borderRadius: 10,
+    alignItems: 'center' },
+    modalText: { 
+      marginTop: 10, 
+      fontSize: 18, 
+      fontWeight: 'bold', 
+      color: '#000' },
   progressContainer: {
     height: 5, 
     backgroundColor: '#E0E0E0', 
@@ -214,7 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginTop: height * 0.03,
     height: height * 0.07,
-    alignItems: 'center', // Centra el Picker verticalmente
+    alignItems: 'center', 
    
   },
 
@@ -223,7 +221,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1A1A1A',
     fontSize: 12,
     width: '100%',
-    textAlignVertical: 'center', // Asegura que el texto no se corte en la parte superior/inferior
+    textAlignVertical: 'center',
   },
 
 

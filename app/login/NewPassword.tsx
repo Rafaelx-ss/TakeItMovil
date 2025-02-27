@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import axios from "axios";
 import { backend } from '@/context/endpoints';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -49,7 +50,24 @@ export default function ChangePasswordScreen() {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+
+       <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: height * 0.05,
+                      marginLeft: width * 0.05,
+                    }}
+                    onPress={() => router.back()}
+                  >
+                    <Icon
+                      style={{ marginTop: height * 0.005 }}
+                      name={'chevron-left'}
+                      size={20}
+                      color="#FCA311"
+                    />
+            </TouchableOpacity>
       <View>
+
         <Text style={styles.titulo}>Cambiar Contraseña</Text>
       </View>
 

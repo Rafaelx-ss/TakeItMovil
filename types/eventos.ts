@@ -24,6 +24,8 @@ export interface Evento {
     created_at?: string;
     updated_at?: string;
     data?: any;
+    tipo_creador?: string;
+    imagen_evento?: string;
 }
 
 export interface EventoFormValues {

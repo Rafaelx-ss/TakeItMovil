@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import { backend } from '@/context/endpoints';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -19,40 +20,68 @@ export default function RecoverAccount() {
 
 
   const recover = async () => {
+    console.log('PEPE');
     try {
-
-      if(!email){
-        Alert.alert('Tienes que introducir el email')
+      if (!email) {
+        Alert.alert('Tienes que introducir el email');
+        return;
       }
-     
+    
       const response = await axios.post(`${backend}/api/auth/enviarcorreo`, {
-        correo : email,
+        correo: email,
       });
-      
-     console.log(response.data.success)
-     if(response.data.success == true){
-      router.push({
-        pathname: '/login/CodigoVerifiacion',
-        params: { 
-          email: email,
-        }
-      });
-
-      console.log(response.data)
-
-     }else{
-      Alert.alert(response.data.message)
-      console.log(response.data)
-     }
+    
+      console.log(response.data);
+    
+      if (response.data.success === true) {
+        router.push({
+          pathname: '/login/CodigoVerifiacion',
+          params: { 
+            email: email,
+          }
+        });
+      } else {
+        Alert.alert('Error', response.data.message || 'Ocurrió un error inesperado');
+      }
     
     } catch (error) {
+      console.error(error);
     
+      if (error.response) {
+        // Si el servidor respondió con un código de error
+        Alert.alert('Error', error.response.data.message || 'Error desconocido en la API');
+        console.error('Error en la respuesta de la API:', error.response.data);
+      } else if (error.request) {
+        // Si la solicitud fue hecha pero no hubo respuesta
+        Alert.alert('Error', 'No se recibió respuesta del servidor');
+        console.error('No se recibió respuesta del servidor:', error.request);
+      } else {
+        // Si ocurrió un error antes de hacer la solicitud
+        Alert.alert('Error', 'Ocurrió un error inesperado');
+        console.error('Error en la configuración de la solicitud:', error.message);
+      }
     }
+    
   };
 
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+ <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      marginTop: height * 0.05,
+                      marginLeft: width * 0.05,
+                    }}
+                    onPress={() => router.back()}
+                  >
+                    <Icon
+                      style={{ marginTop: height * 0.005 }}
+                      name={'chevron-left'}
+                      size={20}
+                      color="#FCA311"
+                    />
+            </TouchableOpacity>
       <Text style={styles.title}>Restablece tu contraseña</Text>
       <Text style={styles.description}>
         Introduce

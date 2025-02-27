@@ -69,6 +69,8 @@ const AuthenticatedApp: React.FC = () => {
     //Usuarios organizadores:
     "adminScreen",
 
+    "QRScanner/QRScanner",
+
 
   ];
   

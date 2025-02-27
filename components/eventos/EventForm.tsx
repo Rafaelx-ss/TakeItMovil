@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, Alert, TouchableWithoutFeedback, Keyboard  } from "react-native"
+import { View,Button, Text,Image, TextInput, ScrollView, StyleSheet, TouchableOpacity, Alert, TouchableWithoutFeedback, Keyboard  } from "react-native"
 import { Picker } from "@react-native-picker/picker"
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { useForm, Controller } from "react-hook-form"
@@ -12,6 +12,11 @@ import { useQuery } from "@tanstack/react-query"
 import { Platform } from "react-native"
 import Modal from 'react-native-modal';
 import { useAuth } from "@/context/AuthContext";
+import * as ImagePicker from 'expo-image-picker';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+
+
 
 
 // import { getUsuario } from "@/context/auth"
@@ -70,6 +75,9 @@ const formSchema = z.object({
 
 
 
+
+
+
 type EventFormValues = z.infer<typeof formSchema>
 
 interface EventFormProps {
@@ -114,6 +122,45 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
     },
   })
 
+  const [imageUri, setImageUri] = useState(null);
+  const [formData, setFormData] = useState(null);
+
+  const pickImage = async () => {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permission.status !== 'granted') {
+      Alert.alert('Permiso requerido', 'Necesitamos acceso a la galería.');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled && result.assets?.length > 0) {
+      const uri = result.assets[0].uri;
+      setImageUri(uri);
+
+      // Convertir imagen a FormData inmediatamente
+      let newFormData = new FormData();
+      newFormData.append('image', {
+        uri: uri,
+        name: 'photo.jpg',
+        type: 'image/jpeg',
+      });
+
+      setFormData(newFormData);
+      console.log('FormData creado automáticamente:', newFormData);
+    } else {
+      console.log('Selección de imagen cancelada');
+    }
+  };
+  console.log(formData);
+  console.log(imageUri);
+
+  
+
+
   var tipoRol = ''
  if(rol === 'Organizador'){
         tipoRol = 'O'
@@ -137,10 +184,10 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
     gcTime: 10 * 60 * 1000,
   })
 
-  console.log(categoriasResponse);
+
 
   const categorias = categoriasResponse?.data ?? []
-  console.log(categorias);
+
 
  
 
@@ -163,6 +210,7 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
   }, [event?.categoriaID, setValue])
 
   const onSubmit = async (values: EventFormValues) => {
+   
     setIsSubmitting(true)
     try {
       if (event && event.eventoID) {
@@ -182,14 +230,15 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
           ...values,
           fechaEvento: values.fechaEvento.toISOString(),
           horaEvento: values.horaEvento.toISOString(),
-          estadoID: Number.parseInt(values.estadoID),
-          maximoParticipantesEvento: values.maximoParticipantesEvento.toString(),
-          categoriaID: Number.parseInt(values.categoriaID),
-          subCategoriaID: Number.parseInt(values.subCategoriaID),
+          estadoID: Number(values.estadoID),
+          maximoParticipantesEvento: Number(values.maximoParticipantesEvento), // Convertido a número
+          categoriaID: Number(values.categoriaID),
+          subCategoriaID: Number(values.subCategoriaID),
           kitEvento: values.kitEvento || "",
           categoriaNombre: "",
           subCategoriaNombre: "",
-          tipo_creador : tipoRol
+          tipo_creador: tipoRol, // Asegurar consistencia
+          imagen_evento: formData, // Asegurar consistencia
         })
         Alert.alert("¡Éxito!", "El evento se ha creado correctamente")
       }
@@ -911,6 +960,10 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
         )}
         name="kitEvento"
       />
+       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200, marginBottom: 10 }} />}
+      <Button title="Seleccionar Imagen" onPress={pickImage} />
+        </View>
 
       <TouchableOpacity style={styles.submitButton} onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
         <Text style={styles.submitButtonText}>
@@ -925,7 +978,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#0A0A0A",
+    backgroundColor: "#0F0F0F",
   },
   inputContainer: {
     marginBottom: 24,

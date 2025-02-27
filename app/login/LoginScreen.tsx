@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 import { backend } from '@/context/endpoints';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 
@@ -30,6 +31,7 @@ export default function LoginScreen() {
       const { data } = response;
       const usuarioID = response.data.data.user.usuarioID;
       const { token } = data.data;
+
     
   
       
@@ -52,6 +54,21 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
+       <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                marginTop: height * 0.05,
+                marginLeft: width * 0.05,
+              }}
+              onPress={() => router.back()}
+            >
+              <Icon
+                style={{ marginTop: height * 0.005 }}
+                name={'chevron-left'}
+                size={20}
+                color="#FCA311"
+              />
+            </TouchableOpacity>
       <View>
         <Text style={styles.titulo}>Iniciar sesión</Text>
       </View>

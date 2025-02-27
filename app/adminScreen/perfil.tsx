@@ -8,10 +8,16 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "@/context/AuthContext"
 
+
+
+
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 
 export default function PerfilScreen() {
 
@@ -120,7 +126,7 @@ export const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginTop: 18,
+    marginTop: height * 0.05,
     zIndex: 3,
   },
   sectionTitle: {

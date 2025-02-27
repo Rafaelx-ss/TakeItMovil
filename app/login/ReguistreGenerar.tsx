@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { backend } from '@/context/endpoints';
 import { Generar } from '@/types/login';
+import { ScrollView } from "react-native-gesture-handler";
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -82,6 +83,8 @@ export default function ReguistreGenerar() {
 
   return (
     <SafeAreaView style={styles.container}>
+
+      <ScrollView>
 
       <TouchableOpacity
         style={{
@@ -164,6 +167,7 @@ export default function ReguistreGenerar() {
       <TouchableOpacity style={styles.buttom} onPress={ReguisG}>
         <Text style={styles.textButtom}>Continuar</Text>
       </TouchableOpacity>
+      </ScrollView>
 
     </SafeAreaView>
   );

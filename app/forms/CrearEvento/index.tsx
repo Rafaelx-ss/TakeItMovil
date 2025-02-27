@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { EventForm } from '@/components/eventos/EventForm'
 import { useNavigation } from '@react-navigation/native'
 import HeaderGradient from '@/components/HeaderGradient'
+import { useRouter } from "expo-router";
 
 export default function CrearEventoScreen() {
   const navigation = useNavigation()

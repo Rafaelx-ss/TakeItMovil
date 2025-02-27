@@ -62,7 +62,8 @@ export const EventosService = {
             maximoParticipantesEvento: Number(eventoData.maximoParticipantesEvento),
             duracionEvento: Number(eventoData.duracionEvento),
             costoEvento: Number(eventoData.costoEvento),
-             tipo_creador : 'O'
+            tipo_creador: eventoData.tipo_creador, 
+            imagen_evento: eventoData.imagen_evento,
         }
 
         const response = await axios.post(`${backend}/api/eventos/crear/${usuarioID}`, formattedData, {
