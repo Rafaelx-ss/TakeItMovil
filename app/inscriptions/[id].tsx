@@ -208,18 +208,33 @@ export default function EventoDetalle() {
 
           {qrCode && (
             <>
-            {Platform.OS === 'web' ? (
-                <Image 
-                  source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
-                  style={{ width: 100, height: 100, marginTop: 10 }} 
-                />
-            ) : (
-                <SvgUri 
-                  uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`} 
-                  width={250} 
-                  height={250} 
-                />
-            )}
+              {Platform.OS === 'web' ? (
+                backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
+                  <Image 
+                    source={{ uri: `${backend}/storage/${qrCode}` }} 
+                    style={{ width: 100, height: 100, marginTop: 10 }} 
+                  />
+                ) : (
+                  <Image 
+                    source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
+                    style={{ width: 100, height: 100, marginTop: 10 }} 
+                  />
+                )
+              ) : (
+                backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
+                  <SvgUri 
+                    uri={`${backend}/storage/${qrCode}`}
+                    width={250} 
+                    height={250} 
+                  />
+                ) : (
+                  <SvgUri 
+                    uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`}
+                    width={250} 
+                    height={250} 
+                  />
+                )
+              )}
             </>
           )}
 
