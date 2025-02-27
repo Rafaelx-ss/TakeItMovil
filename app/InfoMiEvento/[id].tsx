@@ -20,7 +20,7 @@ export default function EventoDetalle() {
   const router = useRouter();
   const [event, setEvent] = useState<Evento | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [qrCode, setQrCode] = useState<string | null>(null);
+  const [qrCode, setQrCode] = useState('aaaa');
 
 
   useEffect(() => {
@@ -35,6 +35,7 @@ export default function EventoDetalle() {
 
       if (usuarioID) {
         interface QrCodeResponse {
+            data: any;
             rutaqr: string;
         }
 
@@ -44,7 +45,8 @@ export default function EventoDetalle() {
 
         QrCodesService.obtenerQrCodePorUsuarioYEvento(Number.parseInt(Array.isArray(id) ? id[0] : id), usuarioID)
             .then((response: QrCodeResponse) => {
-                setQrCode(response.rutaqr);
+                setQrCode(response.data.rutaqr);
+                // console.log("Respuesta QR: ", response.data.rutaqr);
             })
             .catch((error: unknown) => {
                 console.error('Error al obtener el código QR:', error);
@@ -173,23 +175,42 @@ export default function EventoDetalle() {
 
         <View style={styles.section}>
         <Text style={styles.sectionTitle}>Códigos QR</Text>
+        {/* <Text style={{color: '#FFFFFF'}}>
+            ruta: {qrCode}
+        </Text> */}
         <View style={styles.qrContainer}>
-          {qrCode && (
+        {qrCode && (
             <>
-            {Platform.OS === 'web' ? (
-                <Image 
-                  source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
-                  style={{ width: 100, height: 100, marginTop: 10 }} 
-                />
-            ) : (
-                <SvgUri 
-                  uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`} 
-                  width={250} 
-                  height={250} 
-                />
-            )}
+              {Platform.OS === 'web' ? (
+                backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
+                  <Image 
+                    source={{ uri: `${backend}/storage/${qrCode}` }} 
+                    style={{ width: 300, height: 300, marginTop: 10 }} 
+                  />
+                ) : (
+                  <Image 
+                    source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
+                    style={{ width: 300, height: 300, marginTop: 10 }} 
+                  />
+                )
+              ) : (
+                backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
+                  <SvgUri 
+                    uri={`${backend}/storage/${qrCode}`}
+                    width={300} 
+                    height={300} 
+                  />
+                ) : (
+                  <SvgUri 
+                    uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`}
+                    width={300} 
+                    height={300} 
+                  />
+                )
+              )}
             </>
           )}
+          
         </View>
       </View>
 
