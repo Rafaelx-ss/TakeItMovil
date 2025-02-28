@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'expo-router';
@@ -40,7 +40,7 @@ export default function MisEventosAdminScreen() {
         setLoading(true);
       }
 
-      const response = await EventosService.obtenerEventosAdmin(usuarioID, pageNumber);
+      const response = await EventosService.obtenerEventosAdmin(usuarioID || 0, pageNumber); 
       console.log("🔹 Respuesta de la API:", response);
 
       const newEvents = response ?? []; // Asegura que la API devuelve un array válido
@@ -79,9 +79,9 @@ export default function MisEventosAdminScreen() {
 
       <FlatList
         data={events}
-        keyExtractor={(item) => item.eventoID.toString()}
+        keyExtractor={(item) => item.eventoID?.toString() ?? ""} 
         renderItem={({ item }) => (
-          <View style={styles.eventCard}>
+          <TouchableOpacity style={styles.eventCard} onPress={() => route.push(`/QRScanners/${item.eventoID}   `)}>
             <Image
               source={item.imagenEvento ? { uri: `${backend}/${item.imagenEvento.replace(/\\/g, "")}` } : require("@/images/mario-kart.png")}
               style={styles.eventImage}
@@ -97,7 +97,7 @@ export default function MisEventosAdminScreen() {
                 <Text style={styles.eventLocation}>{item.lugarEvento}</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
         ListFooterComponent={loading && hasMore ? <ActivityIndicator size="large" color="#E0B942" /> : null}
         onEndReached={() => {
