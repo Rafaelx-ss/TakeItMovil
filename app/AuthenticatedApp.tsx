@@ -43,7 +43,8 @@ const AuthenticatedApp: React.FC = () => {
     "login/ReguistreLike",
     "login/ReguisteData",
 
-
+    
+    "forms/qr/QRScanner",
     //Usuarios participantees:
     "login/index",
     //Crear patrocinador
@@ -69,7 +70,7 @@ const AuthenticatedApp: React.FC = () => {
     //Usuarios organizadores:
     "adminScreen",
 
-    "QRScanner/QRScanner",
+    "/QRScanner"
 
 
   ];

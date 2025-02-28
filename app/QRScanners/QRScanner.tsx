@@ -1,49 +1,47 @@
-import { Camera, useCameraPermissions,CameraView} from 'expo-camera';
+import { Camera, useCameraPermissions, CameraView } from 'expo-camera';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text,View,Button,Alert} from 'react-native';
-
+import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 
 type Prop = {
   type: string;
   data: string;
 };
-export default function App() {
-  const [permission,requestPermission] = useCameraPermissions();
-  const [scanned,setScanned] = useState(false);
 
-  useEffect(()=>{
-    (async()=>{
-      const {status} = await Camera.requestCameraPermissionsAsync()
+export default function QRScanner() {
+  const [permission, requestPermission] = useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
 
-      if(status  !== 'granted'){
-        alert('Desculpe, precisamos da permissão da câmera para fazer isso funcionar!');
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+
+      if (status !== 'granted') {
+        alert('Lo siento, necesitamos permiso de la cámara para que esto funcione.');
       }
-
-    })()
-  },[])
+    })();
+  }, []);
 
   const handleBarCodeScanned = ({ type, data }: Prop) => {
-      setScanned(true);
-      Alert.alert(
-        `Código ${type} Scaneado`, 
-        `Dados: ${data}`,      
-        [
-          {
-            text: 'OK',      
-            onPress: () => setScanned(false),  
-          }
-        ],
-        { cancelable: false } 
-      );
+    setScanned(true);
+    Alert.alert(
+      `Código ${type} Escaneado`,
+      `Datos: ${data}`,
+      [
+        {
+          text: 'OK',
+          onPress: () => setScanned(false),
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
-  
   if (!permission?.granted) {
     // Camera permissions are still loading or denied.
     return (
       <View style={styles.container}>
-        <Text style={styles.permissionText}>Permissão da câmera não concedida.</Text>
-        <Button title="Solicitar Permissão" onPress={requestPermission} />
+        <Text style={styles.permissionText}>Permiso de la cámara no concedido.</Text>
+        <Button title="Solicitar Permiso" onPress={requestPermission} />
       </View>
     );
   }
@@ -63,7 +61,7 @@ export default function App() {
         <View style={styles.layerBottom} />
       </View>
     </CameraView>
-    );
+  );
 }
 
 

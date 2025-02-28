@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "@/context/AuthContext"
+import { useRouter, useSegments } from "expo-router";
+
 
 
 
@@ -22,6 +24,7 @@ const height = Dimensions.get("window").height;
 export default function PerfilScreen() {
 
   const {username,email,fechaNacimientoUsuario,telefonoUsuario} = useAuth();
+  const router = useRouter();
 
   const profileData = {
     user: {
@@ -94,7 +97,7 @@ export default function PerfilScreen() {
               <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>f</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton}>
+              <TouchableOpacity style={styles.socialButton} onPress={()=>router.push('/forms/qr/QRScanner')}>
                 <Text style={styles.socialButtonText}>📸</Text>
               </TouchableOpacity>
             </View>
