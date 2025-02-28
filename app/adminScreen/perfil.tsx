@@ -97,7 +97,7 @@ export default function PerfilScreen() {
               <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>f</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.socialButton} onPress={()=>router.push('/forms/qr/QRScanner')}>
+              <TouchableOpacity style={styles.socialButton}>
                 <Text style={styles.socialButtonText}>📸</Text>
               </TouchableOpacity>
             </View>

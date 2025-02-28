@@ -11,11 +11,13 @@ import {
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "@/context/AuthContext"
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+
 
 export default function PerfilScreen() {
     const {username, email, fechaNacimientoUsuario, telefonoUsuario, logout} = useAuth();
-    const navigation = useNavigation();
+    const router = useRouter();
   
     return (
       <SafeAreaView style={styles.container}>
@@ -23,7 +25,7 @@ export default function PerfilScreen() {
           <View style={styles.content}>
             {/* Header with back button */}
             <View style={styles.header}>
-              <TouchableOpacity onPress={() => navigation.goBack()}>
+              <TouchableOpacity onPress={() => router.back()}>
                 <MaterialIcons name="arrow-back" size={24} color="#E0B942" />
               </TouchableOpacity>
             </View>

@@ -11,9 +11,13 @@ import {
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "@/context/AuthContext"
-import { useNavigation, useRoute } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import type { RouteProp } from '@react-navigation/native';
+
+// import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+// import { useNavigation, useRoute } from '@react-navigation/native';
+// import type { RouteProp } from '@react-navigation/native';
+// Use userouter for expo
+import { useRouter, useNavigation, useLocalSearchParams } from 'expo-router';
+
 
 type RootStackParamList = {
   Perfil: undefined;
@@ -22,8 +26,7 @@ type RootStackParamList = {
 };
 
 export default function PerfilScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const route = useRoute<RouteProp<RootStackParamList, 'Perfil'>>();
+  const router = useRouter();
   const {username,email,fechaNacimientoUsuario,telefonoUsuario, logout} = useAuth();
 
   const profileData = {
@@ -50,7 +53,7 @@ export default function PerfilScreen() {
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Perfil</Text>
             <TouchableOpacity 
-              onPress={() => navigation.navigate('settings/settings' as never)}
+              onPress={() => router.push('/push/User/settings/settings')}
             >
               <MaterialIcons name="settings" size={24} color="#E0B942" />
             </TouchableOpacity>

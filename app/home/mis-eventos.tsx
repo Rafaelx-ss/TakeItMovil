@@ -59,7 +59,7 @@ export default function MisEventosScreen() {
               <TouchableOpacity
               key={event.eventoID}
               style={styles.eventCard}
-              onPress={() => route.push(`/InfoMiEvento/${event.eventoID}`)}
+              onPress={() => route.push(`/push/User/InfoMiEvento/${event.eventoID}`)}
               >
                 <Image
                   source={

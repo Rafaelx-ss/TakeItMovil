@@ -29,8 +29,8 @@ const AuthenticatedApp: React.FC = () => {
   const screens = [
     //Inicio
     "home",
+    "login/index",
 
-    
     //Inicio de sesión
     "login/LoginScreen",
     //Recuperar cuenta
@@ -43,35 +43,28 @@ const AuthenticatedApp: React.FC = () => {
     "login/ReguistreLike",
     "login/ReguisteData",
 
-    
-    "forms/qr/QRScanner",
-    //Usuarios participantees:
-    "login/index",
-    //Crear patrocinador
-    "forms/CrearPatrocinador/index",
-    //Editar patrocinador
-    "forms/EditarPatrocinador/index",
-    //Crear evento
-    "forms/CrearEvento/index",
-    //Editar evento
-    "forms/EditarEvento/index",
-    //Crear usuario
-    "forms/CrearUsuario/index",
-    //Editar usuario
-    "forms/EditarUsuario/index",
-    //Inscripción
-    "inscriptions/[id]",
-    //Informacion de mis eventos
-    "InfoMiEvento/[id]",
-    //Configuracion de usuario
-    "settings/settings",
-
-
-    //Usuarios organizadores:
+    //Admin
     "adminScreen",
 
-    "QRScanner",
-    "QRScanners/[id]",
+    //Push
+    "push/Admin",
+    "push/User",
+
+    //push/Admin
+    "push/Admin/forms/CrearEvento",
+    "push/Admin/forms/EditarEvento",
+    "push/Admin/forms/CrearPatrocinador",
+    "push/Admin/forms/EditarPatrocinador",
+    "push/Admin/forms/CrearUsuario",
+    "push/Admin/forms/EditarUsuario",
+    "push/Admin/QRScanners/QRScanner",
+    "push/Admin/QRScanners/[id]",
+
+    //push/User
+    "push/User/inscriptions/[id]",
+    "push/User/InfoMiEvento/[id]",
+    "push/User/settings/settings",
+
 
   ];
   

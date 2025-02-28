@@ -64,7 +64,7 @@ export default function AdminEventDetail() {
     };
 
     const handleScanQR = () => {
-        router.push('/QRScanners/QRScanner');
+        router.push('/push/Admin/QRScanners/QRScanner');
     };
 
     const toggleQrModal = () => {

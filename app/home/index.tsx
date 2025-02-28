@@ -150,7 +150,7 @@ export default function EventosScreen() {
             ) : (
               // Contenido real cuando ya ha cargado
               eventosstarting.map((event) => (
-                <TouchableOpacity key={event.eventoID} style={styles.featuredCard} onPress={() => event.eventoID && route.push(`/inscriptions/${event.eventoID}`)}>
+                <TouchableOpacity key={event.eventoID} style={styles.featuredCard} onPress={() => event.eventoID && route.push(`/push/User/inscriptions/${event.eventoID}`)}>
                   <Image
                     source={
                       event.imagenEvento
