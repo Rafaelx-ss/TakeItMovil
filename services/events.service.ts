@@ -117,10 +117,13 @@ export const EventosService = {
         }
     },
 
-    obtenerEventosUsuario: async (usuarioID: number): Promise<Evento[]> => {
+    obtenerEventosUsuario: async (usuarioID: number): Promise<{ data: Evento[] }> => {
         try {
-            const response = await axios.get(`${backend}/api/eventos/usuario/${usuarioID}`);
-
+            const response = await axios.get(`${backend}/api/eventos/usuario/${usuarioID}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
             return response.data;
         } catch (error) {
             console.error('Error al obtener los eventos del usuario:', error);

@@ -20,16 +20,25 @@ export default function MisEventosScreen() {
 
   useEffect(() => {
     if (usuarioID) {
+      setLoading(true);
       EventosService.obtenerEventosUsuario(usuarioID)
-        .then((response: any) => {
-          setMyEvents(response.data);
+        .then((response) => {
+          if (response && response.data) {
+            setMyEvents(response.data);
+          } else {
+            setMyEvents([]);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching events:', error);
+          setMyEvents([]);
+        })
+        .finally(() => {
+          setLoading(false);
           setRefreshing(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching events:', error);
-      });
+        });
     }
-  }, [refreshing]);
+  }, [usuarioID, refreshing]);
 
   const onRefresh = async () => {
     setMyEvents([]);
