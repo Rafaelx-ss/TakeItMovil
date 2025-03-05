@@ -81,10 +81,10 @@ export default function PerfilScreen() {
                 <MaterialIcons name="chevron-right" size={24} color="#E0B942" />
               </TouchableOpacity>
   
-              <TouchableOpacity style={[styles.menuItem, styles.deleteAccount]}>
+              <TouchableOpacity style={[styles.menuItem, styles.deleteAccount]} onPress={logout}>
                 <View style={styles.menuItemLeft}>
-                  <MaterialIcons name="delete" size={24} color="#E0B942" />
-                  <Text style={styles.menuItemText}>Eliminar cuenta</Text>
+                  <MaterialIcons name="logout" size={24} color="#E0B942" />
+                  <Text style={styles.menuItemText}>Cerrar Sesión</Text>
                 </View>
                 <MaterialIcons name="chevron-right" size={24} color="#E0B942" />
               </TouchableOpacity>

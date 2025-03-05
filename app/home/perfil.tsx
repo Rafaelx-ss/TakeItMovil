@@ -57,9 +57,6 @@ export default function PerfilScreen() {
             >
               <MaterialIcons name="settings" size={24} color="#E0B942" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={logout}>
-              <MaterialIcons name="logout" size={24} color="#E0B942" />
-            </TouchableOpacity>
           </View>
 
           {/* User Info */}
