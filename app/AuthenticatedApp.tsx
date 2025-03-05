@@ -64,6 +64,11 @@ const AuthenticatedApp: React.FC = () => {
     "push/User/inscriptions/[id]",
     "push/User/InfoMiEvento/[id]",
     "push/User/settings/settings",
+    "push/User/settings/ChangeAdressScreen",
+    "push/User/settings/ChangeEmailScreen",
+    "push/User/settings/ChangePasswordScreen",
+    "push/User/settings/ChangePhoneScreen",
+    "push/User/settings/ChangePhotoScreen",
 
 
   ];

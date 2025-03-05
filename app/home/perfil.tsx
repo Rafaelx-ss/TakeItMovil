@@ -53,8 +53,7 @@ export default function PerfilScreen() {
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Perfil</Text>
             <TouchableOpacity 
-              onPress={() => router.push('/push/User/settings/settings')}
-            >
+              onPress={() => router.push('/push/User/settings/settings')}>
               <MaterialIcons name="settings" size={24} color="#E0B942" />
             </TouchableOpacity>
           </View>

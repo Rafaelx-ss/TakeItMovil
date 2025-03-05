@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "@/context/AuthContext"
+import MenuItem from "./MenuItem";
 // import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
@@ -38,9 +39,20 @@ export default function PerfilScreen() {
               />
               <Text style={styles.profileName}>{username}</Text>
             </View>
-  
+
             {/* Menu Items */}
             <View style={styles.menuContainer}>
+              <MenuItem icon="photo-camera" text="Cambiar Foto" onPress={() => router.push('/push/User/settings/ChangePhotoScreen')}/>
+              <MenuItem icon="phone" text="Teléfono" onPress={() => router.push('/push/User/settings/ChangePhoneScreen')}/>
+              <MenuItem icon="lock" text="Contraseña" onPress={() => router.push('/push/User/settings/ChangePasswordScreen')}/>
+              <MenuItem icon="email" text="Correo electrónico" onPress={() => router.push('/push/User/settings/ChangeEmailScreen')}/>
+              <MenuItem icon="location-on" text="Dirección" onPress={() => router.push('/push/User/settings/ChangeAdressScreen')}/>
+              <MenuItem icon="logout" text="Cerrar Sesión" onPress={logout} style={styles.deleteAccount} />
+            </View>
+          </View>
+  
+            {/* Menu Items */}
+            {/* <View style={styles.menuContainer}>
               <TouchableOpacity style={styles.menuItem}>
                 <View style={styles.menuItemLeft}>
                   <MaterialIcons name="photo-camera" size={24} color="#E0B942" />
@@ -89,7 +101,7 @@ export default function PerfilScreen() {
                 <MaterialIcons name="chevron-right" size={24} color="#E0B942" />
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
         </ScrollView>
       </SafeAreaView>
     );
