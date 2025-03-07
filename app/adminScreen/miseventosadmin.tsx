@@ -81,7 +81,7 @@ export default function MisEventosAdminScreen() {
         data={events}
         keyExtractor={(item) => item.eventoID?.toString() ?? ""} 
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.eventCard} onPress={() => route.push(`/push/Admin/QRScanners/${item.eventoID}   `)}>
+          <TouchableOpacity style={styles.eventCard} onPress={() => route.push(`/push/Admin/QRScanners/${item.eventoID}`)}>
             <Image
               source={item.imagenEvento ? { uri: `${backend}/${item.imagenEvento.replace(/\\/g, "")}` } : require("@/images/mario-kart.png")}
               style={styles.eventImage}

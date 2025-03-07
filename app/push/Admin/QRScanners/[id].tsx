@@ -4,12 +4,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import Modal from 'react-native-modal';
+import { EventosService } from '@/services/events.service';
+import { Evento } from '@/types/eventos';
 
 const { width } = Dimensions.get('window');
 
 // Mock data for a single event
 const mockEvent = {
-    id: 1,
     nombreEvento: 'Carrera Mario Kart',
     fechaEvento: '2025-06-15',
     horaEvento: '10:00',
@@ -31,26 +32,67 @@ const mockEvent = {
 export default function AdminEventDetail() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
-    const [event, setEvent] = useState(mockEvent);
+     const [event, setEvent] = useState<Evento | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isQrModalVisible, setQrModalVisible] = useState(false);
     const [isOptionsModalVisible, setOptionsModalVisible] = useState(false);
 
+    const [Participantes, setParticipantes] = useState([]);
+    
+
+
     useEffect(() => {
         // In a real app, you would fetch the event data here
-        const fetchEventData = async () => {
-            try {
-                // Simulate API call
-                await new Promise(resolve => setTimeout(resolve, 800));
-                setEvent(mockEvent);
-            } catch (error) {
-                console.error('Error fetching event data:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
 
-        fetchEventData();
+
+        EventosService.obtenerEvento(Number.parseInt(Array.isArray(id) ? id[0] : id))
+              .then((response) => {
+
+            let eventoData = response.data;
+
+            if (typeof eventoData.costoEvento === "string") {
+                try {
+                    eventoData.costoEvento = JSON.parse(eventoData.costoEvento);
+                } catch (error) {
+                    console.error("❌ Error al parsear costoEvento:", error);
+                    eventoData.costoEvento = []; 
+                }
+            }
+
+            setEvent(eventoData);
+            console.log('🔍 Detalles del evento:', response.data);
+            setIsLoading(false);
+              })
+              .catch((error) => {
+            console.error('Error fetching event data:', error);
+            setIsLoading(false);
+              });
+
+
+            EventosService.Participanteseventos(Number.parseInt(Array.isArray(id) ? id[0] : id))
+              .then((response) => {
+             const count = response.data;
+
+                // Mostrar el count en la consola
+                console.log('🔍 Participantes:', response.data);
+                console.log('🔍 Total de participantes:', count);  // Aquí accedes a `count`
+
+                // Opcional: Guardar count en un estado separado si es necesario
+                setParticipantes(response.data);
+
+                console.log('🔍 Total de participantes:', Participantes);
+                console.log(Participantes.count)  // Aquí accedes a `Participantes`
+            
+              })
+              .catch((error) => {
+            console.error('Error fetching event data:', error);
+            setIsLoading(false);
+              });
+
+    
+
+
+
     }, [id]);
 
     const formatDate = (dateStr: string) => {
@@ -84,7 +126,10 @@ export default function AdminEventDetail() {
         );
     }
 
-    const occupancyPercentage = (event.participantesActuales / event.maximoParticipantesEvento) * 100;
+    const maxParticipants = event?.maximoParticipantesEvento ?? 0;
+    const currentParticipants = Participantes?.count ?? 0;
+    const occupancyPercentage = maxParticipants > 0 ? ((currentParticipants / maxParticipants) * 100) : 0;
+    console.log('🔍 Porcentaje de ocupación:', occupancyPercentage);
     const isNearCapacity = occupancyPercentage > 80;
 
     return (
@@ -119,19 +164,19 @@ export default function AdminEventDetail() {
                     <View style={styles.header}>
                         <View style={[
                             styles.statusBadge,
-                            { backgroundColor: event.estadoEvento === 'Activo' ? '#4CAF50' : '#E0B942' }
+                            { backgroundColor: event?.estadoEvento === "Activo" ? '#4CAF50' : '#E0B942' }
                         ]}>
-                            <Text style={styles.statusText}>{event.estadoEvento}</Text>
+                            <Text style={styles.statusText}>{event?.activoEvento ? "Activo" : "Inactivo"}</Text>
                         </View>
-                        <Text style={styles.title}>{event.nombreEvento}</Text>
+                        <Text style={styles.title}>{event?.nombreEvento}</Text>
                         <View style={styles.dateTimeContainer}>
                             <View style={styles.dateTimeItem}>
                                 <MaterialIcons name="event" size={20} color="#E0B942" />
-                                <Text style={styles.dateTimeText}>{formatDate(event.fechaEvento)}</Text>
+                                <Text style={styles.dateTimeText}>{formatDate(event?.fechaEvento)}</Text>
                             </View>
                             <View style={styles.dateTimeItem}>
                                 <MaterialIcons name="access-time" size={20} color="#E0B942" />
-                                <Text style={styles.dateTimeText}>{event.horaEvento} hrs</Text>
+                                <Text style={styles.dateTimeText}>{event?.horaEvento} hrs</Text>
                             </View>
                         </View>
                     </View>
@@ -147,17 +192,17 @@ export default function AdminEventDetail() {
 
                     <View style={styles.statsContainer}>
                         <View style={styles.statItem}>
-                            <Text style={styles.statNumber}>{event.participantesActuales}</Text>
+                            <Text style={styles.statNumber}>{event?.maximoParticipantesEvento}</Text>
                             <Text style={styles.statLabel}>Registrados</Text>
                         </View>
                         <View style={styles.statDivider} />
                         <View style={styles.statItem}>
-                            <Text style={styles.statNumber}>{event.participantesActuales}</Text>
+                            <Text style={styles.statNumber}>{Participantes?.count}</Text>
                             <Text style={styles.statLabel}>Confirmados</Text>
                         </View>
                         <View style={styles.statDivider} />
                         <View style={styles.statItem}>
-                            <Text style={styles.statNumber}>{event.maximoParticipantesEvento - event.participantesActuales}</Text>
+                            <Text style={styles.statNumber}>{event?.maximoParticipantesEvento - Participantes?.count}</Text>
                             <Text style={styles.statLabel}>Disponibles</Text>
                         </View>
                     </View>
@@ -169,9 +214,9 @@ export default function AdminEventDetail() {
                             </View>
                             <View style={styles.infoContent}>
                                 <Text style={styles.infoLabel}>Ubicación</Text>
-                                <Text style={styles.infoText}>{event.lugarEvento}</Text>
-                                <Text style={styles.infoSubtext}>{event.direccionEvento}</Text>
-                                <Text style={styles.infoSubtext}>{event.municioEvento}, CP: {event.cpEvento}</Text>
+                                <Text style={styles.infoText}>{event?.lugarEvento}</Text>
+                                <Text style={styles.infoSubtext}>{event?.direccionEvento}</Text>
+                                <Text style={styles.infoSubtext}>{event?.municioEvento}, CP: {event?.cpEvento}</Text>
                                 <TouchableOpacity style={styles.mapButton}>
                                     <Text style={styles.mapButtonText}>Ver en mapa</Text>
                                     <MaterialIcons name="open-in-new" size={16} color="#E0B942" />
@@ -219,15 +264,26 @@ export default function AdminEventDetail() {
 
                         <View style={styles.divider} />
 
-                        <View style={styles.infoRow}>
-                            <View style={styles.iconContainer}>
-                                <MaterialIcons name="attach-money" size={24} color="#E0B942" />
-                            </View>
-                            <View style={styles.infoContent}>
-                                <Text style={styles.infoLabel}>Costo de Inscripción</Text>
-                                <Text style={styles.infoText}>${event.costoEvento} MXN</Text>
-                            </View>
+                        <View style={styles.infoContent}>
+                            <Text style={styles.infoLabel}>Costo de Inscripción</Text>
+                            {event?.categoriaID === 6 || event?.categoriaID === 11 ? (
+                           
+                                event?.costoEvento?.map((entrada, index) => (
+                                    <Text key={index} style={styles.infoText}>
+                                        {entrada.nombre.charAt(0).toUpperCase() + entrada.nombre.slice(1).replace(/_/g, " ")}:  
+                                        ${entrada.precio} MXN
+                                    </Text>
+                                ))
+                            ) : (
+
+                                <Text style={styles.infoText}>
+                                    ${event?.costoEvento?.find((entrada) => entrada.nombre === "entrada_general")?.precio || "N/A"} MXN
+                                </Text>
+                            )}
                         </View>
+
+
+                   
 
                         <View style={styles.divider} />
 
@@ -270,7 +326,7 @@ export default function AdminEventDetail() {
                     <View style={styles.actionButtonsContainer}>
                         <TouchableOpacity
                             style={[styles.actionButton, styles.editButton]}
-                            // onPress={() => router.push(`/forms/EditarEvento/${id}`)}
+                            onPress={() => router.push(`../push/Admin/forms/EditarEvento/${id}`)}
                             activeOpacity={0.8}
                         >
                             <MaterialIcons name="edit" size={20} color="#FFFFFF" />
