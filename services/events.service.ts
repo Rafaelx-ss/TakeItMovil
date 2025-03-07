@@ -50,6 +50,21 @@ export const EventosService = {
         }
     },
 
+
+    Participanteseventos: async (eventoID: number): Promise<Evento> => {
+        try {
+            const response = await axios.get(`${backend}/api/qr_codesevents/${eventoID}`, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error al obtener el evento:', error);
+            throw error;
+        }
+    },
+
     crearEvento: async (usuarioID: number, eventoData: Omit<Evento, "eventoID">): Promise<Evento> => {
     try {
         const formattedData = {
