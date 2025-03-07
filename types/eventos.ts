@@ -26,6 +26,11 @@ export interface Evento {
     data?: any;
     tipo_creador?: string;
     imagen_evento?: string;
+    costoTipoEntrada2?: string;
+    costoTipoEntrada3?: string;
+    nombreTipoEntrada2?: string;
+    nombreTipoEntrada3?: string;
+    countCostoEvento?: number;
 }
 
 export interface EventoFormValues {

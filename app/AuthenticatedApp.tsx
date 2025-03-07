@@ -52,11 +52,17 @@ const AuthenticatedApp: React.FC = () => {
 
     //push/Admin
     "push/Admin/forms/CrearEvento",
+    "push/Admin/forms/CrearEvento/index",
     "push/Admin/forms/EditarEvento",
+    "push/Admin/forms/EditarEvento/index",
     "push/Admin/forms/CrearPatrocinador",
+    "push/Admin/forms/CrearPatrocinador/index",
     "push/Admin/forms/EditarPatrocinador",
+    "push/Admin/forms/EditarPatrocinador/index",
     "push/Admin/forms/CrearUsuario",
+    "push/Admin/forms/CrearUsuario/index",
     "push/Admin/forms/EditarUsuario",
+    "push/Admin/forms/EditarUsuario/index",
     "push/Admin/QRScanners/QRScanner",
     "push/Admin/QRScanners/[id]",
 
@@ -69,6 +75,7 @@ const AuthenticatedApp: React.FC = () => {
     "push/User/settings/ChangePasswordScreen",
     "push/User/settings/ChangePhoneScreen",
     "push/User/settings/ChangePhotoScreen",
+    
 
 
   ];

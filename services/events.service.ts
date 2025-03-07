@@ -62,6 +62,9 @@ export const EventosService = {
             maximoParticipantesEvento: Number(eventoData.maximoParticipantesEvento),
             duracionEvento: Number(eventoData.duracionEvento),
             costoEvento: Number(eventoData.costoEvento),
+            costoTipoEntrada2: Number(eventoData.costoTipoEntrada2),
+            costoTipoEntrada3: Number(eventoData.costoTipoEntrada3),
+            countCostoEvento: Number(eventoData.countCostoEvento),
             tipo_creador: eventoData.tipo_creador, 
             imagen_evento: eventoData.imagen_evento,
         }

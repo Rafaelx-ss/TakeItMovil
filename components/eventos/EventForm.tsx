@@ -13,10 +13,7 @@ import { Platform } from "react-native"
 import Modal from 'react-native-modal';
 import { useAuth } from "@/context/AuthContext";
 import * as ImagePicker from 'expo-image-picker';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
-
+import { MinusCircleIcon, PlusCircleIcon } from "lucide-react-native"
 
 
 // import { getUsuario } from "@/context/auth"
@@ -70,6 +67,21 @@ const formSchema = z.object({
     .refine((val) => Number(val) > 0 && Number(val) <= 48, "La duración debe estar entre 1 y 48 horas"),
   kitEvento: z.string().min(1, "El kit del evento es requerido").max(255, "El kit no debe exceder 255 caracteres"),
   nuevaSubcategoria: z.string().optional(),
+
+
+  nombreTipoEntrada2: z.string().optional(),
+  costoTipoEntrada2:
+    z.string()
+    .optional()
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, "El costo debe ser un número válido"),
+
+  nombreTipoEntrada3: z.string().optional(),
+  costoTipoEntrada3:
+    z.string()
+    .optional()
+    .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, "El costo debe ser un número válido"),
+
+  countCostoEvento: z.number().min(1, "El número de entradas debe ser al menos 1"),
 })
 
 
@@ -95,6 +107,7 @@ export function EventForm({ event, onSubmitSuccess }: EventFormProps) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisible2, setModalVisible2] = useState(false);
   const [isModalVisible3, setModalVisible3] = useState(false);
+  const [countCostoEvento, setCountCostoEvento] = useState(1);
 
 const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
 
@@ -119,6 +132,11 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
       horaEvento: event?.horaEvento || new Date(),
       duracionEvento: event?.duracionEvento || "",
       kitEvento: event?.kitEvento || "",
+      countCostoEvento: event?.countCostoEvento || 1,
+      nombreTipoEntrada2: event?.nombreTipoEntrada2 || "",
+      costoTipoEntrada2: event?.costoTipoEntrada2 || "",
+      nombreTipoEntrada3: event?.nombreTipoEntrada3 || "",
+      costoTipoEntrada3: event?.costoTipoEntrada3 || "",
     },
   })
 
@@ -239,6 +257,11 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
           subCategoriaNombre: "",
           tipo_creador: tipoRol, // Asegurar consistencia
           imagen_evento: formData, // Asegurar consistencia
+          countCostoEvento: Number(countCostoEvento),
+          nombreTipoEntrada2: values.nombreTipoEntrada2 || "",
+          costoTipoEntrada2: values.costoTipoEntrada2 || 0,
+          nombreTipoEntrada3: values.nombreTipoEntrada3 || "",
+          costoTipoEntrada3: values.costoTipoEntrada3 ||  0,
         })
         Alert.alert("¡Éxito!", "El evento se ha creado correctamente")
       }
@@ -586,13 +609,13 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Costo del Evento</Text>
+            <Text style={styles.label}>{(selectedCategoryId === "6" || selectedCategoryId === "11") ? "Costo de la entrada general" : "Costo del Evento"}</Text>
             <TextInput
               style={styles.input}
               onBlur={onBlur}
               onChangeText={onChange}
               value={value}
-              placeholder="Ej: 250.00"
+              placeholder="Ej: 0.00"
               keyboardType="numeric"
               placeholderTextColor="#858585"
             />
@@ -605,6 +628,136 @@ const {usuarioID, token,rol, fechaNacimientoUsuario}=useAuth()
         )}
         name="costoEvento"
       />
+
+      
+      {countCostoEvento > 1 && (
+        <>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Nombre del tipo de entrada 2</Text>
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Ej: Entrada VIP"
+                  placeholderTextColor="#858585"
+                />
+                {formState.errors.nombreTipoEntrada2 && (
+                  <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                    {formState.errors.nombreTipoEntrada2?.message}
+                  </Text>
+                )}
+              </View>
+            )}
+            name="nombreTipoEntrada2"
+          />
+
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Costo del tipo de entrada 2</Text>
+                <TextInput
+                  style={styles.input}  
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Ej: 250.00"
+                  keyboardType="numeric"
+                  placeholderTextColor="#858585"
+                />
+                {formState.errors.costoTipoEntrada2 && (
+                  <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                    {formState.errors.costoTipoEntrada2?.message}
+                  </Text>
+                )}
+              </View>
+            )}
+            name="costoTipoEntrada2"
+          />
+        </>
+      )}
+
+      {countCostoEvento > 2 && (
+        <>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Nombre del tipo de entrada 3</Text>
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Ej: Entrada Premium"
+                  placeholderTextColor="#858585"
+                />
+                {formState.errors.nombreTipoEntrada3 && (
+                  <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                    {formState.errors.nombreTipoEntrada3?.message}
+                  </Text>
+                )}
+              </View>
+            )}
+            name="nombreTipoEntrada3"
+          />
+
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Costo del tipo de entrada 3</Text>
+                <TextInput
+                  style={styles.input}  
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value}
+                  placeholder="Ej: 500.00"
+                  keyboardType="numeric"
+                  placeholderTextColor="#858585"
+                />
+                {formState.errors.costoTipoEntrada3 && (
+                  <Text style={{ color: "#ff4444", fontSize: 14, marginTop: 4, marginLeft: 4 }}>
+                    {formState.errors.costoTipoEntrada3?.message}
+                  </Text>
+                )}
+              </View>
+            )}
+            name="costoTipoEntrada3"
+          />
+        </>
+      )}
+
+
+      {(selectedCategoryId === "6" || selectedCategoryId === "11") && countCostoEvento < 3 && (
+        <>
+          <TouchableOpacity style={{ marginTop: -10, marginBottom: 15 }} onPress={() => {
+              setCountCostoEvento(countCostoEvento + 1);
+            }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <PlusCircleIcon size={20} color="#E0B942" />
+                <Text style={{ color: "#E0B942" }}> Agregar tipo de entrada</Text>
+              </View>
+          </TouchableOpacity>
+        </>
+      )}
+
+      {countCostoEvento > 1 && (
+        <TouchableOpacity style={{ marginTop: -5, marginBottom: 15 }} onPress={() => {
+            setCountCostoEvento(countCostoEvento - 1);
+          }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <MinusCircleIcon size={20} color="#ff4444" />
+              <Text style={{ color: "#ff4444" }}> Eliminar última entrada</Text>
+            </View>
+          </TouchableOpacity>
+        )}
+
+
 
       <Controller
         control={control}
