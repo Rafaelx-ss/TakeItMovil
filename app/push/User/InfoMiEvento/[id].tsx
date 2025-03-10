@@ -26,7 +26,19 @@ export default function EventoDetalle() {
   useEffect(() => {
     EventosService.obtenerEvento(Number.parseInt(Array.isArray(id) ? id[0] : id))
       .then((response) => {
-        setEvent(response.data);
+
+        let eventoData = response.data;
+
+        if (typeof eventoData.costoEvento === "string") {
+            try {
+                eventoData.costoEvento = JSON.parse(eventoData.costoEvento);
+            } catch (error) {
+                console.error("❌ Error al parsear costoEvento:", error);
+                eventoData.costoEvento = []; 
+            }
+        }
+
+          setEvent(eventoData);
         setIsLoading(false);
       })
       .catch(() => {
@@ -138,8 +150,21 @@ export default function EventoDetalle() {
               <MaterialIcons name="attach-money" size={24} color="#E0B942" />
             </View>
             <View style={styles.infoContent}>
-              <Text style={styles.infoLabel}>Costo de Inscripción</Text>
-              <Text style={styles.infoText}>${event?.costoEvento} MXN</Text>
+              <Text style={styles.infoLabel}>Costo de Inscripcióaaan</Text>
+              {event?.categoriaID === 6 || event?.categoriaID === 11 ? (
+              
+                  event?.costoEvento?.map((entrada, index) => (
+                      <Text key={index} style={styles.infoText}>
+                          {entrada.nombre.charAt(0).toUpperCase() + entrada.nombre.slice(1).replace(/_/g, " ")}:  
+                          ${entrada.precio} MXN
+                      </Text>
+                  ))
+              ) : (
+
+                  <Text style={styles.infoText}>
+                      ${event?.costoEvento?.find((entrada) => entrada.nombre === "entrada_general")?.precio || "N/A"} MXN
+                  </Text>
+              )}
             </View>
           </View>
 
