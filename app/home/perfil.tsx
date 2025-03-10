@@ -29,10 +29,35 @@ export default function PerfilScreen() {
   const router = useRouter();
   const {username,email,fechaNacimientoUsuario,telefonoUsuario, logout} = useAuth();
 
+  // Función para formatear el nombre
+  const formatName = (fullName: string | null) => {
+    if (!fullName) {
+      return {
+        firstName: '',
+        lastName: ''
+      };
+    }
+    
+    const names = fullName.trim().split(' ');
+    if (names.length > 2) {
+      // Si hay más de dos palabras, tomar el primer nombre y el antepenúltimo
+      return {
+        firstName: names[0],
+        lastName: names[names.length - 2] // Cambiamos -1 por -2 para tomar el antepenúltimo
+      };
+    }
+    return {
+      firstName: names[0],
+      lastName: names[1] || '' // Si solo hay un nombre o dos, se mantiene igual
+    };
+  };
+
+  const formattedName = formatName(username);
+
   const profileData = {
     user: {
-      firstName: username,
-      lastName: "",
+      firstName: formattedName.firstName,
+      lastName: formattedName.lastName,
       email: email,
       birthDate: fechaNacimientoUsuario,
       address: "Calle 6 #123, Pacantún, 77400",
@@ -67,8 +92,22 @@ export default function PerfilScreen() {
                 style={styles.profileImage}
               />
               <View style={styles.nameContainer}>
-                <Text style={styles.name}>{user.firstName}</Text>
-                <Text style={styles.name}>{user.lastName}</Text>
+                <Text 
+                  style={styles.name}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {user.firstName}
+                </Text>
+                {user.lastName && (
+                  <Text 
+                    style={styles.name}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {user.lastName}
+                  </Text>
+                )}
               </View>
             </View>
 
@@ -159,6 +198,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 20,
+    paddingRight: 16,
   },
   profileImage: {
     width: 90,
@@ -167,14 +207,18 @@ export const styles = StyleSheet.create({
     marginBottom: 16,
   },
   nameContainer: {
+    flex: 1,
     alignItems: 'flex-start',
     marginTop: 10,
+    maxWidth: '70%',
   },
   name: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#FFFFFF',
     lineHeight: 34,
+    flexWrap: 'wrap',
+    flexShrink: 1,
   },
   infoSection: {
     backgroundColor: '#1A1A1A',
