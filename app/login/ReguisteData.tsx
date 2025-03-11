@@ -94,7 +94,7 @@ export default function ReguisteData() {
         <View style={styles.Text}>
           <TextInput
             style={styles.TextInput}
-            placeholder="Número"
+            placeholder="Número de teléfono (solo números)"
             placeholderTextColor="grey"
             keyboardType="numeric"
             value={numero}
@@ -102,7 +102,13 @@ export default function ReguisteData() {
           />
         </View>
         <TouchableOpacity style={styles.Text} onPress={() => setMostrarFecha(true)}>
-          <TextInput style={styles.TextInput} placeholder="Fecha de Nacimiento" placeholderTextColor="grey" editable={false} />
+          <TextInput 
+            style={styles.TextInput} 
+            placeholder="Selecciona tu fecha de nacimiento" 
+            placeholderTextColor="grey" 
+            editable={false} 
+            value={fecha ? fecha.toLocaleDateString() : ''}
+          />
         </TouchableOpacity>
         {mostrarFecha && (
           <DateTimePicker
@@ -117,18 +123,23 @@ export default function ReguisteData() {
         )}
 
         <View style={styles.pickerContainer}>
-          <Picker selectedValue={genero} onValueChange={setGenero} style={styles.picker} dropdownIconColor="grey">
+          <Picker 
+            selectedValue={genero} 
+            onValueChange={setGenero} 
+            style={styles.picker} 
+            dropdownIconColor="grey"
+          >
             <Picker.Item label="Selecciona tu género" value="" color="grey" />
-            <Picker.Item label="Masculino" value="MASCULINO" color="#000000" />
-            <Picker.Item label="Femenino" value="FEMENINO" color="#000000" />
-            <Picker.Item label="Otro" value="OTRO" color="#000000" />
+            <Picker.Item label="Masculino" value="MASCULINO" color="#FFFFFF" />
+            <Picker.Item label="Femenino" value="FEMENINO" color="#FFFFFF" />
+            <Picker.Item label="Otro" value="OTRO" color="#FFFFFF" />
           </Picker>
         </View>
 
         <View style={styles.Text}>
           <TextInput
             style={styles.TextInput}
-            placeholder="Ubicación"
+            placeholder="Ciudad o ubicación actual"
             placeholderTextColor="grey"
             value={ubicacion}
             onChangeText={setUbicacion}
@@ -203,6 +214,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     height: height * 0.05,
     paddingLeft: width * 0.03,
+    paddingRight: width * 0.03,
   },
   pickerContainer: {
     width: '90%',
