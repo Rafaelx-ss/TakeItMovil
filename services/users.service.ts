@@ -43,17 +43,13 @@ export const UsersService = {
         }
     },
 
-    editarUsuario: async (usuarioID: number, nombreUsuario: string, usuario: string, email: string, password: string, telefonoUsuario: string, generoUsuario: string, rolUsuario: string): Promise<void> => {
+    editarUsuario: async (usuarioID: number, key: string, valor: string): Promise<void> => {
         try {
             await axios.post(`${backend}/api/users/update/${usuarioID}`, 
                 { 
-                    nombreUsuario: nombreUsuario,
-                    usuario: usuario,
-                    email: email,
-                    password: password,
-                    telefonoUsuario: telefonoUsuario,
-                    generoUsuario: generoUsuario,
-                    rolUsuario: rolUsuario
+                    key: key,
+                    valor: valor,
+     
                 },
                 {
                     headers: {

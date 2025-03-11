@@ -75,6 +75,15 @@ const AuthenticatedApp: React.FC = () => {
     "push/User/settings/ChangePasswordScreen",
     "push/User/settings/ChangePhoneScreen",
     "push/User/settings/ChangePhotoScreen",
+
+    //push/Admin/forms/settings
+    "push/Admin/forms/settings/settings",
+    "push/Admin/forms/settings/ChangeAdressScreen",
+    "push/Admin/forms/settings/ChangeEmailScreen",
+    "push/Admin/forms/settings/ChangePasswordScreen",
+    "push/Admin/forms/settings/ChangePhoneScreen",
+    "push/Admin/forms/settings/ChangePhotoScreen",
+
     
 
 

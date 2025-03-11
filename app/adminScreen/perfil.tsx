@@ -48,7 +48,7 @@ export default function PerfilScreen() {
           {/* Header */}
           <View style={styles.header}>
             <Text style={styles.headerTitle}>Perfil</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/push/Admin/forms/settings/settings')}>
               <MaterialIcons name="settings" size={24} color="#E0B942" />
             </TouchableOpacity>
           </View>
