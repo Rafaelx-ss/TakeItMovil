@@ -1,22 +1,36 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useAuth } from '@/context/AuthContext';
+import { UsersService } from '@/services/users.service'
+
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 
 const ChangeEmailScreen: React.FC = () => {
   const [newEmail, setNewEmail] = useState<string>('');
   const [confirmEmail, setConfirmEmail] = useState<string>('');
-  const router = useRouter();
-
-  const handleSave = () => {
-    // Aquí puedes agregar la lógica para guardar el nuevo correo electrónico
-    if (newEmail === confirmEmail) {
-      console.log('Nuevo correo electrónico:', newEmail);
-      router.back();
-    } else {
-      console.log('Los correos electrónicos no coinciden');
-    }
-  };
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+        const updateProfile = useAuth().updateProfile;
+        const router = useRouter();
+        const { usuarioID } = useAuth();
+  
+    const handleSave = async () => {
+          try {
+            await UsersService.editarUsuario(Number(usuarioID), 'email', newEmail);
+            console.log('Éxito', 'Email guardado correctamente');
+            updateProfile('email', newEmail);
+            setModalVisible(true);
+          } catch (error) {
+            console.log('Error', 'Hubo un problema al guardar el número de teléfono');
+          }
+        };
+      
+        const closeModal = () => {
+          setModalVisible(false);
+          router.back();
+        };
 
   return (
     <View style={styles.container}>
@@ -46,6 +60,22 @@ const ChangeEmailScreen: React.FC = () => {
       <TouchableOpacity onPress={handleSave} style={styles.saveButton}>
         <Text style={styles.saveButtonText}>Guardar</Text>
       </TouchableOpacity>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={closeModal}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalTitle}>¡Actualización Exitosa! 🎉</Text>
+            <Text style={styles.modalText}>El número de teléfono se ha actualizado correctamente.</Text>
+            <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
+              <Text style={styles.closeButtonText}>¡Excelente!</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -84,6 +114,41 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#1A1A1A',
     fontSize: 16,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    width: 300,
+    padding: 20,
+    backgroundColor: '#1A1A1A',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#E0B942',
+    marginBottom: 10,
+  },
+  modalText: {
+    color: '#E0B942',
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: '#E0B942',
+    padding: 10,
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: '#1A1A1A',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

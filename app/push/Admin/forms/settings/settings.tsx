@@ -8,13 +8,15 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "@/context/AuthContext"
 import MenuItem from "./MenuItem";
-// import { useNavigation } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 
 export default function PerfilScreen() {
     const {username, email, fechaNacimientoUsuario, telefonoUsuario, logout} = useAuth();
@@ -113,7 +115,9 @@ export default function PerfilScreen() {
         backgroundColor: '#1A1A1A',
     },
     content: {
-        flex: 1,
+      flex: 1,
+      marginTop: height * 0.05,
+      zIndex: 3,
     },
     header: {
       paddingHorizontal: 20,

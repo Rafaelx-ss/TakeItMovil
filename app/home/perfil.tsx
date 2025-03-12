@@ -31,7 +31,7 @@ type RootStackParamList = {
 
 export default function PerfilScreen() {
   const router = useRouter();
-  const {username,email,fechaNacimientoUsuario,telefonoUsuario, logout} = useAuth();
+  const {username,email,fechaNacimientoUsuario,telefonoUsuario, direccion, logout} = useAuth();
 
   // Función para formatear el nombre
   const formatName = (fullName: string | null) => {
@@ -64,7 +64,7 @@ export default function PerfilScreen() {
       lastName: formattedName.lastName,
       email: email,
       birthDate: fechaNacimientoUsuario,
-      address: "Calle 6 #123, Pacantún, 77400",
+      address: direccion,
       website: "",
       phone: telefonoUsuario,
       profileImage: require("@/images/profile.png")

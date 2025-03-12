@@ -12,6 +12,7 @@ interface AuthContextType {
   telefonoUsuario: string | null;
   generoUsuario: string | null;
   fechaNacimientoUsuario: string | null;
+  direccion: string | null;
   login: (
     token: string,
     usuarioID: number,
@@ -20,9 +21,11 @@ interface AuthContextType {
     rol: string,
     telefonoUsuario: string,
     generoUsuario: string,
-    fechaNacimientoUsuario: string
+    fechaNacimientoUsuario: string,
+    direccion: string | null
   ) => void;
   logout: () => void;
+  updateProfile: (key: string, value: string) => void;
 }
 
 // Creamos el contexto de autenticación
@@ -39,6 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [telefonoUsuario, setTelefonoUsuario] = useState<string | null>(null);
   const [generoUsuario, setGeneroUsuario] = useState<string | null>(null);
   const [fechaNacimientoUsuario, setFechaNacimientoUsuario] = useState<string | null>(null);
+  const [direccion, setDireccion] = useState<string | null>(null);
 
   // Cargar datos de autenticación al iniciar la app
   useEffect(() => {
@@ -52,6 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const storedTelefonoUsuario = await AsyncStorage.getItem("telefonoUsuario");
         const storedGeneroUsuario = await AsyncStorage.getItem("generoUsuario");
         const storedFechaNacimientoUsuario = await AsyncStorage.getItem("fechaNacimientoUsuario");
+        const storedDireccion = await AsyncStorage.getItem("direccion");
 
         if (storedToken && storedUsuarioID && storedEmail && storedUsername) {
           setToken(storedToken);
@@ -62,6 +67,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setTelefonoUsuario(storedTelefonoUsuario);
           setGeneroUsuario(storedGeneroUsuario);
           setFechaNacimientoUsuario(storedFechaNacimientoUsuario);
+          setDireccion(storedDireccion);
           setIsAuthenticated(true);
         }
       } catch (error) {
@@ -81,7 +87,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     newRol: string,
     newTelefonoUsuario: string,
     newGeneroUsuario: string,
-    newFechaNacimientoUsuario: string
+    newFechaNacimientoUsuario: string,
+    newDireccion: string | null
   ) => {
     try {
       setToken(newToken);
@@ -92,6 +99,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setTelefonoUsuario(newTelefonoUsuario);
       setGeneroUsuario(newGeneroUsuario);
       setFechaNacimientoUsuario(newFechaNacimientoUsuario);
+      setDireccion(newDireccion);
       setIsAuthenticated(true);
 
       await AsyncStorage.setItem("token", newToken);
@@ -101,6 +109,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await AsyncStorage.setItem("rol", newRol);
       await AsyncStorage.setItem("telefonoUsuario", newTelefonoUsuario);
       await AsyncStorage.setItem("generoUsuario", newGeneroUsuario);
+      if (newDireccion !== null) {
+        await AsyncStorage.setItem("direccion", newDireccion);
+      }
       await AsyncStorage.setItem("fechaNacimientoUsuario", newFechaNacimientoUsuario);
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
@@ -118,6 +129,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setTelefonoUsuario(null);
       setGeneroUsuario(null);
       setFechaNacimientoUsuario(null);
+      setDireccion(null);
       setIsAuthenticated(false);
 
       await AsyncStorage.removeItem("token");
@@ -127,9 +139,50 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await AsyncStorage.removeItem("rol");
       await AsyncStorage.removeItem("telefonoUsuario");
       await AsyncStorage.removeItem("generoUsuario");
+      await AsyncStorage.removeItem("direccion");
       await AsyncStorage.removeItem("fechaNacimientoUsuario");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
+    }
+  };
+
+  // Función para actualizar el perfil
+  const updateProfile = async (key: string, value: string) => {
+    try {
+      switch (key) {
+        case "email":
+          setEmail(value);
+          await AsyncStorage.setItem("email", value);
+          break;
+        case "username":
+          setUsername(value);
+          await AsyncStorage.setItem("username", value);
+          break;
+        case "rol":
+          setRol(value);
+          await AsyncStorage.setItem("rol", value);
+          break;
+        case "telefonoUsuario":
+          setTelefonoUsuario(value);
+          await AsyncStorage.setItem("telefonoUsuario", value);
+          break;
+        case "generoUsuario":
+          setGeneroUsuario(value);
+          await AsyncStorage.setItem("generoUsuario", value);
+          break;
+        case "direccion":
+          setDireccion(value);
+          await AsyncStorage.setItem("direccion", value);
+          break;
+        case "fechaNacimientoUsuario":
+          setFechaNacimientoUsuario(value);
+          await AsyncStorage.setItem("fechaNacimientoUsuario", value);
+          break;
+        default:
+          throw new Error("Clave de perfil no válida");
+      }
+    } catch (error) {
+      console.error("Error al actualizar el perfil:", error);
     }
   };
 
@@ -144,9 +197,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         rol,
         telefonoUsuario,
         generoUsuario,
+        direccion,
         fechaNacimientoUsuario,
         login,
         logout,
+        updateProfile,
       }}
     >
       {children}

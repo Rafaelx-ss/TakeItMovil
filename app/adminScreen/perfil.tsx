@@ -23,7 +23,7 @@ const height = Dimensions.get("window").height;
 
 export default function PerfilScreen() {
 
-  const {username,email,fechaNacimientoUsuario,telefonoUsuario} = useAuth();
+  const {username,email,fechaNacimientoUsuario,telefonoUsuario, direccion} = useAuth();
   const router = useRouter();
 
   const profileData = {
@@ -32,7 +32,7 @@ export default function PerfilScreen() {
       lastName: "",
       email: email,
       birthDate: fechaNacimientoUsuario,
-      address: "Calle 6 #123, Pacantún, 77400",
+      address: direccion,
       website: "",
       phone: telefonoUsuario,
       profileImage: require("@/images/profile.png")
@@ -71,6 +71,11 @@ export default function PerfilScreen() {
             <View style={styles.infoItem}>
               <Text style={styles.infoLabel}>Email</Text>
               <Text style={styles.infoValue}>{user.email}</Text>
+            </View>
+
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Teléfono</Text>
+              <Text style={styles.infoValue}>{user.phone}</Text>
             </View>
 
             <View style={styles.infoItem}>

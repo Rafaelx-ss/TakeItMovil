@@ -35,7 +35,7 @@ export default function LoginScreen() {
     
   
       
-        login(token, usuarioID,data.data.user.email,data.data.user.nombreUsuario,data.data.user.rolUsuario,data.data.user.telefonoUsuario,data.data.user.generoUsuario,data.data.user.fechaNacimientoUsuario);
+        login(token, usuarioID,data.data.user.email,data.data.user.nombreUsuario,data.data.user.rolUsuario,data.data.user.telefonoUsuario,data.data.user.generoUsuario,data.data.user.fechaNacimientoUsuario, data.data.user.direccion);
   
   
     

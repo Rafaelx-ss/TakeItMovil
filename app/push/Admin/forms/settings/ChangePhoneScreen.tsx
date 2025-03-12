@@ -9,14 +9,16 @@ import { useAuth } from '@/context/AuthContext';
 const ChangePhoneScreen: React.FC = () => {
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const updateProfile = useAuth().updateProfile;
   const router = useRouter();
   const { usuarioID } = useAuth();
 
   const handleSave = async () => {
     try {
-      await UsersService.editarUsuario(Number(usuarioID), 'phoneNumber', phoneNumber);
+      await UsersService.editarUsuario(Number(usuarioID), 'telefonoUsuario', phoneNumber);
       console.log('Éxito', 'Número de teléfono guardado correctamente');
-      router.back();
+      updateProfile('telefonoUsuario', phoneNumber);
+      setModalVisible(true);
     } catch (error) {
       console.log('Error', 'Hubo un problema al guardar el número de teléfono');
     }
