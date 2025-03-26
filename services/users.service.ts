@@ -63,6 +63,24 @@ export const UsersService = {
         }
     }, 
 
+    editarUsuarioEmail: async ( key: string, valor: string): Promise<void> => {
+        try {
+            await axios.post(`${backend}/api/auth/newpassword`, {
+                correo : key,
+                password : valor,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                } 
+            );
+        }catch (error){
+            console.error('Error al crear usuario:', error);
+            throw error;
+        }
+    }, 
+
     getUsuario: async (usuarioID: number): Promise<User> => {
         try {
             const response = await axios.get(`${backend}/api/users/get/${usuarioID}`, {

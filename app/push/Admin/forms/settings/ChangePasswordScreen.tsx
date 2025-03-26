@@ -11,6 +11,7 @@ const height = Dimensions.get("window").height;
 const ChangePasswordScreen: React.FC = () => {
   const [currentPassword, setCurrentPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [modalVisible, setModalVisible] = useState<boolean>(false);
           const updateProfile = useAuth().updateProfile;
@@ -19,7 +20,7 @@ const ChangePasswordScreen: React.FC = () => {
     
       const handleSave = async () => {
             try {
-              await UsersService.editarUsuario(Number(usuarioID), 'password', newPassword);
+              await UsersService.editarUsuarioEmail( email, newPassword);
               console.log('Éxito', 'Email guardado correctamente');
               updateProfile('password', newPassword);
               setModalVisible(true);

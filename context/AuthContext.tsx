@@ -22,7 +22,7 @@ interface AuthContextType {
     telefonoUsuario: string,
     generoUsuario: string,
     fechaNacimientoUsuario: string,
-    direccion: string | null
+    direccion: string
   ) => void;
   logout: () => void;
   updateProfile: (key: string, value: string) => void;
@@ -88,7 +88,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     newTelefonoUsuario: string,
     newGeneroUsuario: string,
     newFechaNacimientoUsuario: string,
-    newDireccion: string | null
+    newDireccion: string 
   ) => {
     try {
       setToken(newToken);
@@ -109,9 +109,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       await AsyncStorage.setItem("rol", newRol);
       await AsyncStorage.setItem("telefonoUsuario", newTelefonoUsuario);
       await AsyncStorage.setItem("generoUsuario", newGeneroUsuario);
-      if (newDireccion !== null) {
-        await AsyncStorage.setItem("direccion", newDireccion);
-      }
+      await AsyncStorage.setItem("direccion", newDireccion);
       await AsyncStorage.setItem("fechaNacimientoUsuario", newFechaNacimientoUsuario);
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
