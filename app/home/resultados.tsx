@@ -8,8 +8,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { Search } from "lucide-react-native";
+
+
+const width = Dimensions.get("window").width
+const height = Dimensions.get("window").height
 
 export default function ResultsScreen() {
   const categories = ["Eventos inscritos", "Deportes", "Arte", "Tech"];
@@ -103,6 +108,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#FFFFFF",
     marginBottom: 4,
+    marginTop:  width * 0.1,
   },
   subtitle: {
     fontSize: 14,

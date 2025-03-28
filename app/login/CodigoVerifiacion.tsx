@@ -22,7 +22,7 @@ export default function CodigoVerifiacion() {
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({ value, setValue });
 
 
-    console.log("Email recibido:", email);
+ 
 
 
 
@@ -41,7 +41,7 @@ export default function CodigoVerifiacion() {
     }
   };
 
-  console.log(value)
+
 
 
   const verificarCodigo = async () => {

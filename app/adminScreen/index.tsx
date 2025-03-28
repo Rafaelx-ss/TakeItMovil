@@ -1,163 +1,120 @@
-import { stripBaseUrl } from "expo-router/build/fork/getStateFromPath-forks"
-import { Platform, View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions, Image } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
-import { useRouter } from "expo-router"
-import { useAuth } from "@/context/AuthContext" // Asegúrate de la ruta correcta
+import React from "react";
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
+import { LineChart } from "react-native-chart-kit";
+import { User, Medal, BarChart } from "lucide-react-native";
 
 const width = Dimensions.get("window").width
 const height = Dimensions.get("window").height
 
-export default function index() {
-  const route = useRouter()
+export default function Dashboard() {
+  const totalParticipantes = 150;
+  const eventosFinalizados = 25;
+  const tasaActividad = "43%";
 
-  const index = () => {}
+  const graficaData = {
+    labels: ["Enero", "Febrero", "Marzo"],
+    datasets: [{ data: [50, 80, 40] }],
+  };
+
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      <View style={styles.Text}>
-              <Text style={styles.eslogan}>ADMIN</Text>
-            </View>
-      
-    </SafeAreaView>
-  )
+    <View style={styles.container}>
+      <Text style={styles.title}>Dashboard</Text>
+      <View style={styles.cardContainer}>
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Participantes Totales</Text>
+          <User color="#D4AF37" size={24} />
+          <Text style={styles.cardValue}>{totalParticipantes}</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Eventos Completados</Text>
+          <Medal color="#D4AF37" size={24} />
+          <Text style={styles.cardValue}>{eventosFinalizados}</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Tasa de Actividad</Text>
+          <BarChart color="#D4AF37" size={24} />
+          <Text style={styles.cardValue}>{tasaActividad}</Text>
+        </View>
+      </View>
+
+      <Text style={styles.chartTitle}>Tendencia de Participantes</Text>
+      <LineChart
+        data={graficaData}
+        width={width - 40}
+        height={220}
+        chartConfig={{
+          backgroundColor: "#222",
+          backgroundGradientFrom: "#1A1A1A",
+          backgroundGradientTo: "#1A1A1A",
+          decimalPlaces: 0,
+          color: (opacity = 1) => `rgba(212, 175, 55, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
+            borderRadius: 10,
+          },
+          propsForDots: {
+            r: "4",
+            strokeWidth: "2",
+            stroke: "#D4AF37",
+          },
+        }}
+        bezier
+        style={{ marginVertical: 10, borderRadius: 10 }}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-  principal: {
-    color: "#D4AF37",
-    alignSelf: "center",
-    fontSize: 30,
-    fontWeight: "bold",
-  },
-  socialButtonsContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 20,
-  },
-  socialButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "white",
-  },
-  facebookButton: {
-    backgroundColor: "#1877F2",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  appleButton: {
-    backgroundColor: "black",
-  },
-  googleIcon: {
-    width: 35,
-    height: 35,
-    resizeMode: "contain",
-  },
-  facebookIcon: {
-    width: 24,
-    height: 24,
-    resizeMode: "contain",
-  },
-  appleIcon: {
-    width: 30,
-    height: 30,
-    resizeMode: "contain",
-    tintColor: "white",
-  },
-  icon: {
-    flexDirection: "row",
-    justifyContent: "center",
-  },
   container: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 20,
-    justifyContent: "center",
-  },
-  line: {
-    width: 80,
-    height: 1,
-    backgroundColor: "#ccc",
-    alignSelf: "center",
-  },
-  eslogan: {
-    color: "#fff",
-    fontSize: 24,
-    width: "90%",
-    textAlign: "center",
-    fontWeight: "bold",
-  },
-  mainContainer: {
     flex: 1,
     backgroundColor: "#1A1A1A",
+    padding: 20,
   },
-  titulo: {
-    fontSize: 20,
+  title: {
+    fontSize: 24,
     fontWeight: "bold",
     color: "#fff",
-    alignSelf: "center",
-    marginTop: height * 0.05,
+    textAlign: "center",
+    marginTop: width* 0.1,
+    marginBottom: 20,
   },
-  Text: {
-    color: "#fff",
-    marginTop: height * 0.02,
+  cardContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
+  },
+  card: {
+    backgroundColor: "#222",
+    width: width * 0.3,
+    padding: 15,
+    borderRadius: 10,
     alignItems: "center",
+    marginBottom: 15,
   },
-  TextInput: {
-    borderWidth: 1,
-    borderColor: "#D2D1CE",
-    borderRadius: 5,
-    width: "90%",
-    marginTop: height * 0.01,
+  cardTitle: {
     color: "#fff",
-    height: height * 0.05,
-  },
-  textContainer: {
-    color: "#fff",
-    fontWeight: "bold",
-  },
-  footerContainer: {
-    position: "absolute",
-    bottom: height * 0.05,
-    left: 0,
-    right: 0,
-    alignItems: "center",
-  },
-  textContainerfooter: {
     fontSize: 12,
+    textAlign: "center",
+    marginBottom: 5,
+  },
+  cardValue: {
+    color: "#D4AF37",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  chartTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
     color: "#fff",
-    fontWeight: "bold",
     textAlign: "center",
+    marginTop: 20,
   },
-  textContainertaik: {
-    fontSize: 12,
-    color: "#D4AF37",
-    fontWeight: "bold",
+  noData: {
+    color: "#fff",
     textAlign: "center",
+    marginTop: 10,
   },
-  inicio: {
-    color: "#D4AF37",
-    fontWeight: "bold",
-    marginLeft: width * 0.02,
-    lineHeight: 21,
-  },
-  buttom: {
-    backgroundColor: "#D4AF37",
-    width: width * 0.6,
-    height: height * 0.06,
-    justifyContent: "center",
-    alignSelf: "center",
-    marginTop: height * 0.05,
-    borderRadius: 5,
-  },
-  textButtom: {
-    color: "white",
-    textAlign: "center",
-    textAlignVertical: "center",
-    fontWeight: "500",
-    fontSize: 19,
-  },
-})
-
+});

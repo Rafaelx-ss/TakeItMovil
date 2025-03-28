@@ -18,7 +18,7 @@ const ChangeAdressScreen: React.FC = () => {
   const handleSave = async () => {
         try {
           await UsersService.editarUsuario(Number(usuarioID), 'direccion', newAddress);
-          console.log('Éxito', 'Dirección guardada correctamente');
+          
           updateProfile('direccion', newAddress);
           setModalVisible(true);
         } catch (error) {

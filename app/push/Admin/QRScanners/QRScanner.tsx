@@ -1,6 +1,8 @@
 import { Camera, useCameraPermissions, CameraView } from 'expo-camera';
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, Button, Alert } from 'react-native';
+import axios from "axios";
+import { backend } from '@/context/endpoints';
 
 type Prop = {
   type: string;
@@ -21,19 +23,37 @@ export default function QRScanner() {
     })();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }: Prop) => {
-    setScanned(true);
-    Alert.alert(
-      `Código ${type} Escaneado`,
-      `Datos: ${data}`,
-      [
-        {
-          text: 'OK',
-          onPress: () => setScanned(false),
-        },
-      ],
-      { cancelable: false }
-    );
+  const handleBarCodeScanned = async ({ type, data }: Prop) => {
+    try {
+      setScanned(true);
+  
+      
+      const qrData = JSON.parse(data);
+      const { usuarioID, eventoID } = qrData;
+  
+    
+      const response = await axios.put(`${backend}/api/qr_codes/${usuarioID}/${eventoID}/finalizar`);
+  
+   
+      const result = response.data;
+  
+
+      Alert.alert(
+        `Código ${type} Escaneado`,
+        result.success ? `✅ ${result.message}` : `❌ ${result.message}`,
+        [{ text: 'OK', onPress: () => setScanned(false) }],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.error(error); 
+  
+      Alert.alert(
+        'Error',
+        'Hubo un problema al procesar el QR',
+        [{ text: 'OK', onPress: () => setScanned(false) }],
+        { cancelable: false }
+      );
+    }
   };
 
   if (!permission?.granted) {

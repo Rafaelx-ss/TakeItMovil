@@ -15,7 +15,7 @@ const AuthenticatedApp: React.FC = () => {
     }
 
     if (isAuthenticated && segments[0] === "login") {
-      console.log(rol)
+     
       if(rol === 'Organizador'){
         router.replace("../adminScreen");
       }

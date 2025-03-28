@@ -20,7 +20,7 @@ export default function RecoverAccount() {
 
 
   const recover = async () => {
-    console.log('PEPE');
+
     try {
       if (!email) {
         Alert.alert('Tienes que introducir el email');
@@ -31,7 +31,7 @@ export default function RecoverAccount() {
         correo: email,
       });
     
-      console.log(response.data);
+    
     
       if (response.data.success === true) {
         router.push({

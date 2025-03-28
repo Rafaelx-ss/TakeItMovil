@@ -41,8 +41,7 @@ export default function MisEventosAdminScreen() {
       }
 
       const response = await EventosService.obtenerEventosAdmin(usuarioID || 0, pageNumber); 
-      console.log("🔹 Respuesta de la API:", response);
-
+     
       const newEvents = response ?? []; // Asegura que la API devuelve un array válido
 
       if (!Array.isArray(newEvents)) {

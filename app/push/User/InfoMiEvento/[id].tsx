@@ -204,39 +204,39 @@ export default function EventoDetalle() {
             ruta: {qrCode}
         </Text> */}
         <View style={styles.qrContainer}>
-        {qrCode && (
-            <>
-              {Platform.OS === 'web' ? (
-                backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
-                  <Image 
-                    source={{ uri: `${backend}/storage/${qrCode}` }} 
-                    style={{ width: 300, height: 300, marginTop: 10 }} 
-                  />
+            {qrCode && (
+              <View style={styles.qrCodeWrapper}>
+                {Platform.OS === 'web' ? (
+                  backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
+                    <Image 
+                      source={{ uri: `${backend}/storage/${qrCode}` }} 
+                      style={styles.qrImage} 
+                    />
+                  ) : (
+                    <Image 
+                      source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
+                      style={styles.qrImage} 
+                    />
+                  )
                 ) : (
-                  <Image 
-                    source={{ uri: `${backend.replace('public', 'storage/app/public')}/${qrCode}` }} 
-                    style={{ width: 300, height: 300, marginTop: 10 }} 
-                  />
-                )
-              ) : (
-                backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
-                  <SvgUri 
-                    uri={`${backend}/storage/${qrCode}`}
-                    width={300} 
-                    height={300} 
-                  />
-                ) : (
-                  <SvgUri 
-                    uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`}
-                    width={300} 
-                    height={300} 
-                  />
-                )
-              )}
-            </>
-          )}
-          
-        </View>
+                  backend.includes('127.0.0.1') || backend.includes('10.0.2.2') ? (
+                    <SvgUri 
+                      uri={`${backend}/storage/${qrCode}`}
+                      width={300} 
+                      height={300} 
+                    />
+                  ) : (
+                    <SvgUri 
+                      uri={`${backend.replace('public', 'storage/app/public')}/${qrCode}`}
+                      width={300} 
+                      height={300} 
+                    />
+                  )
+                )}
+              </View>
+            )}
+          </View>
+
       </View>
 
         <View style={styles.section}>
@@ -252,17 +252,23 @@ export default function EventoDetalle() {
 }
 
 const styles = StyleSheet.create({
-    qrContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        gap: 16,
-    },
-    qrImage: {
-        width: 100,
-        height: 100,
-        margin: 8,
-    },
+  qrContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 16,
+  },
+  qrCodeWrapper: {
+    borderWidth: 6, // Ajusta el grosor del borde
+    borderColor: 'white', // Color del borde
+    borderRadius: 8, // Opcional, para esquinas redondeadas
+    backgroundColor: 'white', // Fondo blanco para mejorar contraste
+    padding: 10, // Espaciado para separar el QR del borde
+  },
+  qrImage: {
+    width: 300,
+    height: 300,
+  },
   skeletonBg: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 4,
